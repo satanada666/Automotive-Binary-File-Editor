@@ -1,0 +1,1 @@
+pyinstaller --onefile --noconsole --add-data "untitled.ui;." --add-data "ecu_data.json;." --name Black_Box main.py

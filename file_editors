@@ -1,0 +1,343 @@
+import os
+import shutil
+
+class Encoder:
+    def __init__(self):
+        self.size_min = -1
+        self.size_max = -1
+
+    def encode(self, buffer: bytearray):
+        """Базовый метод кодирования. Переопределяется в наследниках."""
+        pass
+
+    def check(self, buffer: bytearray) -> bool:
+        """Проверяет допустимость буфера данных."""
+        return self._check_size(buffer)
+
+    def _check_size(self, buffer: bytearray) -> bool:
+        """Проверяет размер буфера данных."""
+        size = len(buffer)
+        if self.size_min >= 0:
+            if self.size_min == self.size_max and size != self.size_min:
+                print(f"Размер файла не совпадает: {size} != {self.size_min}")
+                return False
+            elif size < self.size_min:
+                print(f"Файл слишком мал: {size} < {self.size_min}")
+                return False
+        if self.size_max >= 0 and size > self.size_max:
+            print(f"Файл слишком большой: {size} > {self.size_max}")
+            return False
+        return True
+
+    def process_large_file(self, file_path, output_path=None, progress_callback=None):
+        """Обрабатывает большой файл по частям."""
+        if not os.path.exists(file_path):
+            print(f"Ошибка: Файл {file_path} не найден.")
+            return False
+
+        try:
+            file_size = os.path.getsize(file_path)
+            if file_size < 5 * 1024 * 1024:
+                return self.transform_file(file_path, output_path)
+            
+            if output_path is None:
+                temp_path = file_path + '.temp'
+                backup_path = file_path + '.backup'
+                shutil.copy2(file_path, backup_path)
+                final_path = file_path
+            else:
+                temp_path = output_path + '.temp'
+                final_path = output_path
+            
+            shutil.copy2(file_path, temp_path)
+            
+            with open(temp_path, 'r+b') as f:
+                f.seek(0)
+                buffer = bytearray(f.read())
+                
+                if not self.check(buffer):
+                    os.remove(temp_path)
+                    print("Файл не прошел проверку")
+                    return False
+                
+                self.encode(buffer)
+                
+                f.seek(0)
+                f.write(buffer)
+                f.truncate()
+            
+            if os.path.exists(final_path) and final_path != file_path:
+                os.remove(final_path)
+            shutil.move(temp_path, final_path)
+            
+            print(f"Файл успешно преобразован и сохранен в {final_path}")
+            return True
+            
+        except Exception as e:
+            print(f"Ошибка при обработке большого файла: {e}")
+            if 'temp_path' in locals() and os.path.exists(temp_path):
+                os.remove(temp_path)
+            return False
+
+    def transform_file(self, input_path, output_path=None):
+        """Преобразует файл стандартным способом."""
+        if not os.path.exists(input_path):
+            print(f"Ошибка: Файл {input_path} не найден.")
+            return False
+
+        try:
+            with open(input_path, 'rb') as f:
+                buffer = bytearray(f.read())
+
+            if not self.check(buffer):
+                print("Файл не прошел проверку")
+                return False
+
+            if output_path is None:
+                self.create_backup(input_path)
+                output_path = input_path
+
+            self.encode(buffer)
+
+            with open(output_path, 'wb') as f:
+                f.write(buffer)
+
+            print(f"Файл успешно преобразован и сохранен в {output_path}")
+            return True
+
+        except Exception as e:
+            print(f"Ошибка при обработке файла: {e}")
+            return False
+
+    def create_backup(self, file_path):
+        """Создает резервную копию файла."""
+        backup_path = file_path + '.backup'
+        shutil.copy2(file_path, backup_path)
+        print(f"Создана резервная копия: {backup_path}")
+        return backup_path
+
+# ECU редакторы
+class ME17(Encoder):
+    def __init__(self):
+        super().__init__()
+        self.expected_sizes = {1504 * 1024, 1536 * 1024, 2048 * 1024, 2560 * 1024, 4096 * 1024}
+
+    def check(self, buffer: bytearray) -> bool:
+        if len(buffer) not in self.expected_sizes:
+            print(f"Недопустимый размер файла: {len(buffer)} байт. Ожидаются: {self.expected_sizes}")
+            return False
+
+        start_offset = 0
+        if len(buffer) == 1504 * 1024:
+            start_offset = 0x901F0
+        elif len(buffer) == 1536 * 1024:
+            start_offset = 0xAD720
+        elif len(buffer) == 2048 * 1024:
+            start_offset = 0x012FCCD
+        elif len(buffer) == 2560 * 1024:
+            start_offset = 0x01263E0
+        elif len(buffer) == 4096 * 1024:
+            start_offset = 0x6E640 + 4
+
+        target_sequence = bytearray([0x8B, 0x02, 0x20, 0x22])
+        signature = bytearray([0x80, 0x20])
+        signature_length = len(signature)
+        target_length = len(target_sequence)
+
+        if len(buffer) < start_offset + signature_length + target_length:
+            print(f"Файл слишком короткий для проверки: {len(buffer)} < {start_offset + signature_length + target_length}")
+            return False
+
+        for i in range(start_offset, len(buffer) - target_length - signature_length + 1):
+            if (buffer[i:i + signature_length] == signature and
+                buffer[i + signature_length: i + signature_length + target_length] == target_sequence):
+                return True
+
+        print("Последовательность 0x80 0x20 0x8B 0x02 0x20 0x22 не найдена в файле")
+        return False
+
+    def encode(self, buffer: bytearray):
+        start_offset = 0
+        if len(buffer) == 1504 * 1024:
+            start_offset = 0x901F0
+        elif len(buffer) == 1536 * 1024:
+            start_offset = 0xAD720
+        elif len(buffer) == 2048 * 1024:
+            start_offset = 0x012FCCD
+        elif len(buffer) == 2560 * 1024:
+            start_offset = 0x01263E0
+        elif len(buffer) == 4096 * 1024:
+            start_offset = 0x6E640
+
+        target_sequence = bytearray([0x8B, 0x02, 0x20, 0x22])
+        new_sequence = bytearray([0x00, 0x00, 0x82, 0x12])
+        signature = bytearray([0x80, 0x20])
+        signature_length = len(signature)
+        target_length = len(target_sequence)
+
+        for i in range(start_offset, len(buffer) - target_length - signature_length + 1):
+            if (buffer[i:i + signature_length] == signature and
+                buffer[i + signature_length: i + signature_length + target_length] == target_sequence):
+                buffer[i + signature_length: i + signature_length + target_length] = new_sequence
+                print(f"Патч FLASH_OFF успешно применён по адресу 0x{i + signature_length:08X}")
+                return
+
+        print("Не удалось применить патч: последовательность не найдена")
+
+class My2(Encoder):
+    def __init__(self):
+        super().__init__()
+        self.size_min = 3
+
+    def encode(self, buffer: bytearray):
+        if len(buffer) > 0:
+            buffer[0] = 0xBB
+
+    def check(self, buffer: bytearray) -> bool:
+        return super().check(buffer)
+
+# EEPROM редактор
+class eeprom(Encoder):
+    def __init__(self):
+        super().__init__()
+
+class j34p(eeprom):
+    def __init__(self):
+        super().__init__()
+        self.size_min = 2048
+        self.size_max = 2048
+
+    def check(self, buffer: bytearray) -> bool:
+        return super().check(buffer)
+
+    def encode(self, buffer: bytearray):
+        patch = [
+            0xFE, 0x6C, 0xFE, 0x6C, 0x11, 0x11, 0x11, 0x11,
+            0x00, 0xFF, 0xE0, 0x06, 0xC5, 0xA0, 0x00, 0xFF,
+            0x39, 0x60, 0x00, 0x00
+        ]
+
+        if len(buffer) < 0x080 + 20:
+            print("Файл слишком короткий для применения патча")
+            return
+
+        buffer[0x0000:0x0000 + 20] = bytearray(patch)
+        buffer[0x0070:0x0070 + 20] = bytearray(patch)
+
+        print("Патч успешно применён к j34p (0x0000 и 0x0070)")
+
+class edc16u1(eeprom): 
+    def __init__(self):
+        super().__init__()
+        self.size_min = 4096
+        self.size_max = 4096
+
+    def check(self, buffer: bytearray) -> bool:
+        if len(buffer) != self.size_min:
+            return False
+        return super().check(buffer)
+
+    def encode(self, buffer: bytearray):
+        if len(buffer) > 0x017F:
+            buffer[0x0156] = 96
+            buffer[0x0176] = 96
+            buffer[0x015f] = 0xBE
+            buffer[0x017f] = 0xBE
+            print("Патч успешно применён к EDC16U1(U34) (0x0156 и 0x017f)")
+
+class Opel_25040_Pin_Vin(eeprom):
+    def __init__(self):
+        super().__init__()
+        self.size_min = 512
+        self.size_max = 512
+
+    def check(self, buffer: bytearray) -> bool:
+        if len(buffer) != self.size_min:
+            print(f"Недопустимый размер файла: {len(buffer)} байт. Ожидается: {self.size_min}")
+            return False
+        if len(buffer) < 0x008B + 1:
+            print("Файл слишком короткий для извлечения данных")
+            return False
+        return super().check(buffer)
+
+    def encode(self, buffer: bytearray):
+        # Извлечение VIN (17 байтов с адреса 0x0050)
+        vin_bytes = buffer[0x0050:0x0050 + 17]
+        try:
+            vin = vin_bytes.decode('ascii')
+            print(f"VIN: {vin}")
+        except UnicodeDecodeError:
+            print("Ошибка: VIN не удалось декодировать как ASCII")
+            vin = "Ошибка декодирования"
+
+        # Извлечение байтов для расчета PIN
+        p1 = buffer[0x0088]
+        p2 = buffer[0x0089]
+        p3 = buffer[0x008A]
+        p4 = buffer[0x008B]
+        
+        # Расшифровка первой цифры PIN
+        pin1_map = {
+            0x70: 2, 0x71: 3, 0x72: 0, 0x73: 1,
+            0x74: 6, 0x75: 7, 0x76: 4, 0x77: 5,
+            0x78: 10, 0x79: 11, 0x7A: 8, 0x7B: 9,
+            0x7C: 14, 0x7D: 15, 0x7E: 12, 0x7F: 13
+        }
+        pin1 = pin1_map.get(p1, 0)
+        
+        # Расшифровка второй цифры PIN
+        pin2_map = {
+            0x70: 5, 0x71: 4, 0x72: 7, 0x73: 6,
+            0x74: 1, 0x75: 0, 0x76: 3, 0x77: 2,
+            0x78: 13, 0x79: 12, 0x7A: 15, 0x7B: 14,
+            0x7C: 9, 0x7D: 8, 0x7E: 11, 0x7F: 10
+        }
+        pin2 = pin2_map.get(p2, 0)
+        
+        # Расшифровка третьей цифры PIN
+        pin3_map = {
+            0x70: 3, 0x71: 2, 0x72: 1, 0x73: 0,
+            0x74: 7, 0x75: 6, 0x76: 5, 0x77: 4,
+            0x78: 11, 0x79: 10, 0x7A: 9, 0x7B: 8,
+            0x7C: 15, 0x7D: 14, 0x7E: 13, 0x7F: 12
+        }
+        pin3 = pin3_map.get(p3, 0)
+        
+        # Расшифровка четвертой цифры PIN
+        pin4_map = {
+            0x60: 3, 0x61: 2, 0x62: 1, 0x63: 0,
+            0x64: 7, 0x65: 6, 0x66: 5, 0x67: 4,
+            0x68: 11, 0x69: 10, 0x6A: 9, 0x6B: 8,
+            0x6C: 15, 0x6D: 14, 0x6E: 13, 0x6F: 12
+        }
+        pin4 = pin4_map.get(p4, 0)
+        
+        # Формирование полного PIN-кода
+        pin = f"{pin1}{pin2}{pin3}{pin4}"
+        print(f"PIN: {pin}")
+        
+        # Возвращаем словарь с данными для использования в интерфейсе
+        return {"VIN": vin, "PIN": pin}
+        
+
+# DASH редактор
+class dash_vdo(Encoder):
+    def __init__(self):
+        super().__init__()
+        self.size_min = 512
+
+    def encode(self, buffer: bytearray):
+        if len(buffer) >= 4:
+            buffer[0:4] = b"DASH"
+            print("Редактор DASH: записано 'DASH' в начало файла")
+
+# BCM редактор
+class bcm_valeo(Encoder):
+    def __init__(self):
+        super().__init__()
+        self.size_min = 512
+
+    def encode(self, buffer: bytearray):
+        if len(buffer) >= 4:
+            buffer[0:4] = b"BCM!"
+            print("Редактор BCM: записано 'BCM!' в начало файла")
