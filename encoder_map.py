@@ -1,5 +1,5 @@
 from file_editors import ME17_No_Immo, My2,  Encoder,  j34p, edc16u1, Opel_25040_Pin_Vin, mazda_95320_GR6B_57K30B, srs, dasch, eeprom, Vag_simos_2_1_No_Immo, Vag_simos_3_3_No_Immo 
-from file_editors import Chevrolet_E84_Pin_Vin, Chevrolet_E84_Editor 
+from file_editors import Chevrolet_E84_Pin_Vin, Chevrolet_E84_Editor, me7_5_No_Immo_Pin_Cs  
  # Исправлено
    # Импортируем необходимые классы редакторов из file_editors.py
   # Исправлено
@@ -20,6 +20,7 @@ ecu_encoder_map = {
     "Vag_simos_3_3_No_Immo": Vag_simos_3_3_No_Immo(),  # Используем тот же класс для разных версий
     "Chevrolet_E84_Pin_Vin": Chevrolet_E84_Pin_Vin(),
     "Chevrolet_E84_Editor": Chevrolet_E84_Editor(),
+    "me7_5_No_Immo_Pin_Cs" : me7_5_No_Immo_Pin_Cs(), 
 }
 
 # Функция для получения редактора по имени ECU

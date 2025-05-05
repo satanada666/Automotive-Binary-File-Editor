@@ -17,7 +17,7 @@ from text_highlighting import display_hex_comparison
 from file_compare_worker import compare_two_files
 
 # Локальная версия программы
-LOCAL_VERSION = "1.0.0"
+LOCAL_VERSION = "1.1.2"
 GITHUB_VERSION_URL = "https://raw.githubusercontent.com/satanada666/Automotive-Binary-File-Editor/main/version.txt"
 DOWNLOAD_URL =   "https://github.com/satanada666/Automotive-Binary-File-Editor/releases" #"https://1024terabox.com/s/1MUcQEV6sEICcsC73kdFjZw"
 
@@ -88,6 +88,7 @@ def process_file_in_chunks(file_name, encoder, win, settings):
             settings.setValue("last_vin", result['VIN'])
             settings.setValue("last_pin", result['PIN'])
             print(f"process_file_in_chunks: Saved VIN={result['VIN']}, PIN={result['PIN']} to settings")
+            
         else:
             print("process_file_in_chunks: No VIN/PIN data to save")
 
@@ -124,6 +125,8 @@ def process_small_file(file_name, encoder, win, settings):
             settings.setValue("last_vin", result['VIN'])
             settings.setValue("last_pin", result['PIN'])
             print(f"process_small_file: Saved VIN={result['VIN']}, PIN={result['PIN']} to settings")
+            
+
         else:
             print("process_small_file: No VIN/PIN data to save")
         settings.setValue("file_data", data)
@@ -194,15 +197,17 @@ def check_for_updates(win):
 
         if version.parse(server_version) <= version.parse(LOCAL_VERSION):
             print("No updates available or local version is newer.")
+            QMessageBox.information(win, "Обновление",
+                                 f"У вас установлена актуальная версия {LOCAL_VERSION}.")
             if hasattr(win, 'actionYes'):
                 win.actionYes.setEnabled(False)
         else:
             reply = QMessageBox.question(
                 win, "Обновление",
                 f"Доступна новая версия {server_version} (текущая: {LOCAL_VERSION}). Обновить?",
-                QMessageBox.Ok | QMessageBox.Cancel
+                QMessageBox.Yes | QMessageBox.No
             )
-            if reply == QMessageBox.Ok:
+            if reply == QMessageBox.Yes:
                 download_update(win)
             if hasattr(win, 'actionYes'):
                 win.actionYes.setEnabled(True)
@@ -289,6 +294,9 @@ def main():
 
     win.actionCompare.triggered.connect(lambda: compare_two_files(win))
 
+    # Connect the Check_update action to the check_for_updates function
+    win.actionCheckUpdate.triggered.connect(lambda: check_for_updates(win))
+
     if hasattr(win, 'actionYes'):
         win.actionYes.triggered.connect(lambda: download_update(win))
 
@@ -303,6 +311,7 @@ def main():
         print(f"Error loading ECU hierarchy: {str(e)}")
         sys.exit(1)
 
+    # Initial check for updates when the application starts
     check_for_updates(win)
 
     win.show()

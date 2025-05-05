@@ -10,6 +10,7 @@ from Plugin.EEPROM.Vag_simos_2_1_No_Immo import Vag_simos_2_1_No_Immo
 from Plugin.EEPROM.Vag_simos_3_3_No_Immo import Vag_simos_3_3_No_Immo
 from Plugin.EEPROM.Chevrolet_E84_Pin_Vin import Chevrolet_E84_Pin_Vin
 from Plugin.EEPROM.Chevrolet_E84_Editor import Chevrolet_E84_Editor
+from Plugin.EEPROM.me7_5_No_Immo_Pin_Cs import me7_5_No_Immo_Pin_Cs 
 from dash_vdo import dash_vdo
 from bcm_valeo import bcm_valeo
 

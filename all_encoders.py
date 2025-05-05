@@ -10,6 +10,7 @@ from Plugin.EEPROM.Vag_simos_2_1_No_Immo import Vag_simos_2_1_No_Immo
 from Plugin.EEPROM.Vag_simos_3_3_No_Immo import Vag_simos_3_3_No_Immo
 from Plugin.EEPROM.Chevrolet_E84_Pin_Vin import Chevrolet_E84_Pin_Vin
 from Plugin.EEPROM.Chevrolet_E84_Editor import Chevrolet_E84_Editor
+from Plugin.EEPROM.me7_5_No_Immo_Pin_Cs  import me7_5_No_Immo_Pin_Cs  
 from dash_vdo import dash_vdo
 from bcm_valeo import bcm_valeo
 
@@ -27,6 +28,7 @@ encoders = {
     "mazda_95320_GR6B_57K30B": mazda_95320_GR6B_57K30B,
     "Vag_simos_21_No_Immo": Vag_simos_2_1_No_Immo,
     "Vag_simos_33_No_Immo": Vag_simos_3_3_No_Immo,
+    "me7_5_No_Immo_Pin_Cs": me7_5_No_Immo_Pin_Cs, 
 }
 
 def get_encoder(name):
