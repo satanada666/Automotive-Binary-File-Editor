@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'e:\PYTHON\BOX16\untitled.ui'
+# Form implementation generated from reading ui file 'e:\Automotive-Binary-File-Editor\untitled.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_BLACK_BOX(object):
     def setupUi(self, BLACK_BOX):
         BLACK_BOX.setObjectName("BLACK_BOX")
-        BLACK_BOX.resize(1070, 534)
+        BLACK_BOX.resize(1333, 534)
         font = QtGui.QFont()
         font.setFamily("Courier New")
         font.setItalic(True)
@@ -22,12 +22,12 @@ class Ui_BLACK_BOX(object):
         self.centralwidget = QtWidgets.QWidget(BLACK_BOX)
         self.centralwidget.setObjectName("centralwidget")
         self.treeWidget = QtWidgets.QTreeWidget(self.centralwidget)
-        self.treeWidget.setGeometry(QtCore.QRect(40, 50, 381, 371))
+        self.treeWidget.setGeometry(QtCore.QRect(40, 40, 581, 391))
         self.treeWidget.setStyleSheet("background-color: rgb(221, 255, 253);\n"
 "border-color: rgb(157, 170, 255);")
         self.treeWidget.setObjectName("treeWidget")
         self.verticalLayoutWidget = QtWidgets.QWidget(self.centralwidget)
-        self.verticalLayoutWidget.setGeometry(QtCore.QRect(480, 40, 511, 391))
+        self.verticalLayoutWidget.setGeometry(QtCore.QRect(650, 40, 511, 391))
         self.verticalLayoutWidget.setObjectName("verticalLayoutWidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.verticalLayoutWidget)
         self.verticalLayout.setSizeConstraint(QtWidgets.QLayout.SetMinimumSize)
@@ -62,7 +62,7 @@ class Ui_BLACK_BOX(object):
         self.modifiedHexEdit.setObjectName("modifiedHexEdit")
         self.verticalLayout.addWidget(self.modifiedHexEdit)
         self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(620, 20, 291, 16))
+        self.label.setGeometry(QtCore.QRect(790, 20, 291, 16))
         font = QtGui.QFont()
         font.setPointSize(14)
         font.setBold(True)
@@ -70,7 +70,7 @@ class Ui_BLACK_BOX(object):
         self.label.setFont(font)
         self.label.setObjectName("label")
         self.label_2 = QtWidgets.QLabel(self.centralwidget)
-        self.label_2.setGeometry(QtCore.QRect(630, 440, 291, 16))
+        self.label_2.setGeometry(QtCore.QRect(800, 440, 291, 16))
         font = QtGui.QFont()
         font.setPointSize(14)
         font.setBold(True)
@@ -82,7 +82,7 @@ class Ui_BLACK_BOX(object):
         self.statusbar.setObjectName("statusbar")
         BLACK_BOX.setStatusBar(self.statusbar)
         self.menuBar = QtWidgets.QMenuBar(BLACK_BOX)
-        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1070, 26))
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1333, 26))
         self.menuBar.setObjectName("menuBar")
         self.menuFile = QtWidgets.QMenu(self.menuBar)
         self.menuFile.setObjectName("menuFile")

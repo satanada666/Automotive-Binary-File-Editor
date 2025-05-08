@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1070</width>
+    <width>1333</width>
     <height>534</height>
    </rect>
   </property>
@@ -24,9 +24,9 @@
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>50</y>
-      <width>381</width>
-      <height>371</height>
+      <y>40</y>
+      <width>581</width>
+      <height>391</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -42,7 +42,7 @@ border-color: rgb(157, 170, 255);</string>
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>480</x>
+      <x>650</x>
       <y>40</y>
       <width>511</width>
       <height>391</height>
@@ -106,7 +106,7 @@ border-color: rgb(157, 170, 255);</string>
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>620</x>
+      <x>790</x>
       <y>20</y>
       <width>291</width>
       <height>16</height>
@@ -126,7 +126,7 @@ border-color: rgb(157, 170, 255);</string>
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>630</x>
+      <x>800</x>
       <y>440</y>
       <width>291</width>
       <height>16</height>
@@ -150,7 +150,7 @@ border-color: rgb(157, 170, 255);</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1070</width>
+     <width>1333</width>
      <height>26</height>
     </rect>
    </property>
