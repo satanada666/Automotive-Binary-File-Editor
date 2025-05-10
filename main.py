@@ -18,7 +18,7 @@ from file_compare_worker import compare_two_files
 from dash_editor import DashEditor
 
 # Локальная версия программы
-LOCAL_VERSION = "1.1.3"
+LOCAL_VERSION = "1.1.4"
 GITHUB_VERSION_URL = "https://raw.githubusercontent.com/satanada666/Automotive-Binary-File-Editor/main/version.txt"
 DOWNLOAD_URL = "https://github.com/satanada666/Automotive-Binary-File-Editor/releases"
 
@@ -354,13 +354,8 @@ def check_for_updates(win):
         server_version = response.text.strip()
         print(f"Checking for updates: local={LOCAL_VERSION}, server={server_version}")
 
-        if version.parse(server_version) <= version.parse(LOCAL_VERSION):
-            print("No updates available or local version is newer.")
-            QMessageBox.information(win, "Обновление",
-                                 f"У вас установлена актуальная версия {LOCAL_VERSION}.")
-            if hasattr(win, 'actionYes'):
-                win.actionYes.setEnabled(False)
-        else:
+        if version.parse(server_version) > version.parse(LOCAL_VERSION):
+            print(f"Update available: {server_version}")
             reply = QMessageBox.question(
                 win, "Обновление",
                 f"Доступна новая версия {server_version} (текущая: {LOCAL_VERSION}). Обновить?",
@@ -370,6 +365,12 @@ def check_for_updates(win):
                 download_update(win)
             if hasattr(win, 'actionYes'):
                 win.actionYes.setEnabled(True)
+        else:
+            print("No updates available or local version is newer.")
+            QMessageBox.information(win, "Обновление",
+                                 f"У вас установлена актуальная версия {LOCAL_VERSION}.")
+            if hasattr(win, 'actionYes'):
+                win.actionYes.setEnabled(False)
 
     except requests.exceptions.RequestException as e:
         QMessageBox.critical(win, "Ошибка", f"Не удалось проверить обновления: {e}")
@@ -381,9 +382,12 @@ def check_for_updates(win):
             win.actionYes.setEnabled(False)
 
 def download_update(win):
-    webbrowser.open(DOWNLOAD_URL)
-    if hasattr(win, 'actionYes'):
-        win.actionYes.setEnabled(False)
+    try:
+        print(f"Opening download URL: {DOWNLOAD_URL}")
+        webbrowser.open(DOWNLOAD_URL)
+    except Exception as e:
+        print(f"Error opening browser: {str(e)}")
+        QMessageBox.critical(win, "Ошибка", f"Не удалось открыть страницу загрузки: {str(e)}")
 
 def main():
     app = QtWidgets.QApplication([])
