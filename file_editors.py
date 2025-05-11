@@ -22,3 +22,4 @@ from Plugin.DASCH.aveo_93c56 import aveo_93c56
 from dash_vdo import dash_vdo
 ###BCM#########
 from bcm_valeo import bcm_valeo
+from Plugin.BCM.Cruze_BCM_24c16_after_2009 import Cruze_BCM_24c16_after_2009
