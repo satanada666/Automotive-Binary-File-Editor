@@ -18,7 +18,7 @@ from file_compare_worker import compare_two_files
 from dash_editor import DashEditor
 
 # Локальная версия программы
-LOCAL_VERSION = "1.1.5"
+LOCAL_VERSION = "1.1.6"
 GITHUB_VERSION_URL = "https://raw.githubusercontent.com/satanada666/Automotive-Binary-File-Editor/main/version.txt"
 DOWNLOAD_URL = "https://github.com/satanada666/Automotive-Binary-File-Editor/releases"
 
