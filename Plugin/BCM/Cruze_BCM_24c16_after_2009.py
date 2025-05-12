@@ -25,17 +25,18 @@ class Cruze_BCM_24c16_after_2009(DashEditor):
         return super().check(buffer)
 
     def decode_mileage(self, encoded: bytes) -> int:
-        """Декодирует пробег из 4 байт, используя только байты 1 и 2 в little-endian."""
+        """Декодирует пробег из 4 байт как 32-битное число в little-endian, деля на 64."""
         if len(encoded) != 4:
             print(f"decode_mileage: Ошибка: ожидается 4 байта, получено {len(encoded)}")
             return 0
 
         print(f"decode_mileage: Исходные байты = {[hex(b) for b in encoded]}")
         
-        value = int.from_bytes(encoded[1:3], byteorder='little')
+        value = int.from_bytes(encoded, byteorder='little')
         print(f"decode_mileage: Значение = {value}")
         
-        mileage = value * 4
+        mileage = value / 64
+        mileage = round(mileage)  # Округляем до целого числа
         print(f"decode_mileage: Пробег = {mileage} км")
 
         if 0 <= mileage <= 999999:
@@ -43,17 +44,17 @@ class Cruze_BCM_24c16_after_2009(DashEditor):
         print(f"decode_mileage: Ошибка: пробег {mileage} вне диапазона 0–999999")
         return 0
 
-    def encode_mileage(self, km: int, first_byte: int, last_byte: int) -> bytearray:
-        """Кодирует пробег в 4 байта, сохраняя указанные первый и последний байты."""
+    def encode_mileage(self, km: int, first_byte: int) -> bytearray:
+        """Кодирует пробег в 4 байта, умножая на 64, сохраняя указанный нулевой байт."""
         if not 0 <= km <= 999999:
             print(f"encode_mileage: Ошибка: пробег {km} вне диапазона 0–999999")
             raise ValueError("Допустимый диапазон пробега: 0–999999 км")
 
-        print(f"encode_mileage: Кодируем пробег {km} км с первым байтом {hex(first_byte)} и последним {hex(last_byte)}")
+        print(f"encode_mileage: Кодируем пробег {km} км с нулевым байтом {hex(first_byte)}")
         
-        value = int(km / 4)
-        raw_bytes = bytearray(value.to_bytes(2, byteorder='little'))
-        encoded = bytearray([first_byte, raw_bytes[0], raw_bytes[1], last_byte])
+        value = int(km * 64)
+        raw_bytes = bytearray(value.to_bytes(4, byteorder='little'))
+        encoded = bytearray([first_byte, raw_bytes[1], raw_bytes[2], raw_bytes[3]])
         print(f"encode_mileage: Закодированные байты = {[hex(b) for b in encoded]}")
         
         return encoded
@@ -148,7 +149,7 @@ class Cruze_BCM_24c16_after_2009(DashEditor):
         return mileage_values[0]
 
     def update_mileage(self, buffer: bytearray, new_mileage: int, model: str = None):
-        """Обновляет пробег в буфере, сохраняя исходные первый и последний байты."""
+        """Обновляет пробег в буфере, сохраняя исходный нулевой байт."""
         if not self.check(buffer):
             print("update_mileage: Ошибка: некорректный буфер")
             return None
@@ -162,14 +163,13 @@ class Cruze_BCM_24c16_after_2009(DashEditor):
                 print(f"update_mileage: Ошибка: адрес 0x{addr:X} выходит за пределы буфера")
                 continue
                 
-            # Извлекаем исходные первый и последний байты
+            # Извлекаем исходный нулевой байт
             first_byte = self.data[addr]
-            last_byte = self.data[addr + 3]
-            print(f"update_mileage: Адрес 0x{addr:X}, исходные байты = {[hex(b) for b in self.data[addr:addr+4]]}, первый байт = {hex(first_byte)}, последний байт = {hex(last_byte)}")
+            print(f"update_mileage: Адрес 0x{addr:X}, исходные байты = {[hex(b) for b in self.data[addr:addr+4]]}, нулевой байт = {hex(first_byte)}")
             
-            # Кодируем пробег, сохраняя исходные первый и последний байты
+            # Кодируем пробег, сохраняя исходный нулевой байт
             try:
-                encoded = self.encode_mileage(new_mileage, first_byte, last_byte)
+                encoded = self.encode_mileage(new_mileage, first_byte)
             except ValueError as e:
                 print(f"update_mileage: Ошибка кодирования для адреса 0x{addr:X}: {e}")
                 return None
