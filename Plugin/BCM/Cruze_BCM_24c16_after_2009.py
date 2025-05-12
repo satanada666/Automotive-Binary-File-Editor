@@ -2,7 +2,7 @@ from dash_editor import DashEditor
 from collections import Counter
 
 class Cruze_BCM_24c16_after_2009(DashEditor):
-    """Редактор одометра для автомобиля с VIN XUFJA686JD3063545 и PIN 3268"""
+    """Редактор одометра для автомобиля Chevrolet Cruze с EEPROM 24C16 выпущенного после 2009 года"""
 
     def __init__(self):
         super().__init__()
@@ -12,13 +12,10 @@ class Cruze_BCM_24c16_after_2009(DashEditor):
         # Адреса, по которым хранится значение пробега
         self.mileage_addresses = [0xF7, 0x166, 0x1C4]
         # Адреса для VIN и PIN
-        self.vin_address = 0x13
+        self.vin_address = 0x1E8 
         self.vin_length = 17
-        self.pin_address = 0x126
+        self.pin_address = 0xA7 
         self.pin_length = 4
-        # Ожидаемые значения для поиска
-        self.expected_vin = "XUFJA686JD3063545"
-        self.expected_pin = "3268"
 
     def check(self, buffer: bytearray) -> bool:
         """Проверка корректности размера буфера."""
@@ -61,54 +58,6 @@ class Cruze_BCM_24c16_after_2009(DashEditor):
         
         return encoded
 
-    def find_vin(self, buffer: bytearray) -> tuple:
-        """Ищет VIN в буфере по сигнатуре или использует заданный адрес."""
-        if not self.check(buffer):
-            print("find_vin: Ошибка: некорректный буфер")
-            return "не найден", -1
-
-        # Проверяем заданный адрес
-        vin, addr = self.get_vin_at_address(buffer, self.vin_address)
-        if vin == self.expected_vin:
-            print(f"find_vin: VIN найден на адресе 0x{self.vin_address:X}")
-            return vin, self.vin_address
-
-        # Поиск по всему буферу
-        print("find_vin: Поиск VIN по сигнатуре...")
-        expected_bytes = bytearray(self.expected_vin.encode('ascii'))
-        for i in range(len(buffer) - self.vin_length + 1):
-            if buffer[i:i + self.vin_length] == expected_bytes:
-                vin = self.get_vin_at_address(buffer, i)[0]
-                if vin == self.expected_vin:
-                    print(f"find_vin: VIN найден на адресе 0x{i:X}")
-                    return vin, i
-        print("find_vin: VIN не найден в буфере")
-        return "не найден", -1
-
-    def find_pin(self, buffer: bytearray) -> tuple:
-        """Ищет PIN в буфере по сигнатуре или использует заданный адрес."""
-        if not self.check(buffer):
-            print("find_pin: Ошибка: некорректный буфер")
-            return "не найден", -1
-
-        # Проверяем заданный адрес
-        pin, addr = self.get_pin_at_address(buffer, self.pin_address)
-        if pin == self.expected_pin:
-            print(f"find_pin: PIN найден на адресе 0x{self.pin_address:X}")
-            return pin, self.pin_address
-
-        # Поиск по всему буферу
-        print("find_pin: Поиск PIN по сигнатуре...")
-        expected_bytes = bytearray(self.expected_pin.encode('ascii'))
-        for i in range(len(buffer) - self.pin_length + 1):
-            if buffer[i:i + self.pin_length] == expected_bytes:
-                pin = self.get_pin_at_address(buffer, i)[0]
-                if pin == self.expected_pin:
-                    print(f"find_pin: PIN найден на адресе 0x{i:X}")
-                    return pin, i
-        print("find_pin: PIN не найден в буфере")
-        return "не найден", -1
-
     def get_vin_at_address(self, buffer: bytearray, address: int) -> tuple:
         """Извлекает VIN по указанному адресу."""
         if address + self.vin_length > len(buffer):
@@ -146,13 +95,23 @@ class Cruze_BCM_24c16_after_2009(DashEditor):
         return pin, address
 
     def get_vin(self, buffer: bytearray) -> str:
-        """Извлекает VIN, используя поиск по сигнатуре."""
-        vin, addr = self.find_vin(buffer)
+        """Извлекает VIN по заданному адресу."""
+        if not self.check(buffer):
+            print("get_vin: Ошибка: некорректный буфер")
+            return "не найден"
+        
+        vin, addr = self.get_vin_at_address(buffer, self.vin_address)
+        print(f"get_vin: VIN = {vin}")
         return vin
 
     def get_pin(self, buffer: bytearray) -> str:
-        """Извлекает PIN, используя поиск по сигнатуре."""
-        pin, addr = self.find_pin(buffer)
+        """Извлекает PIN по заданному адресу."""
+        if not self.check(buffer):
+            print("get_pin: Ошибка: некорректный буфер")
+            return "не найден"
+        
+        pin, addr = self.get_pin_at_address(buffer, self.pin_address)
+        print(f"get_pin: PIN = {pin}")
         return pin
 
     def get_mileage(self, buffer: bytearray, model: str = None) -> int:
