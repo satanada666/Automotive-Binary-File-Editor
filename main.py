@@ -1,7 +1,6 @@
 from PyQt5 import QtWidgets, uic 
 from PyQt5.QtCore import QSettings, Qt
-from PyQt5.QtWidgets import QFileDialog, QMessageBox, QProgressDialog
-from PyQt5.QtWidgets import QLabel, QVBoxLayout, QWidget, QGroupBox, QInputDialog, QDialog, QGridLayout, QPushButton, QSpinBox
+from PyQt5.QtWidgets import QFileDialog, QMessageBox, QProgressDialog, QLabel, QVBoxLayout, QWidget, QGroupBox, QInputDialog, QDialog, QGridLayout, QPushButton, QSpinBox, QLineEdit
 import sys
 import os
 import requests
@@ -22,14 +21,15 @@ LOCAL_VERSION = "1.1.6"
 GITHUB_VERSION_URL = "https://raw.githubusercontent.com/satanada666/Automotive-Binary-File-Editor/main/version.txt"
 DOWNLOAD_URL = "https://github.com/satanada666/Automotive-Binary-File-Editor/releases"
 
-class MileageEditDialog(QDialog):
-    def __init__(self, parent=None, current_mileage=0):
+class MileageVinPinEditDialog(QDialog):
+    def __init__(self, parent=None, current_mileage=0, current_vin="не найден", current_pin="не найден"):
         super().__init__(parent)
-        self.setWindowTitle("Редактирование пробега")
-        self.setMinimumWidth(300)
+        self.setWindowTitle("Редактирование пробега, VIN и PIN")
+        self.setMinimumWidth(400)
         
         layout = QGridLayout()
         
+        # Пробег
         layout.addWidget(QLabel("Текущий пробег (км):"), 0, 0)
         self.current_mileage_label = QLabel(str(current_mileage))
         layout.addWidget(self.current_mileage_label, 0, 1)
@@ -41,6 +41,29 @@ class MileageEditDialog(QDialog):
         self.new_mileage_spin.setSingleStep(1000)
         layout.addWidget(self.new_mileage_spin, 1, 1)
         
+        # VIN
+        layout.addWidget(QLabel("Текущий VIN:"), 2, 0)
+        self.current_vin_label = QLabel(current_vin)
+        layout.addWidget(self.current_vin_label, 2, 1)
+        
+        layout.addWidget(QLabel("Новый VIN (17 символов, A-Z, 1-9):"), 3, 0)
+        self.new_vin_edit = QLineEdit()
+        self.new_vin_edit.setText(current_vin if current_vin != "не найден" else "")
+        self.new_vin_edit.setMaxLength(17)
+        layout.addWidget(self.new_vin_edit, 3, 1)
+        
+        # PIN
+        layout.addWidget(QLabel("Текущий PIN:"), 4, 0)
+        self.current_pin_label = QLabel(current_pin)
+        layout.addWidget(self.current_pin_label, 4, 1)
+        
+        layout.addWidget(QLabel("Новый PIN (4 цифры, 1-9):"), 5, 0)
+        self.new_pin_edit = QLineEdit()
+        self.new_pin_edit.setText(current_pin if current_pin != "не найден" else "")
+        self.new_pin_edit.setMaxLength(4)
+        layout.addWidget(self.new_pin_edit, 5, 1)
+        
+        # Кнопки
         button_box = QGridLayout()
         self.apply_button = QPushButton("Применить")
         self.apply_button.clicked.connect(self.accept)
@@ -50,12 +73,18 @@ class MileageEditDialog(QDialog):
         button_box.addWidget(self.apply_button, 0, 0)
         button_box.addWidget(self.cancel_button, 0, 1)
         
-        layout.addLayout(button_box, 2, 0, 1, 2)
+        layout.addLayout(button_box, 6, 0, 1, 2)
         
         self.setLayout(layout)
     
     def get_new_mileage(self):
         return self.new_mileage_spin.value()
+    
+    def get_new_vin(self):
+        return self.new_vin_edit.text().strip()
+    
+    def get_new_pin(self):
+        return self.new_pin_edit.text().strip()
 
 def resource_path(relative_path):
     try:
@@ -112,6 +141,9 @@ def edit_mileage(win, settings, current_encoder):
     try:
         file_data = settings.value("file_data")
         current_mileage = settings.value("last_mileage", 0)
+        current_vin = settings.value("last_vin", "не найден")
+        current_pin = settings.value("last_pin", "не найден")
+        
         if current_mileage == "N/A":
             current_mileage = 0
         try:
@@ -119,23 +151,48 @@ def edit_mileage(win, settings, current_encoder):
         except:
             current_mileage = 0
         
-        dialog = MileageEditDialog(win, current_mileage)
+        dialog = MileageVinPinEditDialog(win, current_mileage, current_vin, current_pin)
         if dialog.exec_() == QDialog.Accepted:
             new_mileage = dialog.get_new_mileage()
+            new_vin = dialog.get_new_vin()
+            new_pin = dialog.get_new_pin()
             
             model = 'lacetti_2004' if 'Chevrolet_lacetti_dash_denso' in type(encoder).__name__ else 'Daewoo_Gentra'
-            encoder.update_mileage(file_data, new_mileage, model=model)
             
-            updated_data = encoder.data
+            # Обновляем пробег
+            updated_data = encoder.update_mileage(file_data, new_mileage, model=model)
+            if updated_data is None:
+                QMessageBox.critical(win, "Ошибка", "Не удалось обновить пробег")
+                return
+            
+            # Обновляем VIN, если введено новое значение
+            if new_vin and new_vin != current_vin:
+                updated_data = encoder.set_vin(updated_data, new_vin)
+                if updated_data is None:
+                    QMessageBox.critical(win, "Ошибка", "Не удалось обновить VIN")
+                    return
+            
+            # Обновляем PIN, если введено новое значение
+            if new_pin and new_pin != current_pin:
+                updated_data = encoder.set_pin(updated_data, new_pin)
+                if updated_data is None:
+                    QMessageBox.critical(win, "Ошибка", "Не удалось обновить PIN")
+                    return
+            
+            # Сохраняем обновленные данные в файл
             file_path = settings.value("last_file")
             with open(file_path, 'wb') as f:
                 f.write(updated_data)
             print(f"edit_mileage: Файл сохранён по пути {file_path}")
             
+            # Обновляем настройки
             settings.setValue("file_data", updated_data)
             updated_result = encoder.encode(updated_data, model=model)
             settings.setValue("last_mileage", updated_result['mileage'])
+            settings.setValue("last_vin", updated_result['VIN'])
+            settings.setValue("last_pin", updated_result['PIN'])
             
+            # Сравниваем оригинальный и обновленный файлы
             original_data = None
             with open(file_path, 'rb') as f:
                 original_data = bytearray(f.read())
@@ -143,16 +200,17 @@ def edit_mileage(win, settings, current_encoder):
             if original_data:
                 display_hex_comparison(original_data, updated_data, win)
             
+            # Отображаем обновленную информацию
             show_vin_pin_info(win, 
                              settings.value("last_vin", "N/A"), 
                              settings.value("last_pin", "N/A"), 
                              settings.value("last_mileage", "N/A"))
             
             QMessageBox.information(win, "Успешно", 
-                                  f"Пробег изменен с {current_mileage} км на {new_mileage} км")
+                                   f"Данные обновлены:\nПробег: {new_mileage} км\nVIN: {new_vin}\nPIN: {new_pin}")
     except Exception as e:
-        QMessageBox.critical(win, "Ошибка", f"Не удалось изменить пробег: {str(e)}")
-        print(f"Error editing mileage: {str(e)}")
+        QMessageBox.critical(win, "Ошибка", f"Не удалось обновить данные: {str(e)}")
+        print(f"Error editing data: {str(e)}")
 
 def process_file_in_chunks(file_name, encoder, win, settings):
     progress = None
@@ -191,16 +249,34 @@ def process_file_in_chunks(file_name, encoder, win, settings):
             model = 'lacetti_2004' if 'Chevrolet_lacetti_dash_denso' in type(encoder).__name__ else 'Daewoo_Gentra'
             result = encoder.encode(modified_data, model=model)
             current_mileage = result.get('mileage', 0)
+            current_vin = result.get('VIN', 'не найден')
+            current_pin = result.get('PIN', 'не найден')
             
-            new_mileage, ok = QInputDialog.getInt(win, "Введите новый пробег", 
-                                                 f"Текущий пробег: {current_mileage} км\nВведите новый пробег (в километрах):", 
-                                                 value=current_mileage, min=0, max=999999, step=1000)
-            if ok:
-                print(f"process_file_in_chunks: Новый пробег = {new_mileage} км")
-                encoder.update_mileage(modified_data, new_mileage, model=model)
+            dialog = MileageVinPinEditDialog(win, current_mileage, current_vin, current_pin)
+            if dialog.exec_() == QDialog.Accepted:
+                new_mileage = dialog.get_new_mileage()
+                new_vin = dialog.get_new_vin()
+                new_pin = dialog.get_new_pin()
+                
+                print(f"process_file_in_chunks: Новый пробег = {new_mileage} км, VIN = {new_vin}, PIN = {new_pin}")
+                modified_data = encoder.update_mileage(modified_data, new_mileage, model=model)
+                if modified_data is None:
+                    raise ValueError("Не удалось обновить пробег")
+                
+                if new_vin and new_vin != current_vin:
+                    modified_data = encoder.set_vin(modified_data, new_vin)
+                    if modified_data is None:
+                        raise ValueError("Не удалось обновить VIN")
+                
+                if new_pin and new_pin != current_pin:
+                    modified_data = encoder.set_pin(modified_data, new_pin)
+                    if modified_data is None:
+                        raise ValueError("Не удалось обновить PIN")
+                
                 result = encoder.encode(modified_data, model=model)
             else:
-                print("process_file_in_chunks: Пробег не изменен, используем текущий")
+                print("process_file_in_chunks: Данные не изменены, используем текущие")
+                result = encoder.encode(modified_data, model=model)
         else:
             result = encoder.encode(modified_data)
 
@@ -253,17 +329,37 @@ def process_small_file(file_name, encoder, win, settings):
             model = 'lacetti_2004' if 'Chevrolet_lacetti_dash_denso' in type(encoder).__name__ else 'Daewoo_Gentra'
             temp_result = encoder.encode(data, model=model)
             current_mileage = temp_result.get('mileage', 0)
+            current_vin = temp_result.get('VIN', 'не найден')
+            current_pin = temp_result.get('PIN', 'не найден')
             
-            new_mileage, ok = QInputDialog.getInt(win, "Введите новый пробег", 
-                                              f"Текущий пробег: {current_mileage} км\nВведите новый пробег (в километрах):", 
-                                              value=current_mileage, min=0, max=999999, step=1000)
-            if ok:
-                print(f"process_small_file: Новый пробег = {new_mileage} км")
-                encoder.update_mileage(data, new_mileage, model=model)
+            dialog = MileageVinPinEditDialog(win, current_mileage, current_vin, current_pin)
+            if dialog.exec_() == QDialog.Accepted:
+                new_mileage = dialog.get_new_mileage()
+                new_vin = dialog.get_new_vin()
+                new_pin = dialog.get_new_pin()
+                
+                print(f"process_small_file: Новый пробег = {new_mileage} км, VIN = {new_vin}, PIN = {new_pin}")
+                data = encoder.update_mileage(data, new_mileage, model=model)
+                if data is None:
+                    QMessageBox.critical(win, "Ошибка", "Не удалось обновить пробег")
+                    return
+                
+                if new_vin and new_vin != current_vin:
+                    data = encoder.set_vin(data, new_vin)
+                    if data is None:
+                        QMessageBox.critical(win, "Ошибка", "Не удалось обновить VIN")
+                        return
+                
+                if new_pin and new_pin != current_pin:
+                    data = encoder.set_pin(data, new_pin)
+                    if data is None:
+                        QMessageBox.critical(win, "Ошибка", "Не удалось обновить PIN")
+                        return
+                
                 data = encoder.data
                 result = encoder.encode(data, model=model)
             else:
-                print("process_small_file: Пробег не изменен, используем текущий")
+                print("process_small_file: Данные не изменены, используем текущие")
                 result = temp_result
         else:
             result = encoder.encode(data)
@@ -389,6 +485,18 @@ def download_update(win):
         print(f"Error opening browser: {str(e)}")
         QMessageBox.critical(win, "Ошибка", f"Не удалось открыть страницу загрузки: {str(e)}")
 
+def show_comparison_results(differences, win, settings):
+    if differences:
+        win.statusBar().showMessage(f"Найдено {len(differences)} различий между файлами")
+    else:
+        win.statusBar().showMessage("Файлы идентичны, различий не найдено")
+    
+    vin = settings.value("last_vin", "N/A")
+    pin = settings.value("last_pin", "N/A")
+    mileage = settings.value("last_mileage", "N/A")
+    print(f"show_comparison_results: Retrieved VIN={vin}, PIN={pin}, Mileage={mileage}")
+    show_vin_pin_info(win, vin, pin, mileage)
+
 def main():
     app = QtWidgets.QApplication([])
 
@@ -434,18 +542,6 @@ def main():
         win.progressBar.setVisible(True)
         if value >= 100:
             win.progressBar.setVisible(False)
-
-    def show_comparison_results(differences, win, settings):
-        if differences:
-            win.statusBar().showMessage(f"Найдено {len(differences)} различий между файлами")
-        else:
-            win.statusBar().showMessage("Файлы идентичны, различий не найдено")
-        
-        vin = settings.value("last_vin", "N/A")
-        pin = settings.value("last_pin", "N/A")
-        mileage = settings.value("last_mileage", "N/A")
-        print(f"show_comparison_results: Retrieved VIN={vin}, PIN={pin}, Mileage={mileage}")
-        show_vin_pin_info(win, vin, pin, mileage)
 
     win.update_progress = update_progress
     win.show_comparison_results = lambda differences: show_comparison_results(differences, win, settings)
