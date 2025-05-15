@@ -21,6 +21,14 @@ LOCAL_VERSION = "1.1.6"
 GITHUB_VERSION_URL = "https://raw.githubusercontent.com/satanada666/Automotive-Binary-File-Editor/main/version.txt"
 DOWNLOAD_URL = "https://github.com/satanada666/Automotive-Binary-File-Editor/releases"
 
+# Список модулей, для которых игнорируются VIN и PIN
+IGNORE_VIN_PIN_MODULES = [
+    'Chevrolet_lacetti_2007_2013_dash_denso_93c46',
+    'Chevrolet_lacetti_dash_denso_96804358_EJ_6H21_11000_932900D_93c46',
+    'Daewoo_Gentra_dash_denso_93c56',
+    'Cruze_BCM_24c16_after_2009'  # Добавлен проблемный модуль
+]
+
 class MileageVinPinEditDialog(QDialog):
     def __init__(self, parent=None, current_mileage=0, current_vin="не найден", current_pin="не найден"):
         super().__init__(parent)
@@ -41,6 +49,7 @@ class MileageVinPinEditDialog(QDialog):
         self.new_mileage_spin.setSingleStep(1000)
         layout.addWidget(self.new_mileage_spin, 1, 1)
         
+        # Arrested development: The fields below are kept to maintain UI consistency but are ignored for specific modules
         # VIN
         layout.addWidget(QLabel("Текущий VIN:"), 2, 0)
         self.current_vin_label = QLabel(current_vin)
@@ -157,40 +166,61 @@ def edit_mileage(win, settings, current_encoder):
             new_vin = dialog.get_new_vin()
             new_pin = dialog.get_new_pin()
             
-            model = 'lacetti_2004' if 'Chevrolet_lacetti_dash_denso' in type(encoder).__name__ else 'Daewoo_Gentra'
+            # Определяем модель и проверяем, нужно ли игнорировать VIN/PIN
+            if 'Cruze_BCM_24c16_after_2009' in type(encoder).__name__:
+                model = 'cruze_2009'  # Предполагаемая модель для Cruze
+            elif 'Chevrolet_lacetti_2007_2013_dash_denso_93c46' in type(encoder).__name__:
+                model = 'lacetti_2007'  # Уточняем модель для Lacetti 2007-2013
+            elif 'Chevrolet_lacetti_dash_denso' in type(encoder).__name__:
+                model = 'lacetti_2004'
+            else:
+                model = 'Daewoo_Gentra'
+            
+            encoder_name = type(encoder).__name__
+            ignore_vin_pin = encoder_name in IGNORE_VIN_PIN_MODULES
+            
+            print(f"edit_mileage: encoder={encoder_name}, model={model}, new_mileage={new_mileage}, ignore_vin_pin={ignore_vin_pin}")
             
             # Обновляем пробег
-            updated_data = encoder.update_mileage(file_data, new_mileage, model=model)
-            if updated_data is None:
-                QMessageBox.critical(win, "Ошибка", "Не удалось обновить пробег")
-                return
-            
-            # Обновляем VIN, если введено новое значение
-            if new_vin and new_vin != current_vin:
-                updated_data = encoder.set_vin(updated_data, new_vin)
+            if ignore_vin_pin:
+                # Для проблемных модулей используем старый подход
+                encoder.update_mileage(file_data, new_mileage, model=model)
+                updated_data = encoder.data
                 if updated_data is None:
-                    QMessageBox.critical(win, "Ошибка", "Не удалось обновить VIN")
+                    QMessageBox.critical(win, "Ошибка", f"Не удалось обновить пробег: данные не получены. Модуль: {encoder_name}")
                     return
-            
-            # Обновляем PIN, если введено новое значение
-            if new_pin and new_pin != current_pin:
-                updated_data = encoder.set_pin(updated_data, new_pin)
+            else:
+                updated_data = encoder.update_mileage(file_data, new_mileage, model=model)
                 if updated_data is None:
-                    QMessageBox.critical(win, "Ошибка", "Не удалось обновить PIN")
+                    QMessageBox.critical(win, "Ошибка", f"Не удалось обновить пробег. Модуль: {encoder_name}")
                     return
+                
+                # Обновляем VIN, если не игнорируется
+                if new_vin and new_vin != current_vin:
+                    updated_data = encoder.set_vin(updated_data, new_vin)
+                    if updated_data is None:
+                        QMessageBox.critical(win, "Ошибка", f"Не удалось обновить VIN. Модуль: {encoder_name}")
+                        return
+                
+                # Обновляем PIN, если не игнорируется
+                if new_pin and new_pin != current_pin:
+                    updated_data = encoder.set_pin(updated_data, new_pin)
+                    if updated_data is None:
+                        QMessageBox.critical(win, "Ошибка", f"Не удалось обновить PIN. Модуль: {encoder_name}")
+                        return
             
             # Сохраняем обновленные данные в файл
             file_path = settings.value("last_file")
             with open(file_path, 'wb') as f:
                 f.write(updated_data)
-            print(f"edit_mileage: Файл сохранён по пути {file_path}")
+            print(f"edit \n edit_mileage: Файл сохранён по пути {file_path}")
             
             # Обновляем настройки
             settings.setValue("file_data", updated_data)
             updated_result = encoder.encode(updated_data, model=model)
             settings.setValue("last_mileage", updated_result['mileage'])
-            settings.setValue("last_vin", updated_result['VIN'])
-            settings.setValue("last_pin", updated_result['PIN'])
+            settings.setValue("last_vin", updated_result['VIN'] if not ignore_vin_pin else current_vin)
+            settings.setValue("last_pin", updated_result['PIN'] if not ignore_vin_pin else current_pin)
             
             # Сравниваем оригинальный и обновленный файлы
             original_data = None
@@ -207,10 +237,11 @@ def edit_mileage(win, settings, current_encoder):
                              settings.value("last_mileage", "N/A"))
             
             QMessageBox.information(win, "Успешно", 
-                                   f"Данные обновлены:\nПробег: {new_mileage} км\nVIN: {new_vin}\nPIN: {new_pin}")
+                                   f"Пробег обновлен: {new_mileage} км" + 
+                                   (f"\nVIN: {new_vin}\nPIN: {new_pin}" if not ignore_vin_pin else ""))
     except Exception as e:
-        QMessageBox.critical(win, "Ошибка", f"Не удалось обновить данные: {str(e)}")
-        print(f"Error editing data: {str(e)}")
+        QMessageBox.critical(win, "Ошибка", f"Не удалось обновить данные: {str(e)}\nМодуль: {encoder_name}")
+        print(f"Error editing data: {str(e)}, Encoder: {encoder_name}, Model: {model}")
 
 def process_file_in_chunks(file_name, encoder, win, settings):
     progress = None
@@ -246,7 +277,17 @@ def process_file_in_chunks(file_name, encoder, win, settings):
             return
 
         if isinstance(encoder, DashEditor):
-            model = 'lacetti_2004' if 'Chevrolet_lacetti_dash_denso' in type(encoder).__name__ else 'Daewoo_Gentra'
+            if 'Cruze_BCM_24c16_after_2009' in type(encoder).__name__:
+                model = 'cruze_2009'
+            elif 'Chevrolet_lacetti_2007_2013_dash_denso_93c46' in type(encoder).__name__:
+                model = 'lacetti_2007'
+            elif 'Chevrolet_lacetti_dash_denso' in type(encoder).__name__:
+                model = 'lacetti_2004'
+            else:
+                model = 'Daewoo_Gentra'
+            encoder_name = type(encoder).__name__
+            ignore_vin_pin = encoder_name in IGNORE_VIN_PIN_MODULES
+            
             result = encoder.encode(modified_data, model=model)
             current_mileage = result.get('mileage', 0)
             current_vin = result.get('VIN', 'не найден')
@@ -258,20 +299,28 @@ def process_file_in_chunks(file_name, encoder, win, settings):
                 new_vin = dialog.get_new_vin()
                 new_pin = dialog.get_new_pin()
                 
-                print(f"process_file_in_chunks: Новый пробег = {new_mileage} км, VIN = {new_vin}, PIN = {new_pin}")
-                modified_data = encoder.update_mileage(modified_data, new_mileage, model=model)
-                if modified_data is None:
-                    raise ValueError("Не удалось обновить пробег")
+                print(f"process_file_in_chunks: Новый пробег = {new_mileage} км, VIN = {new_vin}, PIN = {new_pin}, ignore_vin_pin={ignore_vin_pin}")
                 
-                if new_vin and new_vin != current_vin:
-                    modified_data = encoder.set_vin(modified_data, new_vin)
+                if ignore_vin_pin:
+                    # Для проблемных модулей используем старый подход
+                    encoder.update_mileage(modified_data, new_mileage, model=model)
+                    modified_data = encoder.data
                     if modified_data is None:
-                        raise ValueError("Не удалось обновить VIN")
-                
-                if new_pin and new_pin != current_pin:
-                    modified_data = encoder.set_pin(modified_data, new_pin)
+                        raise ValueError(f"Не удалось обновить пробег: данные не получены. Модуль: {encoder_name}")
+                else:
+                    modified_data = encoder.update_mileage(modified_data, new_mileage, model=model)
                     if modified_data is None:
-                        raise ValueError("Не удалось обновить PIN")
+                        raise ValueError(f"Не удалось обновить пробег. Модуль: {encoder_name}")
+                    
+                    if new_vin and new_vin != current_vin:
+                        modified_data = encoder.set_vin(modified_data, new_vin)
+                        if modified_data is None:
+                            raise ValueError(f"Не удалось обновить VIN. Модуль: {encoder_name}")
+                    
+                    if new_pin and new_pin != current_pin:
+                        modified_data = encoder.set_pin(modified_data, new_pin)
+                        if modified_data is None:
+                            raise ValueError(f"Не удалось обновить PIN. Модуль: {encoder_name}")
                 
                 result = encoder.encode(modified_data, model=model)
             else:
@@ -326,7 +375,17 @@ def process_small_file(file_name, encoder, win, settings):
         return
     if check_result:
         if isinstance(encoder, DashEditor):
-            model = 'lacetti_2004' if 'Chevrolet_lacetti_dash_denso' in type(encoder).__name__ else 'Daewoo_Gentra'
+            if 'Cruze_BCM_24c16_after_2009' in type(encoder).__name__:
+                model = 'cruze_2009'
+            elif 'Chevrolet_lacetti_2007_2013_dash_denso_93c46' in type(encoder).__name__:
+                model = 'lacetti_2007'
+            elif 'Chevrolet_lacetti_dash_denso' in type(encoder).__name__:
+                model = 'lacetti_2004'
+            else:
+                model = 'Daewoo_Gentra'
+            encoder_name = type(encoder).__name__
+            ignore_vin_pin = encoder_name in IGNORE_VIN_PIN_MODULES
+            
             temp_result = encoder.encode(data, model=model)
             current_mileage = temp_result.get('mileage', 0)
             current_vin = temp_result.get('VIN', 'не найден')
@@ -338,25 +397,33 @@ def process_small_file(file_name, encoder, win, settings):
                 new_vin = dialog.get_new_vin()
                 new_pin = dialog.get_new_pin()
                 
-                print(f"process_small_file: Новый пробег = {new_mileage} км, VIN = {new_vin}, PIN = {new_pin}")
-                data = encoder.update_mileage(data, new_mileage, model=model)
-                if data is None:
-                    QMessageBox.critical(win, "Ошибка", "Не удалось обновить пробег")
-                    return
+                print(f"process_small_file: Новый пробег = {new_mileage} км, VIN = {new_vin}, PIN = {new_pin}, ignore_vin_pin={ignore_vin_pin}")
                 
-                if new_vin and new_vin != current_vin:
-                    data = encoder.set_vin(data, new_vin)
+                if ignore_vin_pin:
+                    # Для проблемных модулей используем старый подход
+                    encoder.update_mileage(data, new_mileage, model=model)
+                    data = encoder.data
                     if data is None:
-                        QMessageBox.critical(win, "Ошибка", "Не удалось обновить VIN")
+                        QMessageBox.critical(win, "Ошибка", f"Не удалось обновить пробег: данные не получены. Модуль: {encoder_name}")
                         return
-                
-                if new_pin and new_pin != current_pin:
-                    data = encoder.set_pin(data, new_pin)
+                else:
+                    data = encoder.update_mileage(data, new_mileage, model=model)
                     if data is None:
-                        QMessageBox.critical(win, "Ошибка", "Не удалось обновить PIN")
+                        QMessageBox.critical(win, "Ошибка", f"Не удалось обновить пробег. Модуль: {encoder_name}")
                         return
+                    
+                    if new_vin and new_vin != current_vin:
+                        data = encoder.set_vin(data, new_vin)
+                        if data is None:
+                            QMessageBox.critical(win, "Ошибка", f"Не удалось обновить VIN. Модуль: {encoder_name}")
+                            return
+                    
+                    if new_pin and new_pin != current_pin:
+                        data = encoder.set_pin(data, new_pin)
+                        if data is None:
+                            QMessageBox.critical(win, "Ошибка", f"Не удалось обновить PIN. Модуль: {encoder_name}")
+                            return
                 
-                data = encoder.data
                 result = encoder.encode(data, model=model)
             else:
                 print("process_small_file: Данные не изменены, используем текущие")

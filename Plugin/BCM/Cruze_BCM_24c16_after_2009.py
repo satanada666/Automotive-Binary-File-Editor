@@ -35,7 +35,8 @@ class Cruze_BCM_24c16_after_2009(DashEditor):
         value = int.from_bytes(encoded, byteorder='little')
         print(f"decode_mileage: Значение = {value}")
         
-        mileage = value // 64  # Целочисленное деление для точности
+        mileage = value / 64
+        mileage = round(mileage)  # Округляем до целого числа
         print(f"decode_mileage: Пробег = {mileage} км")
 
         if 0 <= mileage <= 999999:
@@ -43,16 +44,17 @@ class Cruze_BCM_24c16_after_2009(DashEditor):
         print(f"decode_mileage: Ошибка: пробег {mileage} вне диапазона 0–999999")
         return 0
 
-    def encode_mileage(self, km: int, first_byte: int = None) -> bytearray:
-        """Кодирует пробег в 4 байта, умножая на 64."""
+    def encode_mileage(self, km: int, first_byte: int) -> bytearray:
+        """Кодирует пробег в 4 байта, умножая на 64, сохраняя указанный нулевой байт."""
         if not 0 <= km <= 999999:
             print(f"encode_mileage: Ошибка: пробег {km} вне диапазона 0–999999")
             raise ValueError("Допустимый диапазон пробега: 0–999999 км")
 
-        print(f"encode_mileage: Кодируем пробег {km} км")
+        print(f"encode_mileage: Кодируем пробег {km} км с нулевым байтом {hex(first_byte)}")
         
-        value = km * 64  # Умножаем на 64
-        encoded = bytearray(value.to_bytes(4, byteorder='little'))
+        value = int(km * 64)
+        raw_bytes = bytearray(value.to_bytes(4, byteorder='little'))
+        encoded = bytearray([first_byte, raw_bytes[1], raw_bytes[2], raw_bytes[3]])
         print(f"encode_mileage: Закодированные байты = {[hex(b) for b in encoded]}")
         
         return encoded
@@ -147,7 +149,7 @@ class Cruze_BCM_24c16_after_2009(DashEditor):
         return mileage_values[0]
 
     def update_mileage(self, buffer: bytearray, new_mileage: int, model: str = None):
-        """Обновляет пробег в буфере."""
+        """Обновляет пробег в буфере, сохраняя исходный нулевой байт."""
         if not self.check(buffer):
             print("update_mileage: Ошибка: некорректный буфер")
             return None
@@ -161,11 +163,13 @@ class Cruze_BCM_24c16_after_2009(DashEditor):
                 print(f"update_mileage: Ошибка: адрес 0x{addr:X} выходит за пределы буфера")
                 continue
                 
-            print(f"update_mileage: Адрес 0x{addr:X}, исходные байты = {[hex(b) for b in self.data[addr:addr+4]]}")
+            # Извлекаем исходный нулевой байт
+            first_byte = self.data[addr]
+            print(f"update_mileage: Адрес 0x{addr:X}, исходные байты = {[hex(b) for b in self.data[addr:addr+4]]}, нулевой байт = {hex(first_byte)}")
             
-            # Кодируем пробег
+            # Кодируем пробег, сохраняя исходный нулевой байт
             try:
-                encoded = self.encode_mileage(new_mileage)
+                encoded = self.encode_mileage(new_mileage, first_byte)
             except ValueError as e:
                 print(f"update_mileage: Ошибка кодирования для адреса 0x{addr:X}: {e}")
                 return None
@@ -200,33 +204,3 @@ class Cruze_BCM_24c16_after_2009(DashEditor):
             'VIN': vin,
             'PIN': pin
         }
-
-    def set_vin(self, buffer: bytearray, new_vin: str) -> bytearray:
-        """Обновляет VIN в буфере."""
-        if not self.check(buffer):
-            print("set_vin: Ошибка: некорректный буфер")
-            return None
-        if len(new_vin) != self.vin_length or not new_vin.isalnum():
-            print(f"set_vin: Ошибка: VIN должен быть {self.vin_length} алфанумерических символов")
-            return None
-        
-        self.data = bytearray(buffer)
-        vin_bytes = bytearray(new_vin.encode('ascii'))
-        self.data[self.vin_address:self.vin_address + self.vin_length] = vin_bytes
-        print(f"set_vin: Обновлен VIN = {new_vin} по адресу 0x{self.vin_address:X}")
-        return self.data
-
-    def set_pin(self, buffer: bytearray, new_pin: str) -> bytearray:
-        """Обновляет PIN в буфере."""
-        if not self.check(buffer):
-            print("set_pin: Ошибка: некорректный буфер")
-            return None
-        if len(new_pin) != self.pin_length or not new_pin.isdigit():
-            print(f"set_pin: Ошибка: PIN должен быть {self.pin_length} цифрами")
-            return None
-        
-        self.data = bytearray(buffer)
-        pin_bytes = bytearray(new_pin.encode('ascii'))
-        self.data[self.pin_address:self.pin_address + self.pin_length] = pin_bytes
-        print(f"set_pin: Обновлен PIN = {new_pin} по адресу ouvido0x{self.pin_address:X}")
-        return self.data
