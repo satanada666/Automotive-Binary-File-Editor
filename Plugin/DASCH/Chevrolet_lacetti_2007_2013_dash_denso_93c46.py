@@ -21,14 +21,21 @@ class Chevrolet_lacetti_2007_2013_dash_denso_93c46(DashEditor):
 
         print(f"decode_mileage: Исходные байты = {[hex(b) for b in encoded]}")
 
-        # Исключаем байты с 0xFF
+        # Исключаем байты с 0xFF - они используются как маркеры
         filtered_bytes = [b for b in encoded if b != 0xFF]
         print(f"decode_mileage: После исключения 0xFF = {[hex(b) for b in filtered_bytes]}")
 
-        # Убедимся, что у нас ровно 3 байта
-        if len(filtered_bytes) != 3:
-            print(f"decode_mileage: Ошибка: после фильтрации ожидается 3 байта, получено {len(filtered_bytes)}")
-            return 0
+        # Если у нас меньше 3 байтов после фильтрации
+        if len(filtered_bytes) < 3:
+            print(f"decode_mileage: Ошибка: после фильтрации ожидается не менее 3 байтов, получено {len(filtered_bytes)}")
+            while len(filtered_bytes) < 3:
+                filtered_bytes.append(0xFF)  # Дополняем 0xFF, чтобы после XOR получить 0x00
+                print(f"decode_mileage: Добавлен дополнительный байт 0xFF")
+
+        # Используем только первые 3 байта, если их больше
+        if len(filtered_bytes) > 3:
+            filtered_bytes = filtered_bytes[:3]
+            print(f"decode_mileage: Используем только первые 3 байта: {[hex(b) for b in filtered_bytes]}")
 
         # Переставляем байты в порядке [2, 0, 1]
         reordered_bytes = [filtered_bytes[2], filtered_bytes[0], filtered_bytes[1]]
@@ -43,12 +50,12 @@ class Chevrolet_lacetti_2007_2013_dash_denso_93c46(DashEditor):
         for b in decoded:
             high_digit = (b >> 4) & 0x0F  # Старшая цифра
             low_digit = b & 0x0F          # Младшая цифра
-            
+
             # Проверяем, что цифры действительно десятичные (0-9)
             if high_digit > 9 or low_digit > 9:
                 print(f"decode_mileage: Ошибка: недопустимое значение BCD {high_digit}{low_digit}")
                 return 0
-                
+
             mileage = mileage * 10 + high_digit
             mileage = mileage * 10 + low_digit
 
@@ -82,25 +89,16 @@ class Chevrolet_lacetti_2007_2013_dash_denso_93c46(DashEditor):
         xored_bytes = bytearray([b ^ 0xFF for b in bcd_bytes])
         print(f"encode_mileage: После XOR = {[hex(b) for b in xored_bytes]}")
 
-        # Переставляем байты в порядке [1, 2, 0] - обратный порядок от декодирования
-        reordered_bytes = bytearray([xored_bytes[1], xored_bytes[2], xored_bytes[0]])
+        # Переставляем байты в порядке [0, 2, 1] (обратная к [2, 0, 1])
+        reordered_bytes = bytearray([xored_bytes[0], xored_bytes[2], xored_bytes[1]])
         print(f"encode_mileage: После перестановки = {[hex(b) for b in reordered_bytes]}")
 
-        # Проверяем наличие байтов 0xFF в результате
-        if 0xFF in reordered_bytes:
-            print(f"encode_mileage: Предупреждение: В данных содержится 0xFF, это может вызвать проблемы")
-            # Заменяем 0xFF на ближайшее значение 0xFE
-            for i in range(len(reordered_bytes)):
-                if reordered_bytes[i] == 0xFF:
-                    reordered_bytes[i] = 0xFE
-                    print(f"encode_mileage: Заменили 0xFF на 0xFE в позиции {i}")
-        
         # Формируем итоговые 4 байта, добавляя 0xFF в конец
         result = bytearray(4)
         result[0] = reordered_bytes[0]
         result[1] = reordered_bytes[1]
         result[2] = reordered_bytes[2]
-        result[3] = 0xFF  # Всегда добавляем 0xFF в конец
+        result[3] = 0xFF  # Всегда добавляем 0xFF в конец как маркер
         print(f"encode_mileage: Итоговые 4 байта = {[hex(b) for b in result]}")
 
         return result
@@ -133,11 +131,11 @@ class Chevrolet_lacetti_2007_2013_dash_denso_93c46(DashEditor):
         # Проверяем, совпадают ли значения из разных блоков
         if len(set(mileage_values)) > 1:
             print(f"get_mileage: Предупреждение: разные значения пробега: {mileage_values}")
-            # Возвращаем наиболее часто встречающееся значение, или максимальное
+            # Возвращаем наиболее часто встречающееся значение
             most_common = max(set(mileage_values), key=mileage_values.count)
             print(f"get_mileage: Выбрано значение {most_common} км как наиболее достоверное")
             return most_common
-        
+
         print(f"get_mileage: Итоговый пробег = {mileage_values[0]}")
         return mileage_values[0]
 
@@ -161,7 +159,7 @@ class Chevrolet_lacetti_2007_2013_dash_denso_93c46(DashEditor):
 
         # Обновляем байты во всех трех блоках
         blocks = [(0x08, 0x0C), (0x0B, 0x0F), (0x10, 0x14)]
-        
+
         for start, end in blocks:
             print(f"update_mileage: Исходные байты (0x{start:02X}–0x{end-1:02X}): {[hex(b) for b in self.data[start:end]]}")
             self.data[start:end] = encoded
