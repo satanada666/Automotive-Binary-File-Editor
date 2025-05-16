@@ -1,224 +1,139 @@
-from PyQt5.QtCore import QThread, pyqtSignal#QThread — это как "рабочий", который делает тяжёлую работу в фоне, чтобы программа не зависала. pyqtSignal — это как почтовый голубь, который отправляет сообщения из фона в главное окно.
-from PyQt5.QtWidgets import QProgressDialog, QApplication#QProgressDialog — это окошко с полоской прогресса (как при скачивании файла). QApplication — это "мозг" программы, который управляет окнами и обновляет их.
-from PyQt5.QtGui import QTextCursor, QColor, QTextCharFormat, QBrush#QTextCursor — как курсор в Word, чтобы выделять или писать текст. QColor — выбор цвета (например, красный). QTextCharFormat — настройка текста (цвет, фон). QBrush — как кисточка для закрашивания фона
-import sys #Это библиотека, которая даёт доступ к "мозгу" программы, например, чтобы её закрыть.
+from PyQt5.QtCore import QThread, pyqtSignal
+from PyQt5.QtWidgets import QProgressDialog, QApplication
+from PyQt5.QtGui import QTextCursor, QColor, QTextCharFormat, QBrush
+from PyQt5.QtWidgets import QDialog
 
-class HexCompareWorker(QThread): #Создаёт "работника" (класс), который сравнивает два файла в фоне. QThread — это основа, чтобы работа не тормозила окно программы
-    progressUpdated = pyqtSignal(int) #Создаёт "голубя", который отправляет число (например, 50), чтобы показать, насколько выполнена работа (процент прогресса).
-    comparisonFinished = pyqtSignal(list, bytearray, bytearray) #Ещё один "голубь", который отправляет список различий и два файла, когда сравнение закончено.
-    blockProcessed = pyqtSignal(int, int, list)  #"Голубь", который сообщает, что кусок файла обработан. Отправляет начало куска, конец и список отличий в этом куске.
+class HexCompareWorker(QThread):
+    progressUpdated = pyqtSignal(int)
+    comparisonFinished = pyqtSignal(list, bytearray, bytearray)
+    blockProcessed = pyqtSignal(int, int, list)
 
-    def __init__(self, original_data, modified_data): #Это как настройка "работника". Даём ему два файла (original_data — старый, modified_data — новый) для сравнения.
-        super().__init__() #Говорит: "Я беру все способности обычного работника (QThread)"
-        self.original_data = original_data #Сохраняет старый файл внутри "работника", чтобы он знал, с чем работать.
-        self.modified_data = modified_data #
-        self.running = True #Устанавливает флажок: "Я работаю!". Это нужно, чтобы потом можно было остановить работу.
+    def __init__(self, original_data: bytearray, modified_data: bytearray):
+        super().__init__()
+        self.original_data = original_data
+        self.modified_data = modified_data
+        self.running = True
 
-    def run(self): #Это главная функция, где "работник" делает своё дело — сравнивает файлы.
-        differences = [] #Создаёт пустой список, куда будут записываться все отличия между файлами.
-        total_bytes = min(len(self.original_data), len(self.modified_data)) #Узнаёт, сколько байт (символов) в самом коротком файле, чтобы сравнивать только их.
+    def run(self):
+        differences = []
+        total_bytes = min(len(self.original_data), len(self.modified_data))
+        block_size = 32768 if total_bytes < 1024*1024 else 131072
+        num_blocks = (total_bytes + block_size - 1) // block_size
 
-        # Адаптивный размер блока: используем меньший размер для маленьких файлов
-        if total_bytes < 1024*1024:  # Меньше 1MB Проверяет, маленький ли файл (меньше 1 мегабайта)
-            block_size = 32768       # 32KB для маленьких файлов Если файл маленький, сравниваем его по кускам в 32 килобайта.
-        else: # Если файл большой (больше 1 мегабайта), то сравниваем его по кускам в 128 килобайт.
-            block_size = 131072      # 128KB для больших файлов
-            
-        num_blocks = (total_bytes + block_size - 1) // block_size #Считаем, сколько таких кусочков (блоков) в файле. Если файл 1000 байт и блок 256 байт, то будет 4 блока (256*4=1024).
+        for block in range(num_blocks):
+            if not self.running:
+                return
+            self.progressUpdated.emit(int(block * 100 / num_blocks))
+            start = block * block_size
+            end = min(start + block_size, total_bytes)
+            block_differences = [i for i in range(start, end)
+                               if self.original_data[i] != self.modified_data[i]]
+            self.blockProcessed.emit(start, end, block_differences)
+            differences.extend(block_differences)
+            QApplication.processEvents()
 
-        for block in range(num_blocks): #Проходим по каждому блоку (кусочку) файла. Например, если блок 256 байт, то сравниваем 256 байт за раз.
-            if not self.running: #Проверяет, не сказали ли нам остановиться. Если running — False, работа прекращается
-                return #Завершает работу, если сказали остановиться.
+        self.progressUpdated.emit(100)
+        self.comparisonFinished.emit(differences, self.original_data, self.modified_data)
 
-            self.progressUpdated.emit(int(block * 100 / num_blocks)) #Отправляет сообщение: "Я обработал столько-то процентов!". Считает процент как текущий кусок / всего кусков * 100.
+    def stop(self):
+        self.running = False
+        self.quit()
+        self.wait()
 
-            start = block * block_size #Вычисляет, с какого байта (символа) начинать сравнение. Например, если блок 256 байт и сейчас 2-й блок, то start будет 512 (256*2).
-            end = min(start + block_size, total_bytes) #Вычисляет, где заканчивается блок. Если блок 256 байт и всего 1000 байт, то end будет 1000 (512+256=768, но не больше 1000).
-            
-            # Оптимизированный поиск различий с использованием списка пониманий
-            block_differences = [i for i in range(start, end) #Создаёт список, где будут номера символов, где различия. Например, если в блоке 256 байт, и в первом символе разные, то будет [0].
-                               if self.original_data[i] != self.modified_data[i]] #Проверяет, разные ли символы в оригинальном и модифицированном файлах. Если разные, добавляет номер символа в список различий.
-            
-            # Отправляем информацию о блоке и найденных в нем различиях
-            self.blockProcessed.emit(start, end, block_differences) #Отправляет сообщение: "Я обработал этот кусок, вот его начало, конец и различия".
-            
-            # Добавляем различия в общий список
-            differences.extend(block_differences) #Добавляет найденные различия в общий список. Например, если в блоке 256 байт нашли 5 различий, то они добавляются в общий список различий.
-            
-            # Позволяем интерфейсу обновиться
-            QApplication.processEvents() #Позволяет программе обновить интерфейс, чтобы всё выглядело плавно и не зависало. Например, если мы видим прогресс-бар, он будет двигаться.
+def format_hex_byte(byte_value: int) -> str:
+    """Форматирует байт в HEX."""
+    return f"{byte_value:02X}"
 
-        self.progressUpdated.emit(100) #Отправляет сообщение: "Я закончил работу на 100%!". Это нужно, чтобы прогресс-бар дошёл до конца.
-        self.comparisonFinished.emit(differences, self.original_data, self.modified_data) #Отправляет сообщение: "Я закончил сравнение, вот список различий и оба файла". Это нужно, чтобы показать результаты сравнения.
+def format_hex_line(data: bytearray, offset: int, line_length: int = 16) -> str:
+    """Форматирует строку из байтов в HEX и ASCII."""
+    hex_line = f"{offset:08X}: "
+    for i in range(line_length):
+        if offset + i < len(data):
+            hex_line += format_hex_byte(data[offset + i]) + " "
+        else:
+            hex_line += "   "
+        if i == 7:
+            hex_line += " "
+    hex_line += " |"
+    for i in range(line_length):
+        if offset + i < len(data):
+            char = data[offset + i]
+            hex_line += chr(char) if 32 <= char <= 126 else "."
+        else:
+            hex_line += " "
+    hex_line += "|"
+    return hex_line
 
-    def stop(self): #Это функция, которая останавливает работу "работника".
-        self.running = False #Говорит "работнику": "Стоп, не работай больше!". Это нужно, чтобы завершить работу, если пользователь закрыл окно или нажал кнопку "Стоп".
-        self.quit() #Закрывает "работника" и освобождает ресурсы. Это нужно, чтобы всё было аккуратно и не оставалось лишних процессов в системе.
-        self.wait() #Ждёт, пока "работник" закончит свою работу. Это нужно, чтобы убедиться, что всё завершено и нет никаких зависаний.
+def highlight_differences(text_edit, line_text: str, line_offset: int, diff_offsets: list, is_original: bool = True):
+    """Подсвечивает различия в строке."""
+    text_edit.append(line_text)
+    cursor = text_edit.textCursor()
+    cursor.movePosition(QTextCursor.End)
+    cursor.movePosition(QTextCursor.StartOfLine)
+    format_diff = QTextCharFormat()
+    format_diff.setBackground(QBrush(QColor(255, 200, 200) if is_original else QColor(200, 255, 200)))
 
+    for abs_offset in diff_offsets:
+        if (abs_offset // 16) * 16 != line_offset:
+            continue
+        rel_pos = abs_offset % 16
+        hex_start_pos = 10 + (rel_pos * 3) + (1 if rel_pos > 7 else 0)
+        cursor.setPosition(cursor.position() - cursor.positionInBlock() + hex_start_pos)
+        cursor.movePosition(QTextCursor.Right, QTextCursor.KeepAnchor, 2)
+        cursor.setCharFormat(format_diff)
+        ascii_start_pos = 10 + 48 + 3 + rel_pos
+        cursor.setPosition(cursor.position() - cursor.positionInBlock() + ascii_start_pos)
+        cursor.movePosition(QTextCursor.Right, QTextCursor.KeepAnchor, 1)
+        cursor.setCharFormat(format_diff)
+    return cursor
 
-def format_hex_byte(byte_value): #Форматирует байт (число от 0 до 255) в HEX (шестнадцатеричное представление). Например, 255 станет "FF", а 15 станет "0F".
-    return f"{byte_value:02X}" #Форматирует число так, чтобы оно всегда состояло из 2 символов. Например, 5 станет "05", а 255 станет "FF".
-
-
-def format_hex_line(data, offset, line_length=16): #Создаёт строку из 16 байт файла в виде кодов и символов (как в редакторе файлов). offset — с какого байта начать, line_length — сколько байт в строке.
-    hex_line = "" #Создаёт пустую строку, куда будем записывать HEX и ASCII представление байтов. Например, "00 01 02 03 ... | 0123456789ABCDEF|".
-    # Формируем адрес
-    hex_line += f"{offset:08X}: " #Добавляет адрес (номер байта) в HEX формате. Например, если offset 0, то будет "00000000: ". Если offset 16, то будет "00000010: ".
-    
-    # Формируем HEX представление
-    for i in range(line_length): #Проходим по каждому байту в строке (от 0 до 15, всего 16 байт).
-        if offset + i < len(data): #Проверяет, есть ли ещё байты в файле, чтобы не выйти за его конец. Если есть, то добавляем байт в строку.
-            hex_line += format_hex_byte(data[offset + i]) + " " #Добавляет байт в HEX формате и пробел. Например, если байт 255, то будет "FF ". Если байт 0, то будет "00 ".
-        else: #Если байт не существует (например, конец файла), то добавляем пробелы.
-            hex_line += "   "  # Добавляет три пробела вместо байта.
-        
-        # Добавляем дополнительный пробел посередине
-        if i == 7: #Проверяет, дошли ли до середины строки (8-й байт).
-            hex_line += " " #Добавляет дополнительный пробел для красоты.
-    
-    hex_line += " |" #Добавляет разделитель между HEX и ASCII частью. Например, "00 01 02 03 ... |". Как поставить черту в таблице: "Числа | Буквы".
-    
-    # Формируем ASCII представление
-    for i in range(line_length): #Проходим по каждому байту в строке (от 0 до 15, всего 16 байт).
-        if offset + i < len(data):#Проверяет, есть ли ещё байты в файле, чтобы не выйти за его конец. Если есть, то добавляем байт в строку.
-            char = data[offset + i] #Получаем байт из файла. Например, если байт 65, то char будет 65.
-            if 32 <= char <= 126:  #Проверяет, можно ли байт показать как букву (например, буквы A-Z или знаки).
-                hex_line += chr(char) #
-            else: #Если байт нельзя показать как букву (например, 0 или 255), то добавляем точку вместо него.
-                hex_line += "." #Добавляет точку вместо непонятного символа.. Например, если байт 0, то будет ".".
-        else: #Если байт не существует (например, конец файла), то добавляем пробелы. для выравнивания.
-            hex_line += " " #Добавляет пробел вместо байта.
-    
-    hex_line += "|" #Добавляет разделитель между HEX и ASCII частью. Например, "00 01 02 03 ... |". Как поставить черту в таблице: "Числа | Буквы".
-    return hex_line #Возвращает строку с HEX и ASCII представлением байтов. Например, "00 01 02 03 ... | 0123456789ABCDEF|".
-
-
-def highlight_differences(text_edit, line_text, line_offset, diff_offsets, is_original=True): #Добавляет строку в текстовое поле и подсвечивает отличия цветом. text_edit — поле для текста, line_text — строка, line_offset — адрес строки, diff_offsets — где отличия, is_original — старый файл или новый.
-    """Добавляет текст с подсвеченными различиями в текстовый редактор"""
-    text_edit.append(line_text)  #Добавляет строку в текстовое поле (как в Word).
-    
-    # Добавляем подсветку
-    cursor = text_edit.textCursor() #Получаем курсор (указатель) в текстовом поле, чтобы выделить текст. Например, как в Word, когда мы выделяем текст.
-    cursor.movePosition(QTextCursor.End) #Перемещаем курсор в конец текста, чтобы выделить только что добавленный текст. Например, если мы добавили строку, курсор будет в конце этой строки.
-    cursor.movePosition(QTextCursor.StartOfLine) #Перемещаем курсор в начало строки, чтобы выделить её. Например, если мы добавили строку, курсор будет в начале этой строки.
-    
-    format_diff = QTextCharFormat() #Создаём формат текста для подсветки. Например, как выбрать цвет текста в Word.
-    
-    # Разный цвет для оригинала и модифицированного файла
-    if is_original: #Проверяет, это оригинальный файл или модифицированный. Если это оригинал, то подсвечиваем его.
-        format_diff.setBackground(QBrush(QColor(255, 200, 200)))  # светло-красный для оригинала
-    else:
-        format_diff.setBackground(QBrush(QColor(200, 255, 200)))  # светло-зеленый для модифицированного
-    
-    for abs_offset in diff_offsets: #Проходит по каждому отличию (месту, где файлы разные).
-        if (abs_offset // 16) * 16 != line_offset: #Проверяет, относится ли отличие к текущей строке (каждая строка — 16 байт).
-            continue  #Пропускает отличие, если оно не в этой строке.
-            
-        # Вычисляем относительную позицию байта в строке
-        rel_pos = abs_offset % 16 #Вычисляет, где именно в строке (от 0 до 15) находится отличие. Например, если отличие в байте 18, то rel_pos будет 2 (18 % 16 = 2).
-        
-        # Позиция в HEX части: адрес (10 символов) + относительная позиция * 3 + доп. пробел после 8-го байта
-        hex_start_pos = 10 + (rel_pos * 3) + (1 if rel_pos > 7 else 0) #Вычисляет, где именно в строке (от 0 до 15) находится отличие. Например, если отличие в байте 18, то hex_start_pos будет 10 + (2 * 3) + 1 = 17.
-        
-        # Выделяем 2 символа HEX значения
-        cursor.setPosition(cursor.position() - cursor.positionInBlock() + hex_start_pos) #Перемещаем курсор в позицию, где начинается отличие. Например, если отличие в байте 18, то курсор будет на 17-й позиции.
-        cursor.movePosition(QTextCursor.Right, QTextCursor.KeepAnchor, 2) #Выделяем 2 символа (байта) в строке. Например, если отличие в байте 18, то выделим 2 символа (18 и 19).
-        cursor.setCharFormat(format_diff) #Применяем формат подсветки к выделенному тексту. Например, если мы выделили 2 символа, то они будут подсвечены цветом, который мы выбрали.
-        
-        # Позиция в ASCII части: адрес (10) + HEX часть (16*3=48) + пробелы (3) + символ rel_pos
-        ascii_start_pos = 10 + 48 + 3 + rel_pos #Вычисляет, где именно в строке (от 0 до 15) находится отличие. Например, если отличие в байте 18, то ascii_start_pos будет 10 + 48 + 3 + 2 = 63.
-        
-        # Выделяем 1 символ ASCII значения
-        cursor.setPosition(cursor.position() - cursor.positionInBlock() + ascii_start_pos) #Перемещаем курсор в позицию, где начинается отличие. Например, если отличие в байте 18, то курсор будет на 63-й позиции.
-        cursor.movePosition(QTextCursor.Right, QTextCursor.KeepAnchor, 1) #Выделяем 1 символ (байт) в строке. Например, если отличие в байте 18, то выделим 1 символ (18).
-        cursor.setCharFormat(format_diff) #Применяем формат подсветки к выделенному тексту. Например, если мы выделили 1 символ, то он будет подсвечен цветом, который мы выбрали.
-    
-    return cursor #Возвращает курсор, чтобы можно было продолжать работать с ним. Например, если мы выделили текст, то курсор останется на месте, где мы закончили.
-
-
-def display_hex_comparison(original_data, modified_data, win): #Сравнивает два файла и показывает их различия в текстовом поле. original_data — старый файл, modified_data — новый файл, win — главное окно программы.
-    # Очистим текстовые поля перед началом нового сравнения
-    win.originalHexEdit.clear() #Очищаем текстовое поле с оригинальным файлом, чтобы не мешали старые данные. Например, если мы сравниваем два файла, то очищаем текстовое поле, чтобы показать только новые данные.
-    win.modifiedHexEdit.clear() #Очищаем текстовое поле с модифицированным файлом, чтобы не мешали старые данные. Например, если мы сравниваем два файла, то очищаем текстовое поле, чтобы показать только новые данные.
-    
-    # Убедимся, что полоса прогресса видна и сброшена
-    win.progressBar.setValue(0) #Сбрасываем значение полосы прогресса на 0, чтобы она начинала с нуля. Например, если мы начали новое сравнение, то полоса прогресса должна начинаться с нуля.
-    win.progressBar.setVisible(True) #Делаем полосу прогресса видимой, чтобы показывать, как идёт сравнение. Например, если мы начали новое сравнение, то полоса прогресса должна быть видимой.
-    
-    # Создаем и запускаем рабочий поток
-    win.comparison_worker = HexCompareWorker(original_data, modified_data) #Создаём "работника" (HexCompareWorker), который будет сравнивать два файла. original_data — старый файл, modified_data — новый файл.
-    win.comparison_worker.progressUpdated.connect(win.update_progress) #Подключаем сигнал, который будет обновлять полосу прогресса. Например, если "работник" обработал 50%, то мы обновим полосу прогресса до 50%.
-    
-    # Обрабатываем блоки данных по мере их обработки
-    win.comparison_worker.blockProcessed.connect(lambda start, end, diffs: process_block(start, end, diffs, original_data, modified_data, win)) #Подключаем сигнал, который будет обрабатывать блоки данных. Например, если "работник" обработал блок данных, то мы обработаем его и покажем различия.
-    #Говорит: "Когда работник найдёт отличия в куске, покажи их в окне".
-    
-    # Завершаем сравнение
-    win.comparison_worker.comparisonFinished.connect(   #Когда работа завершится, покажем результат.
+def display_hex_comparison(original_data: bytearray, modified_data: bytearray, win):
+    """Отображает HEX-сравнение двух файлов."""
+    win.originalHexEdit.clear()
+    win.modifiedHexEdit.clear()
+    win.progressBar.setValue(0)
+    win.progressBar.setVisible(True)
+    win.comparison_worker = HexCompareWorker(original_data, modified_data)
+    win.comparison_worker.progressUpdated.connect(win.update_progress)
+    win.comparison_worker.blockProcessed.connect(
+        lambda start, end, diffs: process_block(start, end, diffs, original_data, modified_data, win)
+    )
+    win.comparison_worker.comparisonFinished.connect(
         lambda diffs, orig, mod: win.show_comparison_results(diffs)
     )
-    
-    win.comparison_worker.start() #Запускаем "работника", чтобы он начал сравнивать файлы. Например, если мы нажали кнопку "Сравнить", то "работник" начнёт свою работу и сравнит два файла.
+    win.comparison_worker.start()
 
-
-def process_block(start_offset, end_offset, differences, original_data, modified_data, win): #Обрабатывает блок данных и отображает различия с контекстом. start_offset — с какого байта начинать, end_offset — до какого байта, differences — список отличий, original_data — старый файл, modified_data — новый файл, win — главное окно программы.
-    """Обрабатывает блок данных и отображает только различия с контекстом с подсветкой"""
-    if not differences: #Проверяет, есть ли различия в этом блоке. Если нет, то ничего не делаем.
-        return  # Завершает функцию, если отличий нет.
-    
-    # Для каждого различия показываем строку с различием и несколько строк контекста
-    unique_lines = set() #Создаёт множество (уникальные значения), чтобы не дублировать строки. Например, если в блоке 256 байт нашли 5 различий, то уникальные строки будут только те, где есть отличия.
-    
-    for diff_offset in differences: #Проходит по каждому отличию в блоке. Например, если в блоке 256 байт нашли 5 различий, то мы пройдём по каждому из них.
-        # Вычисляем начало строки, в которой находится различие
-        line_start = (diff_offset // 16) * 16 #Вычисляет, с какого байта (символа) начинать строку. Например, если отличие в байте 18, то line_start будет 16 (18 // 16 * 16 = 16).
-        
-        # Добавляем строки контекста (1 строка до и 1 строка после)
-        for context in range(-1, 2): #Проходим по строкам контекста (одна до и одна после). Например, если отличие в байте 18, то добавим строки 16 и 17.
-            context_line = line_start + (context * 16) #Вычисляем, где именно в строке (от 0 до 15) находится отличие. Например, если отличие в байте 18, то context_line будет 16 + (-1 * 16) = 0 (первая строка).
-            if context_line >= 0 and context_line < min(len(original_data), len(modified_data)): #Проверяет, не вышли ли мы за пределы файла. Если вышли, то пропускаем.
-                unique_lines.add(context_line) #Добавляет строку в множество уникальных строк. Например, если мы нашли отличие в байте 18, то добавим строки 16 и 17.
-    
-    # Сортируем строки для правильного порядка отображения
-    line_offsets = sorted(list(unique_lines)) #Сортируем уникальные строки, чтобы они были в правильном порядке. Например, если мы нашли отличие в байте 18, то строки будут 16 и 17.
-    
-    # Добавляем разделитель, если это не первый блок
-    if start_offset > 0: #Проверяет, не первый ли блок. Если это не первый блок, то добавляем разделитель.
-        win.originalHexEdit.append("...") #Добавляет разделитель в текстовое поле с оригинальным файлом. Например, если мы сравниваем два файла, то добавляем разделитель между блоками.
-        win.modifiedHexEdit.append("...") #Добавляет разделитель в текстовое поле с модифицированным файлом. Например, если мы сравниваем два файла, то добавляем разделитель между блоками.
-    
-    # Отображаем строки с различиями и контекстом
-    for line_offset in line_offsets: #Проходим по каждой строке, которую мы нашли. Например, если мы нашли отличие в байте 18, то строки будут 16 и 17.
-        orig_line = format_hex_line(original_data, line_offset) #Создаёт строку из 16 байт файла в виде кодов и символов (как в редакторе файлов). line_offset — с какого байта начать, line_length — сколько байт в строке.
-        mod_line = format_hex_line(modified_data, line_offset) #Создаёт строку из 16 байт файла в виде кодов и символов (как в редакторе файлов). line_offset — с какого байта начать, line_length — сколько байт в строке.
-        
-        # Находим различия, относящиеся к этой строке
-        line_diffs = [diff for diff in differences if line_offset <= diff < line_offset + 16] #Создаёт список, где будут номера символов, где различия. Например, если в блоке 256 байт и в первом символе разные, то будет [0].
-        
-        if line_diffs: #Проверяет, есть ли различия в этой строке. Если есть, то подсвечиваем их.
-            # Есть различия в этой строке - используем подсветку
-            highlight_differences(win.originalHexEdit, orig_line, line_offset, line_diffs, is_original=True) #Подсвечиваем отличия в оригинальном файле. Например, если мы нашли отличие в байте 18, то подсветим его.
-            highlight_differences(win.modifiedHexEdit, mod_line, line_offset, line_diffs, is_original=False) #Подсвечиваем отличия в модифицированном файле. Например, если мы нашли отличие в байте 18, то подс
+def process_block(start_offset: int, end_offset: int, differences: list, original_data: bytearray, modified_data: bytearray, win):
+    """Обрабатывает блок данных и отображает различия."""
+    if not differences:
+        return
+    unique_lines = set()
+    for diff_offset in differences:
+        line_start = (diff_offset // 16) * 16
+        for context in range(-1, 2):
+            context_line = line_start + (context * 16)
+            if context_line >= 0 and context_line < min(len(original_data), len(modified_data)):
+                unique_lines.add(context_line)
+    line_offsets = sorted(unique_lines)
+    if start_offset > 0:
+        win.originalHexEdit.append("...")
+        win.modifiedHexEdit.append("...")
+    for line_offset in line_offsets:
+        orig_line = format_hex_line(original_data, line_offset)
+        mod_line = format_hex_line(modified_data, line_offset)
+        line_diffs = [diff for diff in differences if line_offset <= diff < line_offset + 16]
+        if line_diffs:
+            highlight_differences(win.originalHexEdit, orig_line, line_offset, line_diffs, is_original=True)
+            highlight_differences(win.modifiedHexEdit, mod_line, line_offset, line_diffs, is_original=False)
         else:
-            # Нет различий в этой строке (контекст)
-            win.originalHexEdit.append(orig_line) #Добавляет строку в текстовое поле с оригинальным файлом. Например, если мы сравниваем два файла, то добавляем строку без подсветки.
-            win.modifiedHexEdit.append(mod_line) #Добавляет строку в текстовое поле с модифицированным файлом. Например, если мы сравниваем два файла, то добавляем строку без подсветки.
-    
-    # Добавляем пустую строку для разделения групп различий
-    win.originalHexEdit.append("") #Добавляет пустую строку в текстовое поле с оригинальным файлом. Например, если мы сравниваем два файла, то добавляем пустую строку между блоками.
-    win.modifiedHexEdit.append("") #Добавляет пустую строку в текстовое поле с модифицированным файлом. Например, если мы сравниваем два файла, то добавляем пустую строку между блоками.
-    
-    # Прокручиваем текстовые поля, чтобы показать последние изменения
-    cursor = win.originalHexEdit.textCursor() #Получаем курсор (указатель) в текстовом поле, чтобы выделить текст. Например, как в Word, когда мы выделяем текст.
-    cursor.movePosition(QTextCursor.End) #Перемещаем курсор в конец текста, чтобы выделить только что добавленный текст. Например, если мы добавили строку, курсор будет в конце этой строки.
-    win.originalHexEdit.setTextCursor(cursor) #Устанавливаем курсор в конец текста, чтобы показать последние изменения. Например, если мы добавили строку, курсор будет в конце этой строки.
-    
-    cursor = win.modifiedHexEdit.textCursor() #Получаем курсор (указатель) в текстовом поле, чтобы выделить текст. Например, как в Word, когда мы выделяем текст.
-    cursor.movePosition(QTextCursor.End)  #Перемещаем курсор в конец текста, чтобы выделить только что добавленный текст. Например, если мы добавили строку, курсор будет в конце этой строки.   
-    win.modifiedHexEdit.setTextCursor(cursor) #Устанавливаем курсор в конец текста, чтобы показать последние изменения. Например, если мы добавили строку, курсор будет в конце этой строки.
-    
-    # Позволяем интерфейсу обновиться
-    QApplication.processEvents() #Позволяет программе обновить интерфейс, чтобы всё выглядело плавно и не зависало. Например, если мы видим прогресс-бар, он будет двигаться.
-
-
+            win.originalHexEdit.append(orig_line)
+            win.modifiedHexEdit.append(mod_line)
+    win.originalHexEdit.append("")
+    win.modifiedHexEdit.append("")
+    cursor = win.originalHexEdit.textCursor()
+    cursor.movePosition(QTextCursor.End)
+    win.originalHexEdit.setTextCursor(cursor)
+    cursor = win.modifiedHexEdit.textCursor()
+    cursor.movePosition(QTextCursor.End)
+    win.modifiedHexEdit.setTextCursor(cursor)
+    QApplication.processEvents()

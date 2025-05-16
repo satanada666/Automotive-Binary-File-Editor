@@ -1,12 +1,14 @@
 import os
 import shutil
+from typing import Optional
+from PyQt5.QtWidgets import QDialog
 
 class Encoder:
     def __init__(self):
-        self.size_min = -1
-        self.size_max = -1
+        self.size_min: int = -1
+        self.size_max: int = -1
 
-    def encode(self, buffer: bytearray):
+    def encode(self, buffer: bytearray) -> Optional[dict]:
         """Базовый метод кодирования. Переопределяется в наследниках."""
         pass
 
@@ -29,7 +31,7 @@ class Encoder:
             return False
         return True
 
-    def process_large_file(self, file_path, output_path=None, progress_callback=None):
+    def process_large_file(self, file_path: str, output_path: Optional[str] = None, progress_callback=None) -> bool:
         """Обрабатывает большой файл по частям."""
         if not os.path.exists(file_path):
             print(f"Ошибка: Файл {file_path} не найден.")
@@ -60,7 +62,7 @@ class Encoder:
                     print("Файл не прошел проверку")
                     return False
                 
-                self.encode(buffer)
+                result = self.encode(buffer)
                 
                 f.seek(0)
                 f.write(buffer)
@@ -79,7 +81,7 @@ class Encoder:
                 os.remove(temp_path)
             return False
 
-    def transform_file(self, input_path, output_path=None):
+    def transform_file(self, input_path: str, output_path: Optional[str] = None) -> bool:
         """Преобразует файл стандартным способом."""
         if not os.path.exists(input_path):
             print(f"Ошибка: Файл {input_path} не найден.")
@@ -109,9 +111,19 @@ class Encoder:
             print(f"Ошибка при обработке файла: {e}")
             return False
 
-    def create_backup(self, file_path):
+    def create_backup(self, file_path: str) -> str:
         """Создает резервную копию файла."""
         backup_path = file_path + '.backup'
         shutil.copy2(file_path, backup_path)
         print(f"Создана резервная копия: {backup_path}")
         return backup_path
+
+class eeprom(Encoder):
+    """Подкласс для работы с EEPROM."""
+    def __init__(self):
+        super().__init__()
+
+class srs(Encoder):
+    """Подкласс для работы с SRS."""
+    def __init__(self):
+        super().__init__()

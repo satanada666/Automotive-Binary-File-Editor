@@ -1,5 +1,6 @@
 
 from PyQt5.QtWidgets import QFileDialog, QMessageBox
+from PyQt5.QtWidgets import QDialog
 
 def open_file(win, settings, current_encoder):
     options = QFileDialog.Options()
