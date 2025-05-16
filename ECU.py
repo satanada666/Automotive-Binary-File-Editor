@@ -1,19 +1,10 @@
-class ECU:
+
+class ECUNode:
     def __init__(self, name):
         self.name = name
         self.children = []
 
-class EEPROMNode:
-    def __init__(self, name):
-        self.name = name
-        self.children = []
-
-class DASHNode:
-    def __init__(self, name):
-        self.name = name
-        self.children = []
-
-class BCMNode:
-    def __init__(self, name):
-        self.name = name
-        self.children = []
+class ECU(ECUNode): pass
+class EEPROMNode(ECUNode): pass
+class DASHNode(ECUNode): pass
+class BCMNode(ECUNode): pass
