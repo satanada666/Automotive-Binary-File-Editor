@@ -11,6 +11,7 @@ from my2 import My2
 from dash_vdo import dash_vdo
 from bcm_valeo import bcm_valeo
 from Plugin.ECU.me17 import ME17_No_Immo
+from Plugin.ECU.Ems3120_No_Immo import Ems3120_No_Immo
 from Plugin.EEPROM.j34p import j34p
 from Plugin.EEPROM.edc16u1 import edc16u1
 from Plugin.EEPROM.opel_25040_pin_vin import Opel_25040_Pin_Vin
@@ -29,6 +30,7 @@ from Plugin.BCM.Cruze_BCM_24c16_after_2009 import Cruze_BCM_24c16_after_2009
 # Единый реестр энкодеров
 encoder_registry = {
     "ME17_No_Immo": ME17_No_Immo,
+    "Ems3120_No_Immo": Ems3120_No_Immo,
     "MED9.1": My2,
     "EDC16U1(U34)_No_Immo": edc16u1,
     "j34p_No_Immo": j34p,

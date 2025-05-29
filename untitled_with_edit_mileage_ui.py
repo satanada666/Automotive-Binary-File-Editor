@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'e:\PYTHON\NEW\untitled_with_edit_mileage.ui'
+# Form implementation generated from reading ui file 'e:\Automotive-Binary-File-Editor\untitled_with_edit_mileage.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
@@ -9,7 +9,6 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QDialog
 
 
 class Ui_BLACK_BOX(object):
