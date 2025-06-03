@@ -19,6 +19,7 @@ from Plugin.SRS.mazda_95320_GR6B_57K30B import mazda_95320_GR6B_57K30B
 from Plugin.EEPROM.Vag_simos_2_1_No_Immo import Vag_simos_2_1_No_Immo
 from Plugin.EEPROM.Vag_simos_3_3_No_Immo import Vag_simos_3_3_No_Immo
 from Plugin.EEPROM.VAG_EDC15_NI_24c02 import VAG_EDC15_NI_24c02
+from Plugin.EEPROM.VAG_M3_8_3_24C02_NI import VAG_M3_8_3_24C02_NI
 from Plugin.EEPROM.Chevrolet_E84_Pin_Vin import Chevrolet_E84_Pin_Vin
 from Plugin.EEPROM.Chevrolet_E84_Editor import Chevrolet_E84_Editor
 from Plugin.EEPROM.me7_5_No_Immo_Pin_Cs import me7_5_No_Immo_Pin_Cs
@@ -40,6 +41,7 @@ encoder_registry = {
     "Vag_simos_2_1_No_Immo": Vag_simos_2_1_No_Immo,
     "Vag_simos_3_3_No_Immo": Vag_simos_3_3_No_Immo,
     "VAG_EDC15_NI_24c02": VAG_EDC15_NI_24c02,
+    "VAG_M3_8_3_24C02_NI": VAG_M3_8_3_24C02_NI,
     "Chevrolet_E84_Pin_Vin": Chevrolet_E84_Pin_Vin,
     "Chevrolet_E84_Editor": Chevrolet_E84_Editor,
     "me7_5_No_Immo_Pin_Cs": me7_5_No_Immo_Pin_Cs,
