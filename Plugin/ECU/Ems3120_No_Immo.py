@@ -1,3 +1,5 @@
+
+
 from encoder import Encoder
 
 class Ems3120_No_Immo(Encoder):
@@ -45,30 +47,4 @@ class Ems3120_No_Immo(Encoder):
               f"{hex(address_4)},"
               f"{hex(address_5)}")
               
-
-'''from encoder import Encoder
-
-class Ems3120_No_Immo(Encoder):
-    def __init__(self):
-        super().__init__()
-        self.size_min = self.size_max = 2 * 1024 * 1024  # 2 МБ
-
-    def check(self, buffer: bytearray) -> bool:
-        return len(buffer) == self.size_min and super().check(buffer)
-
-    def encode(self, buffer: bytearray):
-        start_address = 0x29CAC
-        end_address = 0x29CB7  # включительно
-
-        if len(buffer) <= end_address:
-            raise ValueError(f"Buffer too small for patch: need at least {end_address+1} bytes")
-
-        # Обнуляем байты с start_address до end_address включительно
-        for i in range(start_address, end_address + 1):
-            buffer[i] = 0x00
-
-        print(f"Патч успешно применён к EMS3120 (обнулены байты с {hex(start_address)} по {hex(end_address)})")'''
-
-
-
 
