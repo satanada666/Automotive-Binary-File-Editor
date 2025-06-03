@@ -2,6 +2,7 @@
   "ECU": {
     "ME17_No_Immo": {},
     "Ems3120_No_Immo": {},
+    "MT86_No_Immo": {},
     "MED9.1": {}
   },
   "EEPROM": {
