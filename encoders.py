@@ -24,6 +24,7 @@ from Plugin.EEPROM.VAG_M3_8_3_24C02_NI import VAG_M3_8_3_24C02_NI
 from Plugin.EEPROM.Chevrolet_E84_Pin_Vin import Chevrolet_E84_Pin_Vin
 from Plugin.EEPROM.Chevrolet_E84_Editor import Chevrolet_E84_Editor
 from Plugin.EEPROM.me7_5_No_Immo_Pin_Cs import me7_5_No_Immo_Pin_Cs
+from Plugin.EEPROM.kyron_95160_NI_CS import kyron_95160_NI_CS
 from Plugin.DASH.Chevrolet_lacetti_dash_denso_96804358_EJ_6H21_11000_932900D_93c46 import Chevrolet_lacetti_dash_denso_96804358_EJ_6H21_11000_932900D_93c46
 from Plugin.DASH.Daewoo_Gentra_dash_denso_93c56 import Daewoo_Gentra_dash_denso_93c56
 from Plugin.DASH.Chevrolet_lacetti_2007_2013_dash_denso_93c46 import Chevrolet_lacetti_2007_2013_dash_denso_93c46
@@ -47,6 +48,7 @@ encoder_registry = {
     "Chevrolet_E84_Pin_Vin": Chevrolet_E84_Pin_Vin,
     "Chevrolet_E84_Editor": Chevrolet_E84_Editor,
     "me7_5_No_Immo_Pin_Cs": me7_5_No_Immo_Pin_Cs,
+    "kyron_95160_NI_CS": kyron_95160_NI_CS,
     "dash_vdo": dash_vdo,
     "Chevrolet_lacetti_dash_denso_96804358_EJ_6H21_11000_932900D_93c46": Chevrolet_lacetti_dash_denso_96804358_EJ_6H21_11000_932900D_93c46,
     "Daewoo_Gentra_dash_denso_93c56": Daewoo_Gentra_dash_denso_93c56,
