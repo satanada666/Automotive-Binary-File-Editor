@@ -12,6 +12,7 @@ from dash_vdo import dash_vdo
 from bcm_valeo import bcm_valeo
 from Plugin.ECU.me17 import ME17_No_Immo
 from Plugin.ECU.Ems3120_No_Immo import Ems3120_No_Immo
+from Plugin.ECU.Ems3132_No_Immo import Ems3132_No_Immo
 from Plugin.ECU.MT86_No_Immo import MT86_No_Immo
 from Plugin.ECU.BMW_MS41_No_Immo_CS import BMW_MS41_No_Immo_CS
 from Plugin.EEPROM.j34p import j34p
@@ -36,6 +37,7 @@ from Plugin.BCM.Cruze_BCM_24c16_after_2009 import Cruze_BCM_24c16_after_2009
 encoder_registry = {
     "ME17_No_Immo": ME17_No_Immo,
     "Ems3120_No_Immo": Ems3120_No_Immo,
+    "Ems3132_No_Immo": Ems3132_No_Immo,
     "MT86_No_Immo": MT86_No_Immo,
     "BMW_MS41_No_Immo_CS": BMW_MS41_No_Immo_CS,
     "MED9.1": My2,
