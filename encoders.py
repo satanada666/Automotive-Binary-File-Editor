@@ -13,6 +13,7 @@ from bcm_valeo import bcm_valeo
 from Plugin.ECU.me17 import ME17_No_Immo
 from Plugin.ECU.Ems3120_No_Immo import Ems3120_No_Immo
 from Plugin.ECU.Ems3132_No_Immo import Ems3132_No_Immo
+from Plugin.ECU.Ems3134_No_Immo import Ems3134_No_Immo
 from Plugin.ECU.MT86_No_Immo import MT86_No_Immo
 from Plugin.ECU.BMW_MS41_No_Immo_CS import BMW_MS41_No_Immo_CS
 from Plugin.EEPROM.j34p import j34p
@@ -38,6 +39,7 @@ encoder_registry = {
     "ME17_No_Immo": ME17_No_Immo,
     "Ems3120_No_Immo": Ems3120_No_Immo,
     "Ems3132_No_Immo": Ems3132_No_Immo,
+    "Ems3134_No_Immo": Ems3134_No_Immo,
     "MT86_No_Immo": MT86_No_Immo,
     "BMW_MS41_No_Immo_CS": BMW_MS41_No_Immo_CS,
     "MED9.1": My2,
