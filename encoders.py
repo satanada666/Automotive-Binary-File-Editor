@@ -20,6 +20,7 @@ from Plugin.EEPROM.j34p import j34p
 from Plugin.EEPROM.edc16u1 import edc16u1
 from Plugin.EEPROM.opel_25040_pin_vin import Opel_25040_Pin_Vin
 from Plugin.SRS.mazda_95320_GR6B_57K30B import mazda_95320_GR6B_57K30B
+from Plugin.SRS.Continental_Reault_8201_385_569 import Continental_Reault_8201_385_569
 from Plugin.EEPROM.Vag_simos_2_1_No_Immo import Vag_simos_2_1_No_Immo
 from Plugin.EEPROM.Vag_simos_3_3_No_Immo import Vag_simos_3_3_No_Immo
 from Plugin.EEPROM.VAG_EDC15_NI_24c02 import VAG_EDC15_NI_24c02
@@ -47,6 +48,7 @@ encoder_registry = {
     "j34p_No_Immo": j34p,
     "Opel_25040_Pin_Vin": Opel_25040_Pin_Vin,
     "mazda_95320_GR6B_57K30B": mazda_95320_GR6B_57K30B,
+    "Continental_Reault_8201_385_569": Continental_Reault_8201_385_569,
     "Vag_simos_2_1_No_Immo": Vag_simos_2_1_No_Immo,
     "Vag_simos_3_3_No_Immo": Vag_simos_3_3_No_Immo,
     "VAG_EDC15_NI_24c02": VAG_EDC15_NI_24c02,
