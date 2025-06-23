@@ -14,6 +14,8 @@ from Plugin.ECU.me17 import ME17_No_Immo
 from Plugin.ECU.Ems3120_No_Immo import Ems3120_No_Immo
 from Plugin.ECU.Ems3132_No_Immo import Ems3132_No_Immo
 from Plugin.ECU.Ems3134_No_Immo import Ems3134_No_Immo
+from Plugin.ECU.sirius_32_No_Immo_v1 import sirius_32_No_Immo_v1
+from Plugin.ECU.sirius_32_No_Immo_v2 import sirius_32_No_Immo_v2
 from Plugin.ECU.MT86_No_Immo import MT86_No_Immo
 from Plugin.ECU.BMW_MS41_No_Immo_CS import BMW_MS41_No_Immo_CS
 from Plugin.EEPROM.j34p import j34p
@@ -41,6 +43,8 @@ encoder_registry = {
     "Ems3120_No_Immo": Ems3120_No_Immo,
     "Ems3132_No_Immo": Ems3132_No_Immo,
     "Ems3134_No_Immo": Ems3134_No_Immo,
+    "sirius_32_No_Immo_v1": sirius_32_No_Immo_v1,
+    "sirius_32_No_Immo_v2": sirius_32_No_Immo_v2,
     "MT86_No_Immo": MT86_No_Immo,
     "BMW_MS41_No_Immo_CS": BMW_MS41_No_Immo_CS,
     "MED9.1": My2,
