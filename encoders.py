@@ -26,6 +26,7 @@ from Plugin.EEPROM.j34p import j34p
 from Plugin.EEPROM.me745_NI import me745_NI
 from Plugin.EEPROM.edc16u1 import edc16u1
 from Plugin.EEPROM.opel_25040_pin_vin import Opel_25040_Pin_Vin
+from Plugin.EEPROM.VW_Simos_4S_93C56_NI import VW_Simos_4S_93C56_NI
 from Plugin.SRS.mazda_95320_GR6B_57K30B import mazda_95320_GR6B_57K30B
 from Plugin.SRS.Continental_Reault_8201_385_569 import Continental_Reault_8201_385_569
 from Plugin.SRS.Hyundi_santa_fe_95910_2b180_epp95640 import Hyundi_santa_fe_95910_2b180_epp95640
@@ -61,6 +62,7 @@ encoder_registry = {
     "EDC16U1(U34)_No_Immo": edc16u1,
     "j34p_No_Immo": j34p,
     "me745_NI": me745_NI,
+    "VW_Simos_4S_93C56_NI": VW_Simos_4S_93C56_NI,
     "Opel_25040_Pin_Vin": Opel_25040_Pin_Vin,
     "mazda_95320_GR6B_57K30B": mazda_95320_GR6B_57K30B,
     "Continental_Reault_8201_385_569": Continental_Reault_8201_385_569,
