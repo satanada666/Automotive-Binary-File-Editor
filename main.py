@@ -17,7 +17,7 @@ from file_compare_worker import compare_two_files
 from dash_editor import DashEditor
 from dialogs import MileageVinPinEditDialog  # Импорт из dialogs.py
 
-LOCAL_VERSION = "1.1.20"
+LOCAL_VERSION = "1.1.21"
 GITHUB_VERSION_URL = "https://raw.githubusercontent.com/satanada666/Automotive-Binary-File-Editor/main/version.txt"
 DOWNLOAD_URL = "https://github.com/satanada666/Automotive-Binary-File-Editor/releases"
 
@@ -73,7 +73,7 @@ def edit_mileage(win, settings, current_encoder):
                 'ecu' in encoder_name.lower() or
                 'eeprom' in encoder_name.lower()
             )
-            
+            ##### Добавить название файла для DASH!!!!
             if 'Cruze_BCM_24c16_after_2009' in encoder_name:
                 model = 'cruze_2009'
             elif 'Chevrolet_lacetti_2007_2013_dash_denso_93c46' in encoder_name:
@@ -82,6 +82,10 @@ def edit_mileage(win, settings, current_encoder):
                 model = 'lacetti_2004'
             elif 'Daewoo_Gentra' in encoder_name:
                 model = 'Daewoo_Gentra'
+
+            elif 'gelly_atlas_2020_24c02':
+                model = 'gelly_atlas_2020_24c02'
+
             else:
                 model = 'default'  # Универсальная модель для неизвестных модулей
             
