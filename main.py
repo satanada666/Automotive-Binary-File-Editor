@@ -86,12 +86,11 @@ def edit_mileage(win, settings, current_encoder):
             elif 'gelly_atlas_2020_24c02':
                 model = 'gelly_atlas_2020_24c02'
 
-<<<<<<< HEAD
+
             elif 'Prado_93c86_until_2015':
                 model = 'Prado_93c86_until_2015'
 
-=======
->>>>>>> 1f08ab3a4f5cb872bbc8410a870b151b4c4bae11
+
             else:
                 model = 'default'  # Универсальная модель для неизвестных модулей
             
