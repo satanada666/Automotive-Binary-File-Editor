@@ -43,7 +43,10 @@ from Plugin.DASH.Daewoo_Gentra_dash_denso_93c56 import Daewoo_Gentra_dash_denso_
 from Plugin.DASH.Chevrolet_lacetti_2007_2013_dash_denso_93c46 import Chevrolet_lacetti_2007_2013_dash_denso_93c46
 from Plugin.DASH.aveo_93c56 import aveo_93c56
 from Plugin.DASH.gelly_atlas_2020_24c02 import gelly_atlas_2020_24c02
+<<<<<<< HEAD
 from Plugin.DASH.Prado_93c86_until_2015 import Prado_93c86_until_2015
+=======
+>>>>>>> 1f08ab3a4f5cb872bbc8410a870b151b4c4bae11
 from Plugin.BCM.Cruze_BCM_24c16_after_2009 import Cruze_BCM_24c16_after_2009
 
 # Единый реестр энкодеров
