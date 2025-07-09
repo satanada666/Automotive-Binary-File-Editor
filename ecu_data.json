@@ -1,32 +1,58 @@
 {
   "ECU": {
-    "ME17_No_Immo": {},
-    "Ems3120_No_Immo": {},
-    "Ems3132_No_Immo": {},
-    "Ems3134_No_Immo": {},
-    "sirius_32_No_Immo_v1": {},
-    "sirius_32_No_Immo_v2": {},
-    "MT86_No_Immo": {},
-    "BMW_MS41_No_Immo_CS": {},
-    "China_797_No_Immo": {},
-    "nissan_classic_SH705524N_NI": {},
-    "Mitsubishi_MH8302F_NI": {},
-    "Melco_MH7203_NI":{},
-    "MED9.1": {}
+    "Renault": {
+      "ME17_No_Immo": {},
+      "Ems3120_No_Immo": {},
+      "Ems3132_No_Immo": {},
+      "Ems3134_No_Immo": {},
+      "sirius_32_No_Immo_v1": {},
+      "sirius_32_No_Immo_v2": {}
+    },
+    "Geely": {
+      "MT86_No_Immo": {}
+    },
+    "BMW": {
+      "BMW_MS41_No_Immo_CS": {}
+    },
+    "China": {
+      "China_797_No_Immo": {}
+    },
+    "Nissan": {
+      "nissan_classic_SH705524N_NI": {}
+    },
+    "Mitsubishi": {
+      "Mitsubishi_MH8302F_NI": {},
+      "Melco_MH7203_NI": {}
+    },
+    "Volkswagen": {
+      "MED9.1": {}
+    }
   },
   "EEPROM": {
-    "j34p_No_Immo": {},
-    "EDC16U1(U34)_No_Immo": {},
-    "Vag_simos_2_1_No_Immo": {},
-    "Vag_simos_3_3_No_Immo": {},
-    "VAG_EDC15_NI_24c02": {},
-    "VAG_M3_8_3_24C02_NI": {},
-    "Opel_25040_Pin_Vin": {},
-    "Chevrolet_E84_Pin_Vin": {},
-    "kyron_95160_NI_CS": {},
-    "VW_Simos_4S_93C56_NI": {},
-    "me745_NI":{},
-    "me7_5_No_Immo_Pin_Cs": {}
+    "Renault": {
+      "j34p_No_Immo": {},
+      "EDC16U1(U34)_No_Immo": {}
+    },
+    "Volkswagen": {
+      "Vag_simos_2_1_No_Immo": {},
+      "Vag_simos_3_3_No_Immo": {},
+      "VAG_EDC15_NI_24c02": {},
+      "VW_Simos_4S_93C56_NI": {},
+      "VAG_M3_8_3_24C02_NI": {},
+      "me7_5_No_Immo_Pin_Cs": {}
+    },
+    "Opel": {
+      "Opel_25040_Pin_Vin": {}
+    },
+    "Chevrolet": {
+      "Chevrolet_E84_Pin_Vin": {}
+    },
+    "SsangYong": {
+      "kyron_95160_NI_CS": {}
+    },
+    "PSA": {
+      "me745_NI": {}
+    }
   },
   "DASH": {
     "Chevrolet": {
@@ -34,23 +60,36 @@
         "Chevrolet_lacetti_dash_denso_96804358_EJ_6H21_11000_932900D_93c46": {},
         "Daewoo_Gentra_dash_denso_93c56": {},
         "Chevrolet_lacetti_2007_2013_dash_denso_93c46": {},
-        "gelly_atlas_2020_24c02": {},
-
-        "Prado_93c86_until_2015": {},
-
         "aveo_93c56": {}
+      },
+      "China": {
+        "Atlas": {
+          "gelly_atlas_2020_24c02": {}
+        }
+      }
+    },
+    "Toyota": {
+      "Prado": {
+        "Prado_93c86_until_2015": {}
       }
     },
     "MagnetiMarelli": {}
   },
   "BCM": {
-    "Cruze_BCM_24c16_after_2009": {},
+    "Chevrolet": {
+      "Cruze_BCM_24c16_after_2009": {}
+    },
     "Siemens": {}
   },
   "SRS": {
-    "mazda_95320_GR6B_57K30B": {},
-    "Continental_Reault_8201_385_569": {},
-    "Hyundi_santa_fe_95910_2b180_epp95640": {}
-
+    "Mazda": {
+      "mazda_95320_GR6B_57K30B": {}
+    },
+    "Renault": {
+      "Continental_Reault_8201_385_569": {}
+    },
+    "Hyundai": {
+      "Hyundi_santa_fe_95910_2b180_epp95640": {}
+    }
   }
 }
