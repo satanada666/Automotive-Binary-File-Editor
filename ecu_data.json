@@ -1,12 +1,14 @@
 {
   "ECU": {
     "Renault": {
-      "ME17_No_Immo": {},
       "Ems3120_No_Immo": {},
       "Ems3132_No_Immo": {},
       "Ems3134_No_Immo": {},
       "sirius_32_No_Immo_v1": {},
       "sirius_32_No_Immo_v2": {}
+    },
+    "ALL": {
+      "ME17_No_Immo": {}
     },
     "Geely": {
       "MT86_No_Immo": {}
@@ -61,11 +63,11 @@
         "Daewoo_Gentra_dash_denso_93c56": {},
         "Chevrolet_lacetti_2007_2013_dash_denso_93c46": {},
         "aveo_93c56": {}
-      },
-      "China": {
-        "Atlas": {
-          "gelly_atlas_2020_24c02": {}
-        }
+      }
+    },
+    "China": {
+      "Atlas": {
+        "gelly_atlas_2020_24c02": {}
       }
     },
     "Toyota": {
