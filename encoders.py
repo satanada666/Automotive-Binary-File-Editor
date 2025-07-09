@@ -30,6 +30,7 @@ from Plugin.EEPROM.VW_Simos_4S_93C56_NI import VW_Simos_4S_93C56_NI
 from Plugin.SRS.mazda_95320_GR6B_57K30B import mazda_95320_GR6B_57K30B
 from Plugin.SRS.Continental_Reault_8201_385_569 import Continental_Reault_8201_385_569
 from Plugin.SRS.Hyundi_santa_fe_95910_2b180_epp95640 import Hyundi_santa_fe_95910_2b180_epp95640
+from Plugin.SRS.srs_kia_95910_3u100_95320 import srs_kia_95910_3u100_95320
 from Plugin.EEPROM.Vag_simos_2_1_No_Immo import Vag_simos_2_1_No_Immo
 from Plugin.EEPROM.Vag_simos_3_3_No_Immo import Vag_simos_3_3_No_Immo
 from Plugin.EEPROM.VAG_EDC15_NI_24c02 import VAG_EDC15_NI_24c02
@@ -80,6 +81,7 @@ encoder_registry = {
     "Prado_93c86_until_2015": Prado_93c86_until_2015,
     "dash_vdo": dash_vdo,
     "gelly_atlas_2020_24c02": gelly_atlas_2020_24c02,
+    "srs_kia_95910_3u100_95320": srs_kia_95910_3u100_95320,
     "Chevrolet_lacetti_dash_denso_96804358_EJ_6H21_11000_932900D_93c46": Chevrolet_lacetti_dash_denso_96804358_EJ_6H21_11000_932900D_93c46,
     "Daewoo_Gentra_dash_denso_93c56": Daewoo_Gentra_dash_denso_93c56,
     "Chevrolet_lacetti_2007_2013_dash_denso_93c46": Chevrolet_lacetti_2007_2013_dash_denso_93c46,
