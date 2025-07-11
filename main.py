@@ -333,7 +333,7 @@ from file_compare_worker import compare_two_files
 from dash_editor import DashEditor
 from dialogs import MileageVinPinEditDialog
 
-LOCAL_VERSION = "1.1.25"
+LOCAL_VERSION = "1.1.26"
 GITHUB_VERSION_URL = "https://raw.githubusercontent.com/satanada666/Automotive-Binary-File-Editor/main/version.txt"
 DOWNLOAD_URL = "https://github.com/satanada666/Automotive-Binary-File-Editor/releases"
 EXE_NAME = "Black_Box.exe"

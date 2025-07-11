@@ -20,6 +20,7 @@ from Plugin.ECU.MT86_No_Immo import MT86_No_Immo
 from Plugin.ECU.BMW_MS41_No_Immo_CS import BMW_MS41_No_Immo_CS
 from Plugin.ECU.China_797_No_Immo import China_797_No_Immo
 from Plugin.ECU.nissan_classic_SH705524N_NI import nissan_classic_SH705524N_NI
+from Plugin.ECU.nissan_classic_SH705529N_NI import nissan_classic_SH705529N_NI
 from Plugin.ECU.Mitsubishi_MH8302F_NI import Mitsubishi_MH8302F_NI
 from Plugin.ECU.Melco_MH7203_NI import Melco_MH7203_NI
 from Plugin.EEPROM.j34p import j34p
@@ -59,6 +60,7 @@ encoder_registry = {
     "BMW_MS41_No_Immo_CS": BMW_MS41_No_Immo_CS,
     "China_797_No_Immo": China_797_No_Immo,
     "nissan_classic_SH705524N_NI": nissan_classic_SH705524N_NI,
+    "nissan_classic_SH705529N_NI": nissan_classic_SH705529N_NI,
     "Mitsubishi_MH8302F_NI": Mitsubishi_MH8302F_NI,
     "Melco_MH7203_NI": Melco_MH7203_NI,
     "MED9.1": My2,
