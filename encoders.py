@@ -27,6 +27,7 @@ from Plugin.ECU.sim2k_140_141_341_NI import sim2k_140_141_341_NI
 from Plugin.EEPROM.j34p import j34p
 from Plugin.EEPROM.me745_NI import me745_NI
 from Plugin.EEPROM.edc16u1 import edc16u1
+from Plugin.EEPROM.med_9_1_NI_95160 import med_9_1_NI_95160
 from Plugin.EEPROM.opel_25040_pin_vin import Opel_25040_Pin_Vin
 from Plugin.EEPROM.VW_Simos_4S_93C56_NI import VW_Simos_4S_93C56_NI
 from Plugin.SRS.mazda_95320_GR6B_57K30B import mazda_95320_GR6B_57K30B
@@ -66,6 +67,7 @@ encoder_registry = {
     "sim2k_140_141_341_NI": sim2k_140_141_341_NI,
     "Melco_MH7203_NI": Melco_MH7203_NI,
     "MED9.1": My2,
+    "med_9_1_NI_95160": med_9_1_NI_95160,
     "EDC16U1(U34)_No_Immo": edc16u1,
     "j34p_No_Immo": j34p,
     "me745_NI": me745_NI,

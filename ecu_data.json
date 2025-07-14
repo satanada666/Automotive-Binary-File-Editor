@@ -29,10 +29,8 @@
     "Mitsubishi": {
       "Mitsubishi_MH8302F_NI": {},
       "Melco_MH7203_NI": {}
-    },
-    "Volkswagen": {
-      "MED9.1": {}
     }
+    
   },
   "EEPROM": {
     "Renault": {
@@ -45,7 +43,8 @@
       "VAG_EDC15_NI_24c02": {},
       "VW_Simos_4S_93C56_NI": {},
       "VAG_M3_8_3_24C02_NI": {},
-      "me7_5_No_Immo_Pin_Cs": {}
+      "me7_5_No_Immo_Pin_Cs": {},
+      "med_9_1_NI_95160": {}
     },
     "Opel": {
       "Opel_25040_Pin_Vin": {}
