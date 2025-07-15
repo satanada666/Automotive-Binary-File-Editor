@@ -10,7 +10,8 @@ class sim2k_250_251(Encoder):
         self.immobilizer_addresses = [
             0x1E0729,
             0x1CBE15,
-            0x1B0F55
+            0x1B0F55,
+            0x1C0059
             
         ]
         
