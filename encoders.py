@@ -25,6 +25,7 @@ from Plugin.ECU.Mitsubishi_MH8302F_NI import Mitsubishi_MH8302F_NI
 from Plugin.ECU.Melco_MH7203_NI import Melco_MH7203_NI
 from Plugin.ECU.sim2k_140_141_341_NI import sim2k_140_141_341_NI
 from Plugin.ECU.sim2k_240_241_242_245 import sim2k_240_241_242_245
+from Plugin.ECU.sim2k_250_251 import sim2k_250_251
 from Plugin.EEPROM.j34p import j34p
 from Plugin.EEPROM.me745_NI import me745_NI
 from Plugin.EEPROM.edc16u1 import edc16u1
@@ -67,6 +68,7 @@ encoder_registry = {
     "Mitsubishi_MH8302F_NI": Mitsubishi_MH8302F_NI,
     "sim2k_140_141_341_NI": sim2k_140_141_341_NI,
     "sim2k_240_241_242_245": sim2k_240_241_242_245,
+    "sim2k_250_251": sim2k_250_251,
     "Melco_MH7203_NI": Melco_MH7203_NI,
     "MED9.1": My2,
     "med_9_1_NI_95160": med_9_1_NI_95160,

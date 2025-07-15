@@ -1,21 +1,17 @@
 from encoder import Encoder
 
-class sim2k_240_241_242_245(Encoder):
+class sim2k_250_251(Encoder):
     def __init__(self):
         super().__init__()
-        self.size_min = 2097152
-        self.size_max = 2097152
+        self.size_min = 2621440
+        self.size_max = 2621440
         
         # Адреса для проверки иммобилайзера
         self.immobilizer_addresses = [
-            0x134CD7,
-            0x139F6B,
-            0x10B2CB,
-            0x12942F,
-            0x130957,
-            0x131D77,
-            0x14CD43,
-            0x12F96B
+            0x1E0729,
+            0x1CBE15,
+            0x1B0F55
+            
         ]
         
         # Ожидаемое значение для проверки
@@ -50,7 +46,7 @@ class sim2k_240_241_242_245(Encoder):
     def encode(self, buffer: bytearray):
         # Проверяем, что буфер соответствует требованиям
         if not self.check(buffer):
-            print(f"Ошибка: буфер не соответствует требованиям sim2k_240_241_242_245")
+            print(f"Ошибка: буфер не соответствует требованиям sim2k_250_251")
             print(f"Размер буфера: {len(buffer)} байт (ожидается {self.size_min})")
             
             # Проверка адресов для диагностики
@@ -74,7 +70,7 @@ class sim2k_240_241_242_245(Encoder):
             return
         
         # Применяем патч для отключения иммобилайзера
-        print("Применение патча для отключения иммобилайзера sim2k_240_241_242_245...")
+        print("Применение патча для отключения иммобилайзера sim2k_250_251...")
         patched_count = 0
         valid_addresses = 0
         
