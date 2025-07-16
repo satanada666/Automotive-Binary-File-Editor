@@ -49,6 +49,7 @@ from Plugin.DASH.Daewoo_Gentra_dash_denso_93c56 import Daewoo_Gentra_dash_denso_
 from Plugin.DASH.Chevrolet_lacetti_2007_2013_dash_denso_93c46 import Chevrolet_lacetti_2007_2013_dash_denso_93c46
 from Plugin.DASH.aveo_93c56 import aveo_93c56
 from Plugin.DASH.gelly_atlas_2020_24c02 import gelly_atlas_2020_24c02
+from Plugin.DASH.haval_m6_2023_dash_93c56 import haval_m6_2023_dash_93c56
 from Plugin.DASH.Prado_93c86_until_2015 import Prado_93c86_until_2015
 from Plugin.BCM.Cruze_BCM_24c16_after_2009 import Cruze_BCM_24c16_after_2009
 
@@ -90,6 +91,7 @@ encoder_registry = {
     "kyron_95160_NI_CS": kyron_95160_NI_CS,
     "Prado_93c86_until_2015": Prado_93c86_until_2015,
     "dash_vdo": dash_vdo,
+    "haval_m6_2023_dash_93c56": haval_m6_2023_dash_93c56,
     "gelly_atlas_2020_24c02": gelly_atlas_2020_24c02,
     "srs_kia_95910_3u100_95320": srs_kia_95910_3u100_95320,
     "Chevrolet_lacetti_dash_denso_96804358_EJ_6H21_11000_932900D_93c46": Chevrolet_lacetti_dash_denso_96804358_EJ_6H21_11000_932900D_93c46,
