@@ -48,7 +48,7 @@ from Plugin.DASH.Chevrolet_lacetti_dash_denso_96804358_EJ_6H21_11000_932900D_93c
 from Plugin.DASH.Daewoo_Gentra_dash_denso_93c56 import Daewoo_Gentra_dash_denso_93c56
 from Plugin.DASH.Chevrolet_lacetti_2007_2013_dash_denso_93c46 import Chevrolet_lacetti_2007_2013_dash_denso_93c46
 from Plugin.DASH.aveo_93c56 import aveo_93c56
-from Plugin.DASH._94003_G9000_ahls_off import _94003_G9000_ahls_off
+from Plugin.DASH._94003_G9000_J5060_94013_G9920_Genesis_g80_94013_J5740_94019_2P191_94043_B1010_94043_B1870_ahls_off import _94003_G9000_J5060_94013_G9920_Genesis_g80_94013_J5740_94019_2P191_94043_B1010_94043_B1870_ahls_off
 from Plugin.DASH.gelly_atlas_2020_24c02 import gelly_atlas_2020_24c02
 from Plugin.DASH.haval_m6_2023_dash_93c56 import haval_m6_2023_dash_93c56
 from Plugin.DASH.Prado_93c86_until_2015 import Prado_93c86_until_2015
@@ -92,7 +92,7 @@ encoder_registry = {
     "kyron_95160_NI_CS": kyron_95160_NI_CS,
     "Prado_93c86_until_2015": Prado_93c86_until_2015,
     "dash_vdo": dash_vdo,
-    "_94003_G9000_ahls_off": _94003_G9000_ahls_off,
+    "_94003_G9000_J5060_94013_G9920_Genesis_g80_94013_J5740_94019_2P191_94043_B1010_94043_B1870_ahls_off": _94003_G9000_J5060_94013_G9920_Genesis_g80_94013_J5740_94019_2P191_94043_B1010_94043_B1870_ahls_off,
     "haval_m6_2023_dash_93c56": haval_m6_2023_dash_93c56,
     "gelly_atlas_2020_24c02": gelly_atlas_2020_24c02,
     "srs_kia_95910_3u100_95320": srs_kia_95910_3u100_95320,
