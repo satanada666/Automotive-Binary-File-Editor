@@ -5,92 +5,97 @@ class sim2k_250_251(Encoder):
         super().__init__()
         self.size_min = 2621440
         self.size_max = 2621440
-        
-        # Адреса для проверки иммобилайзера
-        self.immobilizer_addresses = [
-            0x1E0729,
-            0x1CBE15,
-            0x1B0F55,
-            0x1C0059
-            
+
+        # Первая сигнатура (10 байт)
+        self.sequence_1 = [0xFF, 0x0F, 0x09, 0xCF, 0xCE, 0x18, 0x3E, 0x04, 0xDA, 0x01]
+
+        # Вторая сигнатура (список из двух возможных вариантов)
+        self.sequence_2_variants = [
+            [0x14, 0xF0, 0xDF, 0x00, 0x73, 0x80],
+            [0x14, 0xF0, 0xDF, 0x00, 0x73, 0x00]
         ]
-        
-        # Ожидаемое значение для проверки
-        self.expected_value = 0x01
-        
-        # Новое значение для отключения иммобилайзера
-        self.new_value = 0x00
-    
-    def check_immobilizer_address(self, buffer: bytearray, addr) -> bool:
-        """Проверяет один адрес на наличие значения 01"""
-        if addr >= len(buffer):
-            return False
-        if buffer[addr] != self.expected_value:
-            return False
-        return True
-    
+
+        # Часть для замены внутри второй сигнатуры (байты 3–6)
+        self.sig2_replace_offset = 2
+        self.expected_sig2_patch_variants = [
+            [0xDF, 0x00, 0x73, 0x80],
+            [0xDF, 0x00, 0x73, 0x00]
+        ]
+        self.new_sig2_patch = [0x3C, 0x73, 0x00, 0x00]
+
+    def find_all_sequences(self, buffer: bytearray, sequence: list) -> list:
+        """Найти все вхождения сигнатуры (включая перекрывающиеся)"""
+        positions = []
+        seq_len = len(sequence)
+        print(f"Поиск последовательности {sequence} длиной {seq_len} байт...")
+        for i in range(len(buffer) - seq_len + 1):
+            if buffer[i:i + seq_len] == bytearray(sequence):
+                print(f"Найдено совпадение на адресе 0x{i:06X}: {list(buffer[i:i + seq_len])}")
+                positions.append(i)
+        if not positions:
+            print(f"Сигнатура {sequence} не найдена.")
+        return positions
+
     def check(self, buffer: bytearray) -> bool:
         if len(buffer) != self.size_min:
             return False
-        
-        # Проверяем, что хотя бы один адрес содержит правильное значение
-        valid_addresses = 0
-        for addr in self.immobilizer_addresses:
-            if self.check_immobilizer_address(buffer, addr):
-                valid_addresses += 1
-        
-        if valid_addresses == 0:
-            return False
-        
-        return super().check(buffer)
-    
+        has_seq1 = bool(self.find_all_sequences(buffer, self.sequence_1))
+        has_seq2 = any(bool(self.find_all_sequences(buffer, seq)) for seq in self.sequence_2_variants)
+        return has_seq1 and has_seq2 and super().check(buffer)
+
     def encode(self, buffer: bytearray):
-        # Проверяем, что буфер соответствует требованиям
         if not self.check(buffer):
-            print(f"Ошибка: буфер не соответствует требованиям sim2k_250_251")
-            print(f"Размер буфера: {len(buffer)} байт (ожидается {self.size_min})")
-            
-            # Проверка адресов для диагностики
-            print("\nПроверка адресов иммобилайзера:")
-            valid_addresses = 0
-            
-            for addr_idx, addr in enumerate(self.immobilizer_addresses):
-                if addr < len(buffer):
-                    current_value = buffer[addr]
-                    expected_value = self.expected_value
-                    status = "✓" if current_value == expected_value else "✗"
-                    if current_value == expected_value:
-                        valid_addresses += 1
-                    print(f"  Адрес 0x{addr:06X}: {status} текущее=0x{current_value:02X}, ожидается=0x{expected_value:02X}")
-                else:
-                    print(f"  Адрес 0x{addr:06X}: ✗ выходит за границы буфера")
-            
-            print(f"\nВсего валидных адресов: {valid_addresses}")
-            print("Для работы требуется хотя бы один валидный адрес")
-            
-            return
-        
-        # Применяем патч для отключения иммобилайзера
-        print("Применение патча для отключения иммобилайзера sim2k_250_251...")
+            print("Ошибка: буфер не соответствует требованиям sim2k_250_251")
+            print(f"Размер: {len(buffer)} байт (ожидалось: {self.size_min})")
+            print("Требуется наличие обеих сигнатур.")
+            return False
+
         patched_count = 0
-        valid_addresses = 0
-        
-        for addr_idx, addr in enumerate(self.immobilizer_addresses):
-            if self.check_immobilizer_address(buffer, addr):
-                valid_addresses += 1
-                old_value = buffer[addr]
-                new_value = self.new_value
-                buffer[addr] = new_value
+        print("Применение патча sim2k_250_251...\n")
+
+        # === Шаг 1: Первая сигнатура ===
+        seq1_positions = self.find_all_sequences(buffer, self.sequence_1)
+        print(f"Найдено {len(seq1_positions)} вхождений первой сигнатуры:")
+        for pos in seq1_positions:
+            patch_pos = pos + 9
+            if buffer[patch_pos] == 0x01:
+                buffer[patch_pos] = 0x00
+                print(f"  Адрес 0x{patch_pos:06X}: 0x01 → 0x00")
                 patched_count += 1
-                print(f"  Адрес 0x{addr:06X}: 0x{old_value:02X} -> 0x{new_value:02X}")
             else:
-                if addr < len(buffer):
-                    current_value = buffer[addr]
-                    print(f"  Адрес 0x{addr:06X}: пропущен (текущее значение 0x{current_value:02X}, ожидается 0x{self.expected_value:02X})")
-                else:
-                    print(f"  Адрес 0x{addr:06X}: пропущен (выходит за границы буфера)")
-        
-        print(f"\nПатч успешно применён!")
-        print(f"Обработано валидных адресов: {valid_addresses}")
+                print(f"  Адрес 0x{patch_pos:06X}: пропущен (0x{buffer[patch_pos]:02X} != 0x01)")
+
+        # === Шаг 2: Вторая сигнатура (с заменой DF 00 73 80 или DF 00 73 00) ===
+        total_seq2_positions = []
+        for seq_idx, seq in enumerate(self.sequence_2_variants):
+            seq2_positions = self.find_all_sequences(buffer, seq)
+            total_seq2_positions.extend(seq2_positions)
+            print(f"Найдено {len(seq2_positions)} вхождений варианта сигнатуры {seq_idx + 1}: {seq}")
+
+        print(f"\nОбщее количество вхождений второй сигнатуры: {len(total_seq2_positions)}")
+        for pos in total_seq2_positions:
+            patch_start = pos + self.sig2_replace_offset
+            old_bytes = list(buffer[patch_start:patch_start + 4])
+            print(f"Проверка адреса 0x{patch_start:06X}: найдено {old_bytes}")
+            if old_bytes in self.expected_sig2_patch_variants:
+                buffer[patch_start:patch_start + 4] = bytearray(self.new_sig2_patch)
+                for i in range(4):
+                    print(f"  Адрес 0x{patch_start + i:06X}: 0x{old_bytes[i]:02X} → 0x{self.new_sig2_patch[i]:02X}")
+                patched_count += 4
+            else:
+                print(f"  Пропущено: в сигнатуре по адресу 0x{patch_start:06X} байты {old_bytes} не совпадают с {self.expected_sig2_patch_variants}")
+
+        # Проверка содержимого буфера после патча
+        print("\nСодержимое буфера после патча:")
+        for pos in total_seq2_positions:
+            patch_start = pos + self.sig2_replace_offset
+            print(f"Адрес 0x{patch_start:06X}: {list(buffer[patch_start:patch_start + 4])}")
+
+        if patched_count == 0:
+            print("\nОшибка: ни один патч не был применён. Проверьте сигнатуры в буфере.")
+            return False
+
+        print(f"\nПатч успешно применён.")
         print(f"Всего изменено байт: {patched_count}")
         print("Иммобилайзер отключен.")
+        return True

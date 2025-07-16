@@ -6,249 +6,101 @@ class sim2k_140_141_341_NI(Encoder):
         self.size_min = 2097152
         self.size_max = 2097152
         
-        # Группы адресов для проверки иммобилайзера (по 3 адреса в каждой группе)
-        self.immobilizer_groups = [
-            (0x17EFF, 0x17E8AC,  0x17E8AD),
-            (0x1740CF, 0x17416C, 0x17416D),
-            (0x17A30B, 0x17A3A8, 0x17A3A9),
-            (0x145C4B, 0x145CE4, 0x145CE5),
-            (0x15F367, 0x15F400, 0x15F401),
-            (0x16E60F, 0x16E6AC, 0x16E6AD),
-            (0x17A73F, 0x17A7DC, 0x17A7DD),
-            (0x11A8EF, 0x11A968, 0x11A969),
-            (0x144D3B, 0x144DD4, 0x144DD5),
-            (0x177673, 0x177710, 0x177711),
-            (0x17E80F, 0x17E8AC, 0x17E8AD),
-            (0x190087, 0x190120, 0x190121)
-        ]
+        # Первая последовательность для поиска (10 байт)
+        self.sequence_1 = [0xFF, 0xFF, 0x41, 0x82, 0x00, 0x0C, 0x39, 0x80, 0x00, 0x01]
         
-        # Ожидаемые значения для проверки
-        self.expected_values = [0x01, 0x40, 0x82]
-        
-        # Новые значения для отключения иммобилайзера
-        self.new_values = [0x00, 0x48, 0x00]
-        
-        # Специальные группы с индивидуальными значениями
-        self.special_groups = {
-            11: {  # группа с адресами 0x190087, 0x190120, 0x190121
-                'expected': [0x01, 0x40, 0x82],
-                'new': [0x00, 0x48, 0x00]
-            }
-        }
-    
-    def check_immobilizer_group(self, buffer: bytearray, group_addresses, group_idx=None) -> bool:
-        """Проверяет одну группу из 3 адресов на наличие значений"""
-        expected_vals = self.expected_values
-        
-        # Проверяем, есть ли специальные значения для этой группы
-        if group_idx is not None and group_idx in self.special_groups:
-            expected_vals = self.special_groups[group_idx]['expected']
-        
-        for i, addr in enumerate(group_addresses):
-            if addr >= len(buffer):
-                return False
-            if buffer[addr] != expected_vals[i]:
-                return False
-        return True
-    
+        # Вторая последовательность для поиска (10 байт)
+        self.sequence_2 = [0x2C, 0x09, 0x00, 0x00, 0x40, 0x82, 0x02, 0x14, 0x89, 0x8D]
+
+    def find_sequence(self, buffer: bytearray, sequence: list) -> int:
+        """Находит первое вхождение последовательности в буфере"""
+        seq_len = len(sequence)
+        for i in range(len(buffer) - seq_len + 1):
+            if buffer[i:i+seq_len] == bytearray(sequence):
+                return i
+        return -1
+
     def check(self, buffer: bytearray) -> bool:
         if len(buffer) != self.size_min:
             return False
-        
-        # Проверяем, что хотя бы одна группа адресов содержит правильные значения
-        valid_groups = 0
-        for group_idx, group_addresses in enumerate(self.immobilizer_groups):
-            if self.check_immobilizer_group(buffer, group_addresses, group_idx):
-                valid_groups += 1
-        
-        if valid_groups == 0:
+
+        # Проверяем наличие ОБЕИХ последовательностей
+        seq1_pos = self.find_sequence(buffer, self.sequence_1)
+        seq2_pos = self.find_sequence(buffer, self.sequence_2)
+
+        if seq1_pos == -1 or seq2_pos == -1:
             return False
-        
+
         return super().check(buffer)
-    
+
     def encode(self, buffer: bytearray):
         # Проверяем, что буфер соответствует требованиям
         if not self.check(buffer):
             print(f"Ошибка: буфер не соответствует требованиям sim2k_140_141_341_NI")
             print(f"Размер буфера: {len(buffer)} байт (ожидается {self.size_min})")
-            
-            # Проверка групп адресов для диагностики
-            print("\nПроверка групп адресов иммобилайзера:")
-            valid_groups = 0
-            
-            for group_idx, group_addresses in enumerate(self.immobilizer_groups):
-                print(f"\nГруппа {group_idx + 1}:")
-                group_valid = True
-                
-                # Получаем ожидаемые значения для этой группы
-                expected_vals = self.expected_values
-                if group_idx in self.special_groups:
-                    expected_vals = self.special_groups[group_idx]['expected']
-                
-                for i, addr in enumerate(group_addresses):
-                    if addr < len(buffer):
-                        current_value = buffer[addr]
-                        expected_value = expected_vals[i]
-                        status = "✓" if current_value == expected_value else "✗"
-                        if current_value != expected_value:
-                            group_valid = False
-                        print(f"  Адрес 0x{addr:06X}: {status} текущее=0x{current_value:02X}, ожидается=0x{expected_value:02X}")
-                    else:
-                        print(f"  Адрес 0x{addr:06X}: ✗ выходит за границы буфера")
-                        group_valid = False
-                
-                if group_valid:
-                    valid_groups += 1
-                    print(f"  Группа {group_idx + 1}: ✓ ВАЛИДНА")
-                else:
-                    print(f"  Группа {group_idx + 1}: ✗ НЕ ВАЛИДНА")
-            
-            print(f"\nВсего валидных групп: {valid_groups}")
-            print("Для работы требуется хотя бы одна валидная группа")
-            
-            return
-        
-        # Применяем патч для отключения иммобилайзера
-        print("Применение патча для отключения иммобилайзера sim2k_140_141_341_NI...")
-        patched_count = 0
-        valid_groups = 0
-        
-        for group_idx, group_addresses in enumerate(self.immobilizer_groups):
-            if self.check_immobilizer_group(buffer, group_addresses, group_idx):
-                valid_groups += 1
-                print(f"\nОбработка валидной группы {group_idx + 1}:")
-                
-                # Получаем новые значения для этой группы
-                new_vals = self.new_values
-                if group_idx in self.special_groups:
-                    new_vals = self.special_groups[group_idx]['new']
-                
-                for i, addr in enumerate(group_addresses):
-                    old_value = buffer[addr]
-                    new_value = new_vals[i]
-                    buffer[addr] = new_value
-                    patched_count += 1
-                    print(f"  Адрес 0x{addr:06X}: 0x{old_value:02X} -> 0x{new_value:02X}")
+
+            # Проверка последовательностей для диагностики
+            print("\nПроверка последовательностей:")
+
+            seq1_pos = self.find_sequence(buffer, self.sequence_1)
+            seq2_pos = self.find_sequence(buffer, self.sequence_2)
+
+            if seq1_pos == -1:
+                print("Первая последовательность (FF FF 41 82 00 0C 39 80 00 01): НЕ НАЙДЕНА")
             else:
-                print(f"Группа {group_idx + 1}: пропущена (не валидна)")
-        
+                print(f"Первая последовательность найдена на позиции 0x{seq1_pos:06X}")
+
+            if seq2_pos == -1:
+                print("Вторая последовательность (2C 09 00 00 40 82 02 14 89 8D): НЕ НАЙДЕНА")
+            else:
+                print(f"Вторая последовательность найдена на позиции 0x{seq2_pos:06X}")
+
+            print("Для работы требуется наличие ОБЕИХ последовательностей")
+            return False
+
+        # Поиск последовательностей
+        seq1_pos = self.find_sequence(buffer, self.sequence_1)
+        seq2_pos = self.find_sequence(buffer, self.sequence_2)
+
+        if seq1_pos == -1 or seq2_pos == -1:
+            print("Ошибка: одна из последовательностей не найдена, патч не может быть применён.")
+            return False
+
+        patched_count = 0
+        print("Применение нового алгоритма патча для отключения иммобилайзера sim2k_140_141_341_NI...\n")
+        print(f"Первая последовательность найдена на позиции 0x{seq1_pos:06X}")
+        print(f"Вторая последовательность найдена на позиции 0x{seq2_pos:06X}\n")
+
+        print("Шаг 1: Корректировка 01 -> 00")
+        last_byte_pos = seq1_pos + 9
+        old_value = buffer[last_byte_pos]
+
+        if old_value == 0x01:
+            buffer[last_byte_pos] = 0x00
+            patched_count += 1
+            print(f"  Адрес 0x{last_byte_pos:06X}: 0x{old_value:02X} -> 0x00")
+        else:
+            print(f"  Адрес 0x{last_byte_pos:06X}: пропущен (значение 0x{old_value:02X} != 0x01)")
+
+        print("Шаг 2: Корректировка 40 82 -> 48 00")
+        fifth_byte_pos = seq2_pos + 4
+        sixth_byte_pos = seq2_pos + 5
+        old_value_1 = buffer[fifth_byte_pos]
+        old_value_2 = buffer[sixth_byte_pos]
+
+        if old_value_1 == 0x40 and old_value_2 == 0x82:
+            buffer[fifth_byte_pos] = 0x48
+            buffer[sixth_byte_pos] = 0x00
+            patched_count += 2
+            print(f"  Адрес 0x{fifth_byte_pos:06X}: 0x{old_value_1:02X} -> 0x48")
+            print(f"  Адрес 0x{sixth_byte_pos:06X}: 0x{old_value_2:02X} -> 0x00")
+        else:
+            print(f"  Адреса 0x{fifth_byte_pos:06X}-0x{sixth_byte_pos:06X}: пропущены (значения 0x{old_value_1:02X} 0x{old_value_2:02X} != 0x40 0x82)")
+
         print(f"\nПатч успешно применён!")
-        print(f"Обработано валидных групп: {valid_groups}")
+        print(f"Первая последовательность обработана на позиции 0x{seq1_pos:06X}")
+        print(f"Вторая последовательность обработана на позиции 0x{seq2_pos:06X}")
         print(f"Всего изменено байт: {patched_count}")
         print("Иммобилайзер отключен.")
-
-
-'''from encoder import Encoder
-
-class sim2k_140_141_341_NI(Encoder):
-    def __init__(self):
-        super().__init__()
-        self.size_min = 2097152
-        self.size_max = 2097152
-        
-        # Группы адресов для проверки иммобилайзера (по 3 адреса в каждой группе)
-        self.immobilizer_groups = [
-            (0x17EFF, 0x17E8AC, 0x17E8AD),
-            (0x1740CF, 0x17416C, 0x17416D),
-            (0x17A30B, 0x17A3A8, 0x17A3A9),
-            (0x145C4B, 0x145CE4, 0x145CE5),
-            (0x15F367, 0x15F400, 0x15F401),
-            (0x16E60F, 0x16E6AC, 0x16E6AD),
-            (0x17A73F, 0x17A7DC, 0x17A7DD),
-            (0x11A8EF, 0x11A968, 0x11A969),
-            (0x144D3B, 0x144DD4, 0x144DD5),
-            (0x177673, 0x177710, 0x177711),
-            (0x17E80F, 0x17E8AC, 0x17E8AD) 
-            (0x17E847, 0x17AE6B)
-        ]
-        
-        # Ожидаемые значения для проверки
-        self.expected_values = [0x01, 0x40, 0x82]
-        
-        # Новые значения для отключения иммобилайзера
-        self.new_values = [0x00, 0x48, 0x00]
-    
-    def check_immobilizer_group(self, buffer: bytearray, group_addresses) -> bool:
-        """Проверяет одну группу из 3 адресов на наличие значений 01, 40, 82"""
-        for i, addr in enumerate(group_addresses):
-            if addr >= len(buffer):
-                return False
-            if buffer[addr] != self.expected_values[i]:
-                return False
         return True
-    
-    def check(self, buffer: bytearray) -> bool:
-        if len(buffer) != self.size_min:
-            return False
-        
-        # Проверяем, что хотя бы одна группа адресов содержит правильные значения
-        valid_groups = 0
-        for group_idx, group_addresses in enumerate(self.immobilizer_groups):
-            if self.check_immobilizer_group(buffer, group_addresses):
-                valid_groups += 1
-        
-        if valid_groups == 0:
-            return False
-        
-        return super().check(buffer)
-    
-    def encode(self, buffer: bytearray):
-        # Проверяем, что буфер соответствует требованиям
-        if not self.check(buffer):
-            print(f"Ошибка: буфер не соответствует требованиям sim2k_140_141_341_NI")
-            print(f"Размер буфера: {len(buffer)} байт (ожидается {self.size_min})")
-            
-            # Проверка групп адресов для диагностики
-            print("\nПроверка групп адресов иммобилайзера:")
-            valid_groups = 0
-            
-            for group_idx, group_addresses in enumerate(self.immobilizer_groups):
-                print(f"\nГруппа {group_idx + 1}:")
-                group_valid = True
-                
-                for i, addr in enumerate(group_addresses):
-                    if addr < len(buffer):
-                        current_value = buffer[addr]
-                        expected_value = self.expected_values[i]
-                        status = "✓" if current_value == expected_value else "✗"
-                        if current_value != expected_value:
-                            group_valid = False
-                        print(f"  Адрес 0x{addr:06X}: {status} текущее=0x{current_value:02X}, ожидается=0x{expected_value:02X}")
-                    else:
-                        print(f"  Адрес 0x{addr:06X}: ✗ выходит за границы буфера")
-                        group_valid = False
-                
-                if group_valid:
-                    valid_groups += 1
-                    print(f"  Группа {group_idx + 1}: ✓ ВАЛИДНА")
-                else:
-                    print(f"  Группа {group_idx + 1}: ✗ НЕ ВАЛИДНА")
-            
-            print(f"\nВсего валидных групп: {valid_groups}")
-            print("Для работы требуется хотя бы одна валидная группа")
-            
-            return
-        
-        # Применяем патч для отключения иммобилайзера
-        print("Применение патча для отключения иммобилайзера sim2k_140_141_341_NI...")
-        patched_count = 0
-        valid_groups = 0
-        
-        for group_idx, group_addresses in enumerate(self.immobilizer_groups):
-            if self.check_immobilizer_group(buffer, group_addresses):
-                valid_groups += 1
-                print(f"\nОбработка валидной группы {group_idx + 1}:")
-                
-                for i, addr in enumerate(group_addresses):
-                    old_value = buffer[addr]
-                    new_value = self.new_values[i]
-                    buffer[addr] = new_value
-                    patched_count += 1
-                    print(f"  Адрес 0x{addr:06X}: 0x{old_value:02X} -> 0x{new_value:02X}")
-            else:
-                print(f"Группа {group_idx + 1}: пропущена (не валидна)")
-        
-        print(f"\nПатч успешно применён!")
-        print(f"Обработано валидных групп: {valid_groups}")
-        print(f"Всего изменено байт: {patched_count}")
-        print("Иммобилайзер отключен.")'''
+
