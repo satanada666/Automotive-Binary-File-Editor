@@ -29,6 +29,7 @@ from Plugin.ECU.sim2k_240_241_242_245 import sim2k_240_241_242_245
 from Plugin.ECU.sim2k_250_251 import sim2k_250_251
 from Plugin.ECU.delphi_MT_38_NI import delphi_MT_38_NI
 from Plugin.EEPROM.j34p import j34p
+from Plugin.EEPROM.Geely_Emgrand_93c56_PIN import Geely_Emgrand_93c56_PIN
 from Plugin.EEPROM.me745_NI import me745_NI
 from Plugin.EEPROM.edc16u1 import edc16u1
 from Plugin.EEPROM.med_9_1_NI_95160 import med_9_1_NI_95160
@@ -77,6 +78,7 @@ encoder_registry = {
     "delphi_MT_38_NI": delphi_MT_38_NI,
     "Melco_MH7203_NI": Melco_MH7203_NI,
     "MED9.1": My2,
+    "Geely_Emgrand_93c56_PIN": Geely_Emgrand_93c56_PIN,
     "med_9_1_NI_95160": med_9_1_NI_95160,
     "EDC16U1(U34)_No_Immo": edc16u1,
     "j34p_No_Immo": j34p,
