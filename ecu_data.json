@@ -2,6 +2,7 @@
   "ECU": {
     "Renault": {
       "Ems3120_No_Immo": {},
+      "Ems3130_NI":{},
       "Ems3132_No_Immo": {},
       "Ems3134_No_Immo": {},
       "sirius_32_No_Immo_v1": {},
@@ -26,7 +27,8 @@
     "Kia_Hyundai ": {
       "sim2k_140_141_341_NI": {},
       "sim2k_240_241_242_245": {},
-      "sim2k_250_251": {}  
+      "sim2k_250_251": {},
+      "delphi_MT_38_NI":{}  
     },
     "Mitsubishi": {
       "Mitsubishi_MH8302F_NI": {},

@@ -12,6 +12,7 @@ from dash_vdo import dash_vdo
 from bcm_valeo import bcm_valeo
 from Plugin.ECU.me17 import ME17_No_Immo
 from Plugin.ECU.Ems3120_No_Immo import Ems3120_No_Immo
+from Plugin.ECU.Ems3130_NI import Ems3130_NI
 from Plugin.ECU.Ems3132_No_Immo import Ems3132_No_Immo
 from Plugin.ECU.Ems3134_No_Immo import Ems3134_No_Immo
 from Plugin.ECU.sirius_32_No_Immo_v1 import sirius_32_No_Immo_v1
@@ -26,6 +27,7 @@ from Plugin.ECU.Melco_MH7203_NI import Melco_MH7203_NI
 from Plugin.ECU.sim2k_140_141_341_NI import sim2k_140_141_341_NI
 from Plugin.ECU.sim2k_240_241_242_245 import sim2k_240_241_242_245
 from Plugin.ECU.sim2k_250_251 import sim2k_250_251
+from Plugin.ECU.delphi_MT_38_NI import delphi_MT_38_NI
 from Plugin.EEPROM.j34p import j34p
 from Plugin.EEPROM.me745_NI import me745_NI
 from Plugin.EEPROM.edc16u1 import edc16u1
@@ -58,6 +60,7 @@ from Plugin.BCM.Cruze_BCM_24c16_after_2009 import Cruze_BCM_24c16_after_2009
 encoder_registry = {
     "ME17_No_Immo": ME17_No_Immo,
     "Ems3120_No_Immo": Ems3120_No_Immo,
+    "Ems3130_NI": Ems3130_NI,
     "Ems3132_No_Immo": Ems3132_No_Immo,
     "Ems3134_No_Immo": Ems3134_No_Immo,
     "sirius_32_No_Immo_v1": sirius_32_No_Immo_v1,
@@ -71,6 +74,7 @@ encoder_registry = {
     "sim2k_140_141_341_NI": sim2k_140_141_341_NI,
     "sim2k_240_241_242_245": sim2k_240_241_242_245,
     "sim2k_250_251": sim2k_250_251,
+    "delphi_MT_38_NI": delphi_MT_38_NI,
     "Melco_MH7203_NI": Melco_MH7203_NI,
     "MED9.1": My2,
     "med_9_1_NI_95160": med_9_1_NI_95160,
