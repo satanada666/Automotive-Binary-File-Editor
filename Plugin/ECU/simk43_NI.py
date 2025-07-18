@@ -19,6 +19,12 @@ class simk43_NI(Encoder):
                 'search_pattern': bytes([0x18, 0x08, 0x10, 0x00, 0x00, 0x00]),
                 'expected_value': 0x00,
                 'new_value': 0x10
+            },
+             {
+                'name': 'Паттерн 3', 
+                'search_pattern': bytes([0x01, 0x00, 0x01, 0x01, 0x01, 0xFF]),
+                'expected_value': 0xFF,
+                'new_value': 0x01
             }
         ]
         
