@@ -1,10 +1,10 @@
 from encoder import Encoder
 
-class simk43_NI(Encoder):
+class simk41_NI(Encoder):
     def __init__(self):
         super().__init__()
-        self.size_min = 524288
-        self.size_max = 524288
+        self.size_min = 262144
+        self.size_max = 262144
         
         # Два варианта поиска - программа выберет сама какой использовать
         self.patterns = [
@@ -16,7 +16,7 @@ class simk43_NI(Encoder):
             },
             {
                 'name': 'Паттерн 2', 
-                'search_pattern': bytes([0x18, 0x08, 0x10, 0x00, 0x00, 0x00]),
+                'search_pattern': bytes([0x00, 0x02, 0x01, 0x00, 0x00, 0x00]),
                 'expected_value': 0x00,
                 'new_value': 0x10
             }
