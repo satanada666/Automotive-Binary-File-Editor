@@ -8,40 +8,86 @@ class MT86_No_Immo(Encoder):
     def check(self, buffer: bytearray) -> bool:
         return len(buffer) == self.size_min and super().check(buffer)
 
+    def find_byte_sequence(self, buffer: bytearray, sequence: bytes) -> int:
+        """
+        Поиск ПЕРВОГО вхождения последовательности байтов в буфере
+        Возвращает адрес первого найденного вхождения или -1 если не найдено
+        """
+        sequence_len = len(sequence)
+        
+        for i in range(len(buffer) - sequence_len + 1):
+            if buffer[i:i + sequence_len] == sequence:
+                return i  # Возвращаем сразу при первом найденном совпадении
+                
+        return -1  # Не найдено
+
     def encode(self, buffer: bytearray):
-        # Адреса для отключения иммобилайзера MT86
-        immo_addresses = {
-            0x20020: 0x18,  # байт 18 в формате hex
-            0x20021: 0x3E,  # байт 3E в формате hex
-            0x30350: 0x00,  # байт 00 в формате hex
-            0x30351: 0x00   # байт 00 в формате hex
-        }
+        # Ищем последовательность 01 00 55
+        target_sequence = bytes([0x01, 0x00, 0x55])
         
-        # Проверка размера буфера
-        max_address = max(immo_addresses.keys())
-        if len(buffer) <= max_address:
-            raise ValueError(f"Буфер слишком мал для патча MT86: требуется минимум {max_address + 1} байт")
+        print(f"Поиск последовательности байтов: {' '.join([hex(b).upper().replace('0X', '0x') for b in target_sequence])}")
+        
+        # Находим ПЕРВОЕ вхождение последовательности
+        found_address = self.find_byte_sequence(buffer, target_sequence)
+        
+        if found_address == -1:
+            print("Последовательность 01 00 55 не найдена в файле")
+            return
+            
+        print(f"Последовательность найдена по адресу: {hex(found_address).upper()}")
+        
+        # Показываем контекст (несколько байтов до и после)
+        context_start = max(0, found_address - 5)
+        context_end = min(len(buffer), found_address + 8)
+        print(f"Контекст [{hex(context_start).upper()} - {hex(context_end-1).upper()}]: ", end="")
+        for i in range(context_start, context_end):
+            if i == found_address:
+                print(f"[{hex(buffer[i]).upper().replace('0X', '0x')}]", end=" ")
+            else:
+                print(f"{hex(buffer[i]).upper().replace('0X', '0x')}", end=" ")
+        print()
+        
+        # Проверяем, что первый байт действительно 0x01 перед изменением
+        if buffer[found_address] == 0x01:
+            old_value = buffer[found_address]
+            buffer[found_address] = 0x00  # Заменяем 01 на 00
+            print(f"Адрес {hex(found_address).upper()}: {hex(old_value).upper().replace('0X', '0x')} -> {hex(buffer[found_address]).upper().replace('0X', '0x')}")
+            
+            print(f"\nПатч успешно применён!")
+            
+            # Показываем результат после патчинга
+            print("Результат:")
+            print(f"Адрес {hex(found_address).upper()}: Последовательность теперь: ", end="")
+            for i in range(3):  # Показываем 3 байта последовательности
+                print(f"{hex(buffer[found_address + i]).upper().replace('0X', '0x')}", end=" ")
+            print()
+        else:
+            print(f"Ошибка: Первый байт по адресу {hex(found_address).upper()} не равен 0x01")
 
-        # Вывод значений байтов с адреса 20000 по 20019 (по аналогии)
-        print("Текущие значения байтов с 20000 по 20019:")
-        for i in range(0x20000, 0x20014):  # 0x20000 до 0x20013 включительно (20 байт)
-            print(f"Адрес {hex(i).upper()}: {hex(buffer[i]).upper().replace('0X', '0x')}")
+    def search_and_replace_all_sequences(self, buffer: bytearray):
+        """
+        Альтернативный метод: поиск и замена всех последовательностей 01 00 55 на 00 00 55
+        """
+        original_sequence = bytes([0x01, 0x00, 0x55])
+        replacement_sequence = bytes([0x00, 0x00, 0x55])
         
-        print("\nПрименение патча для отключения иммобилайзера MT86...")
+        print(f"Поиск и замена всех последовательностей:")
+        print(f"Исходная: {' '.join([hex(b).upper().replace('0X', '0x') for b in original_sequence])}")
+        print(f"Замена на: {' '.join([hex(b).upper().replace('0X', '0x') for b in replacement_sequence])}")
         
-        # Применяем изменения для отключения иммобилайзера
-        for address, value in immo_addresses.items():
-            old_value = buffer[address]
-            buffer[address] = value
-            print(f"Адрес {hex(address).upper()}: {hex(old_value).upper().replace('0X', '0x')} -> {hex(value).upper().replace('0X', '0x')}")
-
-        print(f"\nПатч успешно применён к MT86 (изменены байты по адресам: "
-              f"{', '.join([hex(addr).upper() for addr in immo_addresses.keys()])})")
+        replacements = 0
+        i = 0
         
-        # Вывод значений после изменений для проверки
-        print("\nЗначения байтов после применения патча:")
-        for address in immo_addresses.keys():
-            print(f"Адрес {hex(address).upper()}: {hex(buffer[address]).upper().replace('0X', '0x')}")
+        while i <= len(buffer) - len(original_sequence):
+            if buffer[i:i + len(original_sequence)] == original_sequence:
+                print(f"Замена по адресу {hex(i).upper()}")
+                buffer[i:i + len(replacement_sequence)] = replacement_sequence
+                replacements += 1
+                i += len(replacement_sequence)  # Пропускаем замененную последовательность
+            else:
+                i += 1
+                
+        print(f"Выполнено {replacements} замен")
 
 
 # Пример использования
@@ -58,14 +104,15 @@ if __name__ == "__main__":
         # Проверяем совместимость
         if mt86_patcher.check(buffer):
             print("Файл MT86 успешно проверен")
+            print(f"Размер файла: {len(buffer)} байт\n")
             
-            # Применяем патч
+            # Применяем патч с поиском последовательности
             mt86_patcher.encode(buffer)
             
             # Сохраняем модифицированный файл
             with open("mt86_no_immo.bin", "wb") as f:
                 f.write(buffer)
-            print("\nМодифицированный файл сохранён как 'mt86_no_immo.bin'")
+            print(f"\nМодифицированный файл сохранён как 'mt86_no_immo.bin'")
             
         else:
             print("Ошибка: Файл не соответствует формату MT86")
