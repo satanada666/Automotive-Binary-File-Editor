@@ -32,6 +32,7 @@ from Plugin.ECU.Me_17_kia_Hyundai  import Me_17_kia_Hyundai
 from Plugin.ECU.simk43_NI import simk43_NI
 from Plugin.ECU.simk41_NI import simk41_NI
 from Plugin.ECU.M78_NI import M78_NI
+from Plugin.ECU.Me17_China_NI import Me17_China_NI
 from Plugin.EEPROM.j34p import j34p
 from Plugin.EEPROM.Geely_Emgrand_93c56_PIN import Geely_Emgrand_93c56_PIN
 from Plugin.EEPROM.me745_NI import me745_NI
@@ -82,6 +83,7 @@ encoder_registry = {
     "simk43_NI": simk43_NI,
     "simk41_NI": simk41_NI,
     "M78_NI": M78_NI,
+    "Me17_China_NI": Me17_China_NI,
     "Me_17_kia_Hyundai": Me_17_kia_Hyundai ,
     "delphi_MT_38_NI": delphi_MT_38_NI,
     "Melco_MH7203_NI": Melco_MH7203_NI,
