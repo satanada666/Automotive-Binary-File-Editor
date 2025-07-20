@@ -16,7 +16,8 @@
       "BMW_MS41_No_Immo_CS": {}
     },
     "China": {
-      "China_797_No_Immo": {}
+      "China_797_No_Immo": {},
+      "M78_NI": {}
     },
     "Nissan": {
       "nissan_classic_SH705524N_NI": {},
@@ -28,6 +29,7 @@
       "sim2k_250_251": {},
       "simk41_NI": {},
       "simk43_NI":{},
+      "Me_17_kia_Hyundai": {},
       "delphi_MT_38_NI":{}  
     },
     "Mitsubishi": {
