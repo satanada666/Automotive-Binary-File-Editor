@@ -27,6 +27,7 @@ from Plugin.ECU.Melco_MH7203_NI import Melco_MH7203_NI
 from Plugin.ECU.sim2k_140_141_341_NI import sim2k_140_141_341_NI
 from Plugin.ECU.sim2k_240_241_242_245 import sim2k_240_241_242_245
 from Plugin.ECU.sim2k_250_251 import sim2k_250_251
+from Plugin.ECU.ME17_9_11_12_activate_cruise_control_NO_CS_CS_Winols import ME17_9_11_12_activate_cruise_control_NO_CS_CS_Winols
 from Plugin.ECU.delphi_MT_38_NI import delphi_MT_38_NI
 from Plugin.ECU.Me_17_kia_Hyundai  import Me_17_kia_Hyundai  
 from Plugin.ECU.simk43_NI import simk43_NI
@@ -83,6 +84,7 @@ encoder_registry = {
     "simk43_NI": simk43_NI,
     "simk41_NI": simk41_NI,
     "M78_NI": M78_NI,
+    "ME17_9_11_12_activate_cruise_control_NO_CS_CS_Winols": ME17_9_11_12_activate_cruise_control_NO_CS_CS_Winols,
     "Me17_China_NI": Me17_China_NI,
     "Me_17_kia_Hyundai": Me_17_kia_Hyundai ,
     "delphi_MT_38_NI": delphi_MT_38_NI,
