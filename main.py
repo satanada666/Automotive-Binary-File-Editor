@@ -1,4 +1,3 @@
-
 import os
 import sys
 import requests
@@ -23,6 +22,7 @@ from dialogs import MileageVinPinEditDialog
 LOCAL_VERSION = "1.1.43"
 GITHUB_VERSION_URL = "https://raw.githubusercontent.com/satanada666/Automotive-Binary-File-Editor/main/version.txt"
 DOWNLOAD_URL = "https://github.com/satanada666/Automotive-Binary-File-Editor/releases"
+SUPPORT_URL = "https://yoomoney.ru/to/410013340366044/1000"
 EXE_NAME = "Black_Box.exe"
 
 def resource_path(relative_path):
@@ -162,6 +162,36 @@ def download_update(win):
         webbrowser.open(DOWNLOAD_URL)
     except Exception as e:
         QMessageBox.critical(win, "Ошибка", f"Не удалось открыть страницу загрузки: {str(e)}")
+
+# =========================== Функция поддержки проекта ===========================
+
+def thankyou(win):
+    """
+    Функция для поддержки проекта через ЮMoney
+    Открывает страницу пожертвований в браузере
+    """
+    try:
+        # Показываем сообщение пользователю
+        reply = QMessageBox.question(
+            win, "Поддержка проекта",
+            "Спасибо за использование нашего приложения!\n\n"
+            "Если вам понравился проект и вы хотите его поддержать,\n"
+            "мы будем очень благодарны за любую помощь.\n\n"
+            "Открыть страницу для поддержки проекта?",
+            QMessageBox.Yes | QMessageBox.No,
+            QMessageBox.Yes
+        )
+        
+        if reply == QMessageBox.Yes:
+            webbrowser.open(SUPPORT_URL)
+            print(f"Открыта страница поддержки проекта: {SUPPORT_URL}")
+            
+    except Exception as e:
+        QMessageBox.critical(
+            win, "Ошибка", 
+            f"Не удалось открыть страницу поддержки проекта:\n{str(e)}"
+        )
+        print(f"Ошибка при открытии страницы поддержки: {str(e)}")
 
 # =========================== Основная логика ===========================
 
@@ -394,6 +424,7 @@ def main():
     win.actionCompare.triggered.connect(lambda: compare_two_files(win))
     win.actionEditMileage.triggered.connect(lambda: edit_mileage(win, settings, current_encoder))
     win.actionCheckUpdate.triggered.connect(lambda: check_for_updates(win))
+    win.actionThankYou.triggered.connect(lambda: thankyou(win))
     if hasattr(win, 'actionYes'):
         win.actionYes.triggered.connect(lambda: auto_update_exe(win))
 
@@ -415,15 +446,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-    
-
-
-
-
-
-
-
-

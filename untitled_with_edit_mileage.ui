@@ -17,7 +17,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>BLACK_BOX</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTreeWidget" name="treeWidget">
@@ -179,6 +179,7 @@ border-color: rgb(157, 170, 255);</string>
     <addaction name="separator"/>
     <addaction name="separator"/>
     <addaction name="actionCheckUpdate"/>
+    <addaction name="actionThankYou"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuColor"/>
@@ -225,10 +226,15 @@ border-color: rgb(157, 170, 255);</string>
    </property>
   </action>
   <action name="actionEditMileage">
- <property name="text">
-  <string>Edit Mileage</string>
- </property>
-</action>
+   <property name="text">
+    <string>Edit Mileage</string>
+   </property>
+  </action>
+  <action name="actionThankYou">
+   <property name="text">
+    <string>Thank you</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
