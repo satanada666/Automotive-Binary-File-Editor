@@ -20,6 +20,9 @@
       "M78_NI": {},
       "Me17_China_NI":{}
     },
+      "Chevrolet":{
+        "sirius_d3_d4_NI":{}
+    },
     "Nissan": {
       "nissan_classic_SH705524N_NI": {},
       "nissan_classic_SH705529N_NI": {}
@@ -37,6 +40,12 @@
     "Mitsubishi": {
       "Mitsubishi_MH8302F_NI": {},
       "Melco_MH7203_NI": {}
+    },
+    "Fiat":{
+      "Ducato_edc16c39_NI":{}
+    },
+    "Ford":{
+      "Sid802_804_NI":{}
     }
     
   },
