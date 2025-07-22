@@ -13,7 +13,8 @@
       "MT86_No_Immo": {}
     },
     "BMW": {
-      "BMW_MS41_No_Immo_CS": {}
+      "BMW_MS41_No_Immo_CS": {},
+      "ms42_NI":{}
     },
     "China": {
       "China_797_No_Immo": {},
