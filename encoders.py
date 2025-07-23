@@ -38,6 +38,8 @@ from Plugin.ECU.Me17_China_NI import Me17_China_NI
 from Plugin.ECU.Ducato_edc16c39_NI import Ducato_edc16c39_NI
 from Plugin.ECU.Sid802_804_NI import Sid802_804_NI
 from Plugin.ECU.ms42_NI import ms42_NI
+from Plugin.ECU.M798_MG798_NI import M798_MG798_NI
+from Plugin.ECU.M_E_797_NI import M_E_797_NI
 from Plugin.EEPROM.j34p import j34p
 from Plugin.EEPROM.Geely_Emgrand_93c56_PIN import Geely_Emgrand_93c56_PIN
 from Plugin.EEPROM.me745_NI import me745_NI
@@ -87,7 +89,9 @@ encoder_registry = {
     "sim2k_250_251": sim2k_250_251,
     "simk43_NI": simk43_NI,
     "simk41_NI": simk41_NI,
+    "M798_MG798_NI": M798_MG798_NI,
     "M78_NI": M78_NI,
+    "M_E_797_NI": M_E_797_NI,
     "ms42_NI": ms42_NI,
     "Sid802_804_NI": Sid802_804_NI,
     "Ducato_edc16c39_NI": Ducato_edc16c39_NI,

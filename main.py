@@ -19,7 +19,7 @@ from file_compare_worker import compare_two_files
 from dash_editor import DashEditor
 from dialogs import MileageVinPinEditDialog
 
-LOCAL_VERSION = "1.1.44"
+LOCAL_VERSION = "1.1.46"
 GITHUB_VERSION_URL = "https://raw.githubusercontent.com/satanada666/Automotive-Binary-File-Editor/main/version.txt"
 DOWNLOAD_URL = "https://github.com/satanada666/Automotive-Binary-File-Editor/releases"
 SUPPORT_URL = "https://yoomoney.ru/to/410013340366044/1000"
@@ -193,6 +193,55 @@ def thankyou(win):
             f"Не удалось открыть страницу поддержки проекта:\n{str(e)}"
         )
         print(f"Ошибка при открытии страницы поддержки: {str(e)}")
+
+def show_donation_on_close():
+    """
+    Показывает окно с предложением поддержать проект при закрытии программы
+    """
+    try:
+        reply = QMessageBox.question(
+            None, "🚀 До свидания! Спасибо за использование Black Box! 🔧",
+            "⭐ Программа была полезна? \n\n"
+            "💝 Поддержи разработчика донатом! 🎯\n"
+            "🍔 Даже небольшая сумма поможет развитию проекта! 💪\n\n"
+            "🔥 Больше донатов = больше крутых фич! 🚀\n\n"
+            "💳 Перейти к поддержке проекта?",
+            QMessageBox.Yes | QMessageBox.No,
+            QMessageBox.No  # По умолчанию "Нет"
+        )
+        
+        if reply == QMessageBox.Yes:
+            webbrowser.open(SUPPORT_URL)
+            print(f"Пользователь перешел к поддержке проекта при закрытии: {SUPPORT_URL}")
+        else:
+            print("Пользователь отказался от доната при закрытии")
+            
+    except Exception as e:
+        print(f"Ошибка при показе окна доната при закрытии: {str(e)}")
+
+# =========================== Кастомный класс главного окна ===========================
+
+class MainWindow(QtWidgets.QMainWindow):
+    def __init__(self, ui_file):
+        super().__init__()
+        uic.loadUi(ui_file, self)
+        self.progressBar.setValue(0)
+        self.progressBar.setVisible(False)
+    
+    def closeEvent(self, event):
+        """
+        Перехватываем событие закрытия окна и показываем окно доната
+        """
+        try:
+            # Показываем окно с предложением доната
+            show_donation_on_close()
+            
+            # Принимаем событие закрытия
+            event.accept()
+            
+        except Exception as e:
+            print(f"Ошибка при закрытии приложения: {str(e)}")
+            event.accept()
 
 # =========================== Основная логика ===========================
 
@@ -378,9 +427,8 @@ def main():
     app = QtWidgets.QApplication([])
     try:
         ui_file = resource_path("untitled_with_edit_mileage.ui")
-        win = uic.loadUi(ui_file)
-        win.progressBar.setValue(0)
-        win.progressBar.setVisible(False)
+        # Используем кастомный класс MainWindow вместо uic.loadUi
+        win = MainWindow(ui_file)
     except Exception as e:
         print(f"Error loading UI: {str(e)}")
         sys.exit(1)
