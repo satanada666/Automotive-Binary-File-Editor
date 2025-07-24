@@ -1,0 +1,64 @@
+from subclass import srs  # <-- Импорт базового класса srs
+
+class TRW_51822436_D219391215(srs):
+    def __init__(self):
+        super().__init__()
+        self.size_min = 512
+        self.size_max = 512
+
+    def check(self, buffer: bytearray) -> bool:
+        if len(buffer) != self.size_min:
+            return False
+        return super().check(buffer)
+
+    def encode(self, buffer: bytearray):
+        if len(buffer) < self.size_min:
+            print(f"Ошибка: размер буфера ({len(buffer)}) меньше минимального ({self.size_min})")
+            return
+
+        # 1. Полностью очистить участок — записать FF от 0x00 до 0x1FF
+        for addr in range(0x00, 0x200):
+            if buffer[addr] != 0x00:
+                print(f"[Очистка] Адрес 0x{addr:04X}: было 0x{buffer[addr]:02X} → стало 0xFF")
+            buffer[addr] = 0x00
+
+        print("[Информация] Буфер полностью очищен значением 0xFF")
+
+        # 2. Затем точечно патчить нужные байты
+        patch_data = {
+            0x01: 0xFF,
+            0x06: 0xFF,
+            0x0B: 0xFF,
+            0x10: 0xFF,
+            0x15: 0xFF,
+            0x1A: 0xFF,
+            0x37: 0x05,
+            0x5B: 0xFF,
+            0xE7: 0x00,
+            0xE8: 0x08,
+            0xE9: 0x02,
+            0xEA: 0x07,
+            0xEB: 0x02,
+            0xEC: 0x00,
+            0xED: 0x01,
+            0xEE: 0x00,
+            0xEF: 0x08,
+            0xFD: 0xB5,
+            0x126: 0x00,
+            0x133: 0xD2,
+            0x134: 0x1C,
+            0x135: 0x00,
+            0x136: 0x00,
+            0x137: 0x00,
+            0x138: 0x11,
+        }
+
+        for addr, value in patch_data.items():
+            old = buffer[addr]
+            buffer[addr] = value
+            print(f"[Патч] Адрес 0x{addr:04X}: было 0x{old:02X} → стало 0x{value:02X}")
+
+        print("[Информация] Патч применён успешно к TRW_51822436_D219391215")
+
+        # Вызов родительского метода
+        super().encode(buffer)
