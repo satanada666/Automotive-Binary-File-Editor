@@ -40,6 +40,7 @@ from Plugin.ECU.Sid802_804_NI import Sid802_804_NI
 from Plugin.ECU.ms42_NI import ms42_NI
 from Plugin.ECU.M798_MG798_NI import M798_MG798_NI
 from Plugin.ECU.M_E_797_NI import M_E_797_NI
+from Plugin.ECU.kefico_MH72_MH832_MH83 import kefico_MH72_MH832_MH83
 from Plugin.EEPROM.j34p import j34p
 from Plugin.EEPROM.Geely_Emgrand_93c56_PIN import Geely_Emgrand_93c56_PIN
 from Plugin.EEPROM.me745_NI import me745_NI
@@ -51,6 +52,7 @@ from Plugin.SRS.mazda_95320_GR6B_57K30B import mazda_95320_GR6B_57K30B
 from Plugin.SRS.Continental_Reault_8201_385_569 import Continental_Reault_8201_385_569
 from Plugin.SRS.Hyundi_santa_fe_95910_2b180_epp95640 import Hyundi_santa_fe_95910_2b180_epp95640
 from Plugin.SRS.srs_kia_95910_3u100_95320 import srs_kia_95910_3u100_95320
+from Plugin.SRS._0285001639_Bosch_98820_BU900_HC12B32 import _0285001639_Bosch_98820_BU900_HC12B32
 from Plugin.EEPROM.Vag_simos_2_1_No_Immo import Vag_simos_2_1_No_Immo
 from Plugin.EEPROM.Vag_simos_3_3_No_Immo import Vag_simos_3_3_No_Immo
 from Plugin.EEPROM.VAG_EDC15_NI_24c02 import VAG_EDC15_NI_24c02
@@ -107,6 +109,7 @@ encoder_registry = {
     "EDC16U1(U34)_No_Immo": edc16u1,
     "j34p_No_Immo": j34p,
     "me745_NI": me745_NI,
+    "kefico_MH72_MH832_MH83": kefico_MH72_MH832_MH83,
     "VW_Simos_4S_93C56_NI": VW_Simos_4S_93C56_NI,
     "Opel_25040_Pin_Vin": Opel_25040_Pin_Vin,
     "mazda_95320_GR6B_57K30B": mazda_95320_GR6B_57K30B,
@@ -118,6 +121,7 @@ encoder_registry = {
     "VAG_M3_8_3_24C02_NI": VAG_M3_8_3_24C02_NI,
     "Chevrolet_E84_Pin_Vin": Chevrolet_E84_Pin_Vin,
     "Chevrolet_E84_Editor": Chevrolet_E84_Editor,
+    "_0285001639_Bosch_98820_BU900_HC12B32": _0285001639_Bosch_98820_BU900_HC12B32,
     "me7_5_No_Immo_Pin_Cs": me7_5_No_Immo_Pin_Cs,
     "kyron_95160_NI_CS": kyron_95160_NI_CS,
     "Prado_93c86_until_2015": Prado_93c86_until_2015,
