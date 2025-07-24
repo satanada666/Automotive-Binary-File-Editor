@@ -115,6 +115,7 @@
     "Siemens": {}
   },
   "SRS": {
+    
     "Mazda": {
       "mazda_95320_GR6B_57K30B": {}
     },
@@ -122,7 +123,9 @@
       "Continental_Reault_8201_385_569": {}
     },"Nissan":{
       "_0285001639_Bosch_98820_BU900_HC12B32":{}
-    
+    },
+    "PSA":{
+      "_619771500_9674290880_2012MCU95320": {}
     },
     "Hyundai": {
       "Hyundi_santa_fe_95910_2b180_epp95640": {},

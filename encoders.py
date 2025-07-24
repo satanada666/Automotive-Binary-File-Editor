@@ -52,6 +52,7 @@ from Plugin.SRS.mazda_95320_GR6B_57K30B import mazda_95320_GR6B_57K30B
 from Plugin.SRS.Continental_Reault_8201_385_569 import Continental_Reault_8201_385_569
 from Plugin.SRS.Hyundi_santa_fe_95910_2b180_epp95640 import Hyundi_santa_fe_95910_2b180_epp95640
 from Plugin.SRS.srs_kia_95910_3u100_95320 import srs_kia_95910_3u100_95320
+from Plugin.SRS._619771500_9674290880_2012MCU95320 import _619771500_9674290880_2012MCU95320  
 from Plugin.SRS._0285001639_Bosch_98820_BU900_HC12B32 import _0285001639_Bosch_98820_BU900_HC12B32
 from Plugin.EEPROM.Vag_simos_2_1_No_Immo import Vag_simos_2_1_No_Immo
 from Plugin.EEPROM.Vag_simos_3_3_No_Immo import Vag_simos_3_3_No_Immo
@@ -135,6 +136,7 @@ encoder_registry = {
     "Chevrolet_lacetti_2007_2013_dash_denso_93c46": Chevrolet_lacetti_2007_2013_dash_denso_93c46,
     "aveo_93c56": aveo_93c56,
     "Cruze_BCM_24c16_after_2009": Cruze_BCM_24c16_after_2009,
+    "_619771500_9674290880_2012MCU95320": _619771500_9674290880_2012MCU95320,
     "bcm_valeo": bcm_valeo
 }
 
