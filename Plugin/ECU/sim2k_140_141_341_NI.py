@@ -12,6 +12,21 @@ class sim2k_140_141_341_NI(Encoder):
         # Вторая последовательность для поиска (10 байт)
         self.sequence_2 = [0x2C, 0x09, 0x00, 0x00, 0x40, 0x82, 0x02, 0x14, 0x89, 0x8D]
 
+        # Третья последовательность для поиска (10 байт)
+        self.sequence_3 = [0x2C, 0x09, 0x00, 0x00, 0x40, 0x82, 0x01, 0x44, 0x89, 0x8D]
+
+        # Четвертая последовательность для поиска (10 байт)
+        self.sequence_4 = [0x00, 0x00, 0x41, 0x82, 0x00, 0x0C, 0x39, 0x80, 0x00, 0x01]
+        
+    def find_all_sequences(self, buffer: bytearray, sequence: list) -> list:
+        """Находит ВСЕ вхождения последовательности в буфере"""
+        positions = []
+        seq_len = len(sequence)
+        for i in range(len(buffer) - seq_len + 1):
+            if buffer[i:i+seq_len] == bytearray(sequence):
+                positions.append(i)
+        return positions
+
     def find_sequence(self, buffer: bytearray, sequence: list) -> int:
         """Находит первое вхождение последовательности в буфере"""
         seq_len = len(sequence)
@@ -20,15 +35,59 @@ class sim2k_140_141_341_NI(Encoder):
                 return i
         return -1
 
+    def find_closest_sequences(self, buffer: bytearray):
+        """Находит ближайшие друг к другу последовательности"""
+        # Ищем все вхождения каждой последовательности
+        seq1_positions = self.find_all_sequences(buffer, self.sequence_1)
+        seq2_positions = self.find_all_sequences(buffer, self.sequence_2)
+        seq3_positions = self.find_all_sequences(buffer, self.sequence_3)
+        seq4_positions = self.find_all_sequences(buffer, self.sequence_4)
+        
+        print(f"Найдено вхождений:")
+        print(f"  Последовательность 1 (FF FF 41 82...): {len(seq1_positions)} шт. на позициях: {[hex(pos) for pos in seq1_positions]}")
+        print(f"  Последовательность 2 (2C 09... 02 14): {len(seq2_positions)} шт. на позициях: {[hex(pos) for pos in seq2_positions]}")
+        print(f"  Последовательность 3 (2C 09... 01 44): {len(seq3_positions)} шт. на позициях: {[hex(pos) for pos in seq3_positions]}")
+        print(f"  Последовательность 4 (00 00 41 82...): {len(seq4_positions)} шт. на позициях: {[hex(pos) for pos in seq4_positions]}")
+        
+        # Объединяем все позиции типа sequence_1 (включая sequence_4 которая похожа)
+        type1_positions = seq1_positions + seq4_positions
+        # Объединяем все позиции типа sequence_2 (включая sequence_3)
+        type2_positions = seq2_positions + seq3_positions
+        
+        if not type1_positions or not type2_positions:
+            return None, None
+        
+        # Если найдено много вхождений, ищем самые близкие пары
+        min_distance = float('inf')
+        best_pos1 = None
+        best_pos2 = None
+        
+        for pos1 in type1_positions:
+            for pos2 in type2_positions:
+                distance = abs(pos1 - pos2)
+                if distance < min_distance:
+                    min_distance = distance
+                    best_pos1 = pos1
+                    best_pos2 = pos2
+        
+        print(f"\nВыбраны ближайшие последовательности:")
+        print(f"  Позиция 1: 0x{best_pos1:06X}")
+        print(f"  Позиция 2: 0x{best_pos2:06X}")
+        print(f"  Расстояние между ними: {min_distance} байт")
+        
+        return best_pos1, best_pos2
+
     def check(self, buffer: bytearray) -> bool:
         if len(buffer) != self.size_min:
             return False
 
-        # Проверяем наличие ОБЕИХ последовательностей
-        seq1_pos = self.find_sequence(buffer, self.sequence_1)
-        seq2_pos = self.find_sequence(buffer, self.sequence_2)
+        # Проверяем наличие хотя бы одной пары последовательностей
+        type1_found = (self.find_sequence(buffer, self.sequence_1) != -1 or 
+                      self.find_sequence(buffer, self.sequence_4) != -1)
+        type2_found = (self.find_sequence(buffer, self.sequence_2) != -1 or 
+                      self.find_sequence(buffer, self.sequence_3) != -1)
 
-        if seq1_pos == -1 or seq2_pos == -1:
+        if not type1_found or not type2_found:
             return False
 
         return super().check(buffer)
@@ -41,35 +100,29 @@ class sim2k_140_141_341_NI(Encoder):
 
             # Проверка последовательностей для диагностики
             print("\nПроверка последовательностей:")
-
+            
             seq1_pos = self.find_sequence(buffer, self.sequence_1)
             seq2_pos = self.find_sequence(buffer, self.sequence_2)
+            seq3_pos = self.find_sequence(buffer, self.sequence_3)
+            seq4_pos = self.find_sequence(buffer, self.sequence_4)
 
-            if seq1_pos == -1:
-                print("Первая последовательность (FF FF 41 82 00 0C 39 80 00 01): НЕ НАЙДЕНА")
-            else:
-                print(f"Первая последовательность найдена на позиции 0x{seq1_pos:06X}")
+            if seq1_pos == -1 and seq4_pos == -1:
+                print("Последовательности типа 1 (41 82 00 0C 39 80 00 01): НЕ НАЙДЕНЫ")
+            if seq2_pos == -1 and seq3_pos == -1:
+                print("Последовательности типа 2 (40 82 XX XX 89 8D): НЕ НАЙДЕНЫ")
 
-            if seq2_pos == -1:
-                print("Вторая последовательность (2C 09 00 00 40 82 02 14 89 8D): НЕ НАЙДЕНА")
-            else:
-                print(f"Вторая последовательность найдена на позиции 0x{seq2_pos:06X}")
-
-            print("Для работы требуется наличие ОБЕИХ последовательностей")
+            print("Для работы требуется наличие хотя бы одной пары последовательностей")
             return False
 
-        # Поиск последовательностей
-        seq1_pos = self.find_sequence(buffer, self.sequence_1)
-        seq2_pos = self.find_sequence(buffer, self.sequence_2)
+        # Находим ближайшие последовательности
+        seq1_pos, seq2_pos = self.find_closest_sequences(buffer)
 
-        if seq1_pos == -1 or seq2_pos == -1:
-            print("Ошибка: одна из последовательностей не найдена, патч не может быть применён.")
+        if seq1_pos is None or seq2_pos is None:
+            print("Ошибка: не удалось найти подходящую пару последовательностей")
             return False
 
         patched_count = 0
-        print("Применение нового алгоритма патча для отключения иммобилайзера sim2k_140_141_341_NI...\n")
-        print(f"Первая последовательность найдена на позиции 0x{seq1_pos:06X}")
-        print(f"Вторая последовательность найдена на позиции 0x{seq2_pos:06X}\n")
+        print("\nПрименение нового алгоритма патча для отключения иммобилайзера sim2k_140_141_341_NI...\n")
 
         print("Шаг 1: Корректировка 01 -> 00")
         last_byte_pos = seq1_pos + 9
@@ -103,4 +156,3 @@ class sim2k_140_141_341_NI(Encoder):
         print(f"Всего изменено байт: {patched_count}")
         print("Иммобилайзер отключен.")
         return True
-
