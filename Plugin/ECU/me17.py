@@ -3,6 +3,42 @@ from encoder import Encoder
 class ME17_No_Immo(Encoder):
     def __init__(self):
         super().__init__()
+
+    def check(self, buffer: bytearray) -> bool:
+        signature = bytearray([0x80, 0x20])
+        target_sequence = bytearray([0x8B, 0x02, 0x20, 0x22])
+        full_sequence = signature + target_sequence
+
+        index = buffer.find(full_sequence)
+
+        if index != -1:
+            print(f"Последовательность найдена по адресу: 0x{index:08X}")
+            return True
+        else:
+            print("Последовательность 0x80 0x20 0x8B 0x02 0x20 0x22 не найдена в файле")
+            return False
+
+    def encode(self, buffer: bytearray):
+        signature = bytearray([0x80, 0x20])
+        target_sequence = bytearray([0x8B, 0x02, 0x20, 0x22])
+        new_sequence = bytearray([0x00, 0x00, 0x82, 0x12])
+        full_sequence = signature + target_sequence
+
+        index = buffer.find(full_sequence)
+
+        if index != -1:
+            buffer[index + len(signature): index + len(signature) + len(target_sequence)] = new_sequence
+            print(f"Патч FLASH_OFF успешно применён по адресу 0x{index + len(signature):08X}")
+        else:
+            print("Не удалось применить патч: последовательность не найдена")
+
+
+
+'''from encoder import Encoder
+
+class ME17_No_Immo(Encoder):
+    def __init__(self):
+        super().__init__()
         self.expected_sizes = {1504 * 1024, 1536 * 1024, 2048 * 1024, 2560 * 1024, 4096 * 1024}
 
     def check(self, buffer: bytearray) -> bool:
@@ -65,4 +101,4 @@ class ME17_No_Immo(Encoder):
                 print(f"Патч FLASH_OFF успешно применён по адресу 0x{i + signature_length:08X}")
                 return
 
-        print("Не удалось применить патч: последовательность не найдена")
+        print("Не удалось применить патч: последовательность не найдена")'''
