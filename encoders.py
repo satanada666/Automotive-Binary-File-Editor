@@ -39,6 +39,7 @@ from Plugin.ECU.M798_MG798_NI import M798_MG798_NI
 from Plugin.ECU.M_E_797_NI import M_E_797_NI
 from Plugin.ECU.kefico_MH72_MH832_MH83 import kefico_MH72_MH832_MH83
 from Plugin.ECU.nissan_hitachi_sh705507n_NI import nissan_hitachi_sh705507n_NI
+from Plugin.ECU.me_72_BMW_NI import me_72_BMW_NI
 from Plugin.EEPROM.j34p import j34p
 from Plugin.EEPROM.Geely_Emgrand_93c56_PIN import Geely_Emgrand_93c56_PIN
 from Plugin.EEPROM.me745_NI import me745_NI
@@ -109,6 +110,7 @@ encoder_registry = {
     "EDC16U1(U34)_No_Immo": edc16u1,
     "j34p_No_Immo": j34p,
     "me745_NI": me745_NI,
+    "me_72_BMW_NI": me_72_BMW_NI,
     "kefico_MH72_MH832_MH83": kefico_MH72_MH832_MH83,
     "VW_Simos_4S_93C56_NI": VW_Simos_4S_93C56_NI,
     "Opel_25040_Pin_Vin": Opel_25040_Pin_Vin,
