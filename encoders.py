@@ -7,9 +7,6 @@ from PyQt5.QtWidgets import QDialog
 sys.path.append(str(Path(__file__).parent))
 
 from encoder import Encoder
-from my2 import My2
-from dash_vdo import dash_vdo
-from bcm_valeo import bcm_valeo
 from Plugin.ECU.me17 import ME17_No_Immo
 from Plugin.ECU.Ems3120_No_Immo import Ems3120_No_Immo
 from Plugin.ECU.Ems3130_NI import Ems3130_NI
@@ -107,7 +104,6 @@ encoder_registry = {
     "Me_17_kia_Hyundai": Me_17_kia_Hyundai ,
     "delphi_MT_38_NI": delphi_MT_38_NI,
     "Melco_MH7203_NI": Melco_MH7203_NI,
-    "MED9.1": My2,
     "Geely_Emgrand_93c56_PIN": Geely_Emgrand_93c56_PIN,
     "med_9_1_NI_95160": med_9_1_NI_95160,
     "EDC16U1(U34)_No_Immo": edc16u1,
@@ -129,7 +125,6 @@ encoder_registry = {
     "me7_5_No_Immo_Pin_Cs": me7_5_No_Immo_Pin_Cs,
     "kyron_95160_NI_CS": kyron_95160_NI_CS,
     "Prado_93c86_until_2015": Prado_93c86_until_2015,
-    "dash_vdo": dash_vdo,
     "_94003_G9000_J5060_94013_G9920_Genesis_g80_94013_J5740_94019_2P191_94043_B1010_94043_B1870_ahls_off": _94003_G9000_J5060_94013_G9920_Genesis_g80_94013_J5740_94019_2P191_94043_B1010_94043_B1870_ahls_off,
     "haval_m6_2023_dash_93c56": haval_m6_2023_dash_93c56,
     "gelly_atlas_2020_24c02": gelly_atlas_2020_24c02,
@@ -141,7 +136,7 @@ encoder_registry = {
     "Cruze_BCM_24c16_after_2009": Cruze_BCM_24c16_after_2009,
     "_619771500_9674290880_2012MCU95320": _619771500_9674290880_2012MCU95320,
     "TRW_51822436_D219391215": TRW_51822436_D219391215,
-    "bcm_valeo": bcm_valeo
+   
 }
 
 def get_encoder(name: str) -> Encoder:
