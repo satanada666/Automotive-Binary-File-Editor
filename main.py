@@ -19,7 +19,7 @@ from file_compare_worker import compare_two_files
 from dash_editor import DashEditor
 from dialogs import MileageVinPinEditDialog
 
-LOCAL_VERSION = "1.1.49"
+LOCAL_VERSION = "1.1.50"
 GITHUB_VERSION_URL = "https://raw.githubusercontent.com/satanada666/Automotive-Binary-File-Editor/main/version.txt"
 DOWNLOAD_URL = "https://github.com/satanada666/Automotive-Binary-File-Editor/releases"
 SUPPORT_URL = "https://yoomoney.ru/to/410013340366044/1000"
@@ -442,11 +442,11 @@ def main():
         selected_items = tree.selectedItems()
         if selected_items:
             ecu_name = selected_items[0].text(0)
-            encoder = get_encoder(ecu_name)
+            encoder = get_encoder(ecu_name,win)# Передаём win как parent
             current_encoder[0] = encoder
             win.statusBar().showMessage(
                 f"Выбран ECU: {ecu_name}, редактор готов к работе" if encoder
-                else f"Выбран ECU: {ecu_name}, редактор не найден"
+                else f"Выбран ECU: {ecu_name}, редактор не найден или доступ заблокирован"
             )
             print(f"on_tree_item_clicked: Selected ECU = {ecu_name}, Encoder = {type(encoder).__name__ if encoder else None}")
             if hasattr(win, 'info_panel'):

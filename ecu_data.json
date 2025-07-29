@@ -1,3 +1,4 @@
+
 {
   "ECU": {
     "Renault": {
@@ -16,7 +17,7 @@
     "BMW": {
       "BMW_MS41_No_Immo_CS": {},
       "ms42_NI":{},
-      "me_72_BMW_NI": {}
+      "me_72_BMW_NI": {"password_protected": true}
     },
     "China": {
       "China_797_No_Immo": {},
