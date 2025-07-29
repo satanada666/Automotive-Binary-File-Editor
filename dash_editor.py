@@ -67,9 +67,3 @@ class DashEditor(Encoder, ABC):
         if not (0 <= mileage_value <= 999999):
             raise ValueError("Пробег вне допустимого диапазона")
         return mileage_value
-    
-    def get_field(self, buffer, address, length, decode_fn):#############
-        if address + length > len(buffer):
-           return "не найден"
-        raw = buffer[address:address+length]
-        return decode_fn(raw)

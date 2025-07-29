@@ -1,8 +1,7 @@
 import os
 import sys
 from pathlib import Path
-from PyQt5.QtWidgets import QDialog, QInputDialog, QMessageBox, QLineEdit  # Добавлен QLineEdit
-from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QDialog
 
 # Добавляем корневую директорию проекта в sys.path для корректных импортов
 sys.path.append(str(Path(__file__).parent))
@@ -141,45 +140,8 @@ encoder_registry = {
     "TRW_51822436_D219391215": TRW_51822436_D219391215,
    
 }
-#####dobavil
-def get_encoder(name: str, parent=None) -> Encoder:
-    """Возвращает экземпляр энкодера по его имени с проверкой пароля."""
-    encoder_class = encoder_registry.get(name)
-    if not encoder_class:
-        print(f"get_encoder: Name = {name}, Encoder = None")
-        return None
 
-    # Загружаем данные из JSON для проверки защиты паролем
-    from ecu_data import create_ecu_hierarchy_from_file
-    ecu_data = create_ecu_hierarchy_from_file()
-    protected = False
-    for root in ecu_data:
-        if root.name == "ECU" or root.name == "EEPROM" or root.name == "DASH" or root.name == "BCM" or root.name == "SRS":
-            for child in root.children:
-                for grand_child in child.children:
-                    if grand_child.name == name and grand_child.password_protected:
-                        protected = True
-                        break
-                if protected:
-                    break
-            if protected:
-                break
-
-    if protected:
-        password, ok = QInputDialog.getText(
-            parent, "Ввод пароля", "Модуль запаролен. Введите пароль:",
-            QLineEdit.Password, ""
-        )
-        if not ok or password != "GZkuoqZcE2PmL1QC":
-            QMessageBox.warning(parent, "Ошибка", "Неверный пароль. Доступ запрещён.")
-            print(f"get_encoder: Name = {name}, Encoder = None (wrong password)")
-            return None
-
-    encoder = encoder_class()
-    print(f"get_encoder: Name = {name}, Encoder = {type(encoder).__name__}")
-    return encoder
-####
-'''def get_encoder(name: str) -> Encoder:
+def get_encoder(name: str) -> Encoder:
     """Возвращает экземпляр энкодера по его имени."""
     encoder_class = encoder_registry.get(name)
     if encoder_class:
@@ -187,5 +149,4 @@ def get_encoder(name: str, parent=None) -> Encoder:
         print(f"get_encoder: Name = {name}, Encoder = {type(encoder).__name__}")
         return encoder
     print(f"get_encoder: Name = {name}, Encoder = None")
-    return None'''
-
+    return None
