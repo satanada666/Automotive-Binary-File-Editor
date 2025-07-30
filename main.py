@@ -4,10 +4,20 @@ import requests
 import webbrowser
 import subprocess
 import tempfile
+import logging
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('debug.log'),
+        logging.StreamHandler()
+    ]
+)
+
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtCore import QSettings, Qt, QThread, pyqtSignal
 from PyQt5.QtWidgets import QFileDialog, QMessageBox, QGroupBox, QVBoxLayout, QLabel, QInputDialog, QDialog
-
 from packaging import version
 from color import setup_color
 from file_operations import open_file, save_file
@@ -26,14 +36,26 @@ SUPPORT_URL = "https://yoomoney.ru/to/410013340366044/1000"
 EXE_NAME = "Black_Box.exe"
 
 def resource_path(relative_path):
+    """Функция для получения правильного пути к ресурсам в exe и обычном запуске"""
     try:
+        # PyInstaller создает временную папку и сохраняет путь в _MEIPASS
         base_path = getattr(sys, '_MEIPASS', os.path.abspath(os.path.dirname(__file__)))
         full_path = os.path.join(base_path, relative_path)
         print(f"Resolved path for {relative_path}: {full_path}")
-        return full_path
+        
+        # Проверяем существование файла
+        if os.path.exists(full_path):
+            return full_path
+        else:
+            print(f"WARNING: File not found at {full_path}")
+            # Пробуем альтернативный путь
+            alt_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), relative_path)
+            print(f"Trying alternative path: {alt_path}")
+            return alt_path
+            
     except Exception as e:
         print(f"Error resolving resource path for {relative_path}: {str(e)}")
-        sys.exit(1)
+        return os.path.join(os.path.dirname(os.path.abspath(__file__)), relative_path)
 
 # =========================== Автообновление ===========================
 
@@ -44,28 +66,20 @@ class UpdaterThread(QThread):
 
     def run(self):
         try:
-            # Получение последней версии с GitHub
             r = requests.get(GITHUB_VERSION_URL)
             r.raise_for_status()
             new_version = r.text.strip()
 
-            # Проверка необходимости обновления
             if version.parse(new_version) <= version.parse(LOCAL_VERSION):
                 self.done.emit("already_latest")
                 return
 
-            # Путь к рабочему столу и целевой папке
             desktop_path = os.path.join(os.path.expanduser("~"), "Desktop")
             target_dir = os.path.join(desktop_path, "New_version_Black_Box")
             os.makedirs(target_dir, exist_ok=True)
-
-            # Путь к файлу
             target_exe = os.path.join(target_dir, EXE_NAME)
-
-            # URL для скачивания
             url = f"https://github.com/satanada666/Automotive-Binary-File-Editor/releases/download/v{new_version}/{EXE_NAME}"
 
-            # Скачивание с прогрессом
             with requests.get(url, stream=True) as r:
                 r.raise_for_status()
                 total = int(r.headers.get('content-length', 0))
@@ -79,12 +93,10 @@ class UpdaterThread(QThread):
                                 percent = int(downloaded * 100 / total)
                                 self.progress.emit(percent)
 
-            # Готово — возвращаем путь к новому exe
             self.done.emit(target_exe)
 
         except Exception as e:
             self.error.emit(str(e))
-
 
 def auto_update_exe(win):
     win.updater_thread = UpdaterThread()
@@ -100,21 +112,17 @@ def auto_update_exe(win):
             return
 
         QMessageBox.information(win, "Обновление", "Загрузка завершена. Новая версия запускается.")
-
-        # Открываем папку с новой версией
         try:
             folder_path = os.path.dirname(path)
             subprocess.Popen(f'explorer "{folder_path}"')
         except Exception as e:
             print(f"Не удалось открыть папку: {e}")
 
-        # Запускаем новую версию
         try:
             subprocess.Popen([path])
         except Exception as e:
             QMessageBox.critical(win, "Ошибка", f"Не удалось запустить новую версию: {str(e)}")
 
-        # Завершаем текущую программу
         thread.quit()
         thread.wait()
         QtWidgets.QApplication.quit()
@@ -128,8 +136,6 @@ def auto_update_exe(win):
     thread.error.connect(on_error)
     thread.start()
 
-
-# Дополнительная функция для проверки обновлений без автозагрузки
 def check_for_updates(win):
     try:
         response = requests.get(GITHUB_VERSION_URL)
@@ -166,12 +172,7 @@ def download_update(win):
 # =========================== Функция поддержки проекта ===========================
 
 def thankyou(win):
-    """
-    Функция для поддержки проекта через ЮMoney
-    Открывает страницу пожертвований в браузере
-    """
     try:
-        # Показываем сообщение пользователю
         reply = QMessageBox.question(
             win, "💰 Донат для разработчика 🎮",
             "🎯 Эй, автомеханик! Black Box работает? 🔥\n\n"
@@ -195,9 +196,6 @@ def thankyou(win):
         print(f"Ошибка при открытии страницы поддержки: {str(e)}")
 
 def show_donation_on_close():
-    """
-    Показывает окно с предложением поддержать проект при закрытии программы
-    """
     try:
         reply = QMessageBox.question(
             None, "🚀 До свидания! Спасибо за использование Black Box! 🔧",
@@ -207,7 +205,7 @@ def show_donation_on_close():
             "🔥 Больше донатов = больше крутых фич! 🚀\n\n"
             "💳 Перейти к поддержке проекта?",
             QMessageBox.Yes | QMessageBox.No,
-            QMessageBox.No  # По умолчанию "Нет"
+            QMessageBox.No
         )
         
         if reply == QMessageBox.Yes:
@@ -229,16 +227,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.progressBar.setVisible(False)
     
     def closeEvent(self, event):
-        """
-        Перехватываем событие закрытия окна и показываем окно доната
-        """
         try:
-            # Показываем окно с предложением доната
             show_donation_on_close()
-            
-            # Принимаем событие закрытия
             event.accept()
-            
         except Exception as e:
             print(f"Ошибка при закрытии приложения: {str(e)}")
             event.accept()
@@ -282,13 +273,11 @@ def edit_mileage(win, settings, current_encoder):
             
             print(f"edit_mileage: Пользователь ввел: mileage={new_mileage}, vin={new_vin}, pin={new_pin}")
             
-            # Проверяем диапазон пробега
             if new_mileage > 65535:
                 QMessageBox.warning(win, "Предупреждение", 
                                    f"Пробег {new_mileage} км превышает максимальное значение 65535 км для данного модуля")
                 return
             
-            # Определяем модель и проверяем, нужно ли игнорировать VIN/PIN
             encoder_name = type(encoder).__name__
             ignore_vin_pin = (
                 'dash' in encoder_name.lower() or
@@ -313,7 +302,6 @@ def edit_mileage(win, settings, current_encoder):
             
             print(f"edit_mileage: encoder={encoder_name}, model={model}, new_mileage={new_mileage}, ignore_vin_pin={ignore_vin_pin}")
             
-            # Обновляем пробег
             if ignore_vin_pin:
                 encoder.update_mileage(file_data, new_mileage, model=model)
                 updated_data = encoder.data
@@ -338,13 +326,11 @@ def edit_mileage(win, settings, current_encoder):
                         QMessageBox.critical(win, "Ошибка", f"Не удалось обновить PIN. Модуль: {encoder_name}")
                         return
             
-            # Сохраняем обновленные данные
             file_path = settings.value("last_file")
             with open(file_path, 'wb') as f:
                 f.write(updated_data)
             print(f"edit_mileage: Файл сохранён по пути {file_path}")
             
-            # Обновляем настройки
             settings.setValue("file_data", updated_data)
             updated_result = encoder.encode(updated_data, model=model)
             print(f"edit_mileage: encode result = {updated_result}")
@@ -352,11 +338,9 @@ def edit_mileage(win, settings, current_encoder):
             settings.setValue("last_vin", updated_result['VIN'] if not ignore_vin_pin else current_vin)
             settings.setValue("last_pin", updated_result['PIN'] if not ignore_vin_pin else current_pin)
             
-            # Сравниваем файлы
             original_data = bytearray(file_data)
             display_hex_comparison(original_data, updated_data, win)
             
-            # Отображаем информацию
             show_vin_pin_info(win,
                              settings.value("last_vin", "N/A"),
                              settings.value("last_pin", "N/A"),
@@ -425,12 +409,25 @@ def show_comparison_results(differences, win, settings):
 
 def main():
     app = QtWidgets.QApplication([])
+    
+    # Отладочная информация для exe
+    if hasattr(sys, '_MEIPASS'):
+        print(f"Running from exe, _MEIPASS: {sys._MEIPASS}")
+        try:
+            print(f"Contents of _MEIPASS: {os.listdir(sys._MEIPASS)}")
+        except Exception as e:
+            print(f"Error listing _MEIPASS contents: {e}")
+    
     try:
         ui_file = resource_path("untitled_with_edit_mileage.ui")
-        # Используем кастомный класс MainWindow вместо uic.loadUi
+        if not os.path.exists(ui_file):
+            print(f"ERROR: UI file not found at {ui_file}")
+            QMessageBox.critical(None, "Критическая ошибка", f"UI файл не найден: {ui_file}")
+            sys.exit(1)
         win = MainWindow(ui_file)
     except Exception as e:
         print(f"Error loading UI: {str(e)}")
+        QMessageBox.critical(None, "Критическая ошибка", f"Ошибка загрузки UI: {str(e)}")
         sys.exit(1)
 
     tree = win.treeWidget
@@ -439,25 +436,50 @@ def main():
     current_encoder = [None]
 
     def on_tree_item_clicked():
-        selected_items = tree.selectedItems()
-        if selected_items:
+        try:
+            selected_items = tree.selectedItems()
+            if not selected_items:
+                print("on_tree_item_clicked: No items selected")
+                return
+                
             ecu_name = selected_items[0].text(0)
-            encoder = get_encoder(ecu_name,win)# Передаём win как parent
+            print(f"on_tree_item_clicked: Attempting to get encoder for {ecu_name}")
+            
+            encoder = None
+            try:
+                # ВАЖНО: передаем win как parent для диалога пароля!
+                encoder = get_encoder(ecu_name, win)
+            except Exception as e:
+                print(f"on_tree_item_clicked: Error getting encoder for {ecu_name}: {e}")
+                QMessageBox.critical(win, "Ошибка", f"Ошибка при загрузке модуля {ecu_name}: {str(e)}")
+                return
+                
             current_encoder[0] = encoder
-            win.statusBar().showMessage(
-                f"Выбран ECU: {ecu_name}, редактор готов к работе" if encoder
-                else f"Выбран ECU: {ecu_name}, редактор не найден или доступ заблокирован"
-            )
-            print(f"on_tree_item_clicked: Selected ECU = {ecu_name}, Encoder = {type(encoder).__name__ if encoder else None}")
-            if hasattr(win, 'info_panel'):
-                win.vin_label.setText("VIN: N/A")
-                win.pin_label.setText("PIN: N/A")
-                if hasattr(win, 'mileage_label'):
-                    win.mileage_label.setText("Mileage: N/A")
-                win.info_panel.hide()
-            settings.setValue("last_vin", "N/A")
-            settings.setValue("last_pin", "N/A")
-            settings.setValue("last_mileage", "N/A")
+            
+            if encoder:
+                win.statusBar().showMessage(f"Выбран ECU: {ecu_name}, редактор готов к работе")
+                print(f"on_tree_item_clicked: Successfully loaded encoder for {ecu_name}")
+            else:
+                win.statusBar().showMessage(f"Выбран ECU: {ecu_name}, доступ запрещен или модуль не найден")
+                print(f"on_tree_item_clicked: Failed to load encoder for {ecu_name}")
+            
+            try:
+                if hasattr(win, 'info_panel'):
+                    win.vin_label.setText("VIN: N/A")
+                    win.pin_label.setText("PIN: N/A")
+                    if hasattr(win, 'mileage_label'):
+                        win.mileage_label.setText("Mileage: N/A")
+                    win.info_panel.hide()
+                
+                settings.setValue("last_vin", "N/A")
+                settings.setValue("last_pin", "N/A")
+                settings.setValue("last_mileage", "N/A")
+            except Exception as e:
+                print(f"Error resetting info panel: {e}")
+                
+        except Exception as e:
+            print(f"Critical error in on_tree_item_clicked: {e}")
+            QMessageBox.critical(win, "Критическая ошибка", f"Ошибка при выборе модуля: {str(e)}")
 
     win.update_progress = lambda value: (
         win.progressBar.setValue(value),
@@ -465,7 +487,6 @@ def main():
     )[1]
     win.show_comparison_results = lambda differences: show_comparison_results(differences, win, settings)
 
-    # Подключение событий
     tree.itemClicked.connect(on_tree_item_clicked)
     win.actionOpen.triggered.connect(lambda: open_file(win, settings, current_encoder))
     win.actionSave.triggered.connect(lambda: save_file(win, settings, current_encoder))
@@ -477,20 +498,44 @@ def main():
     if hasattr(win, 'actionYes'):
         win.actionYes.triggered.connect(lambda: auto_update_exe(win))
 
-    # Загрузка данных ECU
     try:
         ecu_file = resource_path("ecu_data.json")
         print(f"Loading ECU data from: {ecu_file}")
+        
+        if not os.path.exists(ecu_file):
+            print(f"ERROR: ECU data file not found at {ecu_file}")
+            QMessageBox.critical(win, "Критическая ошибка", f"Файл данных ECU не найден: {ecu_file}")
+            sys.exit(1)
+        
+        # Проверяем содержимое JSON файла
+        try:
+            import json
+            with open(ecu_file, 'r', encoding='utf-8') as f:
+                json_content = json.load(f)
+            print(f"JSON loaded successfully, keys: {list(json_content.keys())}")
+        except Exception as e:
+            print(f"ERROR: Failed to parse JSON: {e}")
+            QMessageBox.critical(win, "Критическая ошибка", f"Ошибка чтения JSON файла: {str(e)}")
+            sys.exit(1)
+        
         ecu_roots = create_ecu_hierarchy_from_file(ecu_file)
         populate_tree(tree, ecu_roots)
-        print(f"Tree item count: {tree.topLevelItemCount()}")
+        print(f"Tree populated successfully, item count: {tree.topLevelItemCount()}")
+        
     except Exception as e:
         print(f"Error loading ECU hierarchy: {str(e)}")
+        QMessageBox.critical(win, "Критическая ошибка", f"Ошибка загрузки данных ECU: {str(e)}")
         sys.exit(1)
 
-    # Проверка обновлений при запуске
-    check_for_updates(win)
+    # Проверяем обновления при запуске
+    try:
+        check_for_updates(win)
+    except Exception as e:
+        print(f"Error checking for updates: {e}")
+    
     win.show()
+    
+    print("Application started successfully")
     sys.exit(app.exec_())
 
 if __name__ == "__main__":
