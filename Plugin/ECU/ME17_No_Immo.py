@@ -7,98 +7,70 @@ class ME17_No_Immo(Encoder):
     def check(self, buffer: bytearray) -> bool:
         signature = bytearray([0x80, 0x20])
         target_sequence = bytearray([0x8B, 0x02, 0x20, 0x22])
+        patched_sequence = bytearray([0x00, 0x00, 0x82, 0x12])
         full_sequence = signature + target_sequence
+        full_patched = signature + patched_sequence
 
-        index = buffer.find(full_sequence)
+        # Найти первое вхождение
+        first_index = buffer.find(full_sequence)
+        if first_index == -1:
+            # Если первое оригинальное не найдено, возможно уже пропатчено
+            first_patched = buffer.find(full_patched)
+            if first_patched == -1:
+                print("Последовательность не найдена в файле")
+                return False
 
-        if index != -1:
-            print(f"Последовательность найдена по адресу: 0x{index:08X}")
+        print(f"1-е вхождение найдено по адресу: 0x{(first_index if first_index != -1 else first_patched):08X}")
+
+        # Теперь ищем второе вхождение после первого
+        start_search = (first_index if first_index != -1 else first_patched) + 1
+
+        # Сначала проверяем, есть ли пропатченное 2-е вхождение
+        second_patched = buffer.find(full_patched, start_search)
+        if second_patched != -1:
+            print(f"2-е вхождение уже пропатчено по адресу: 0x{second_patched:08X}")
+            print("Иммобилайзер отключен")
             return True
-        else:
-            print("Последовательность 0x80 0x20 0x8B 0x02 0x20 0x22 не найдена в файле")
-            return False
 
-    def encode(self, buffer: bytearray):
-        signature = bytearray([0x80, 0x20])
-        target_sequence = bytearray([0x8B, 0x02, 0x20, 0x22])
-        new_sequence = bytearray([0x00, 0x00, 0x82, 0x12])
-        full_sequence = signature + target_sequence
+        # Если пропатченного нет, ищем оригинальное 2-е для правки
+        second_original = buffer.find(full_sequence, start_search)
+        if second_original != -1:
+            print(f"2-е вхождение найдено по адресу: 0x{second_original:08X} - требует правки")
+            return True
 
-        index = buffer.find(full_sequence)
-
-        if index != -1:
-            buffer[index + len(signature): index + len(signature) + len(target_sequence)] = new_sequence
-            print(f"Патч FLASH_OFF успешно применён по адресу 0x{index + len(signature):08X}")
-        else:
-            print("Не удалось применить патч: последовательность не найдена")
-
-
-
-'''from encoder import Encoder
-
-class ME17_No_Immo(Encoder):
-    def __init__(self):
-        super().__init__()
-        self.expected_sizes = {1504 * 1024, 1536 * 1024, 2048 * 1024, 2560 * 1024, 4096 * 1024}
-
-    def check(self, buffer: bytearray) -> bool:
-        if len(buffer) not in self.expected_sizes:
-            print(f"Недопустимый размер файла: {len(buffer)} байт. Ожидаются: {self.expected_sizes}")
-            return False
-
-        start_offset = 0
-        if len(buffer) == 1504 * 1024:
-            start_offset = 0x901F0
-        elif len(buffer) == 1536 * 1024:
-            start_offset = 0xAD720
-        elif len(buffer) == 2048 * 1024:
-            start_offset = 0x012FCCD
-        elif len(buffer) == 2560 * 1024:
-            start_offset = 0x01263E0
-        elif len(buffer) == 4096 * 1024:
-            start_offset = 0x6E640 + 4
-
-        target_sequence = bytearray([0x8B, 0x02, 0x20, 0x22])
-        signature = bytearray([0x80, 0x20])
-        signature_length = len(signature)
-        target_length = len(target_sequence)
-
-        if len(buffer) < start_offset + signature_length + target_length:
-            print(f"Файл слишком короткий для проверки: {len(buffer)} < {start_offset + signature_length + target_length}")
-            return False
-
-        for i in range(start_offset, len(buffer) - target_length - signature_length + 1):
-            if (buffer[i:i + signature_length] == signature and
-                buffer[i + signature_length: i + signature_length + target_length] == target_sequence):
-                return True
-
-        print("Последовательность 0x80 0x20 0x8B 0x02 0x20 0x22 не найдена в файле")
+        print("2-е вхождение не найдено после первого")
         return False
 
     def encode(self, buffer: bytearray):
-        start_offset = 0
-        if len(buffer) == 1504 * 1024:
-            start_offset = 0x901F0
-        elif len(buffer) == 1536 * 1024:
-            start_offset = 0xAD720
-        elif len(buffer) == 2048 * 1024:
-            start_offset = 0x012FCCD
-        elif len(buffer) == 2560 * 1024:
-            start_offset = 0x01263E0
-        elif len(buffer) == 4096 * 1024:
-            start_offset = 0x6E640
-
+        signature = bytearray([0x80, 0x20])
         target_sequence = bytearray([0x8B, 0x02, 0x20, 0x22])
         new_sequence = bytearray([0x00, 0x00, 0x82, 0x12])
-        signature = bytearray([0x80, 0x20])
-        signature_length = len(signature)
-        target_length = len(target_sequence)
+        full_sequence = signature + target_sequence
+        full_patched = signature + new_sequence
 
-        for i in range(start_offset, len(buffer) - target_length - signature_length + 1):
-            if (buffer[i:i + signature_length] == signature and
-                buffer[i + signature_length: i + signature_length + target_length] == target_sequence):
-                buffer[i + signature_length: i + signature_length + target_length] = new_sequence
-                print(f"Патч FLASH_OFF успешно применён по адресу 0x{i + signature_length:08X}")
+        # Найти первое вхождение
+        first_index = buffer.find(full_sequence)
+        if first_index == -1:
+            first_patched = buffer.find(full_patched)
+            if first_patched == -1:
+                print("Не удалось найти первое вхождение")
                 return
 
-        print("Не удалось применить патч: последовательность не найдена")'''
+        # Ищем второе вхождение после первого
+        start_search = (first_index if first_index != -1 else first_patched) + 1
+
+        # Проверяем, не пропатчено ли уже 2-е вхождение
+        second_patched = buffer.find(full_patched, start_search)
+        if second_patched != -1:
+            print("Иммобилайзер отключен - 2-е вхождение уже пропатчено")
+            return
+
+        # Ищем оригинальное 2-е вхождение для патча
+        second_original = buffer.find(full_sequence, start_search)
+        if second_original != -1:
+            # Применяем патч ко второму вхождению
+            buffer[second_original + len(signature): second_original + len(signature) + len(target_sequence)] = new_sequence
+            print(f"Патч FLASH_OFF успешно применён ко 2-му вхождению по адресу 0x{second_original + len(signature):08X}")
+            print("Иммобилайзер отключен")
+        else:
+            print("Не удалось найти 2-е вхождение для применения патча")
