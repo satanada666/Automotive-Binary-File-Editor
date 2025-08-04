@@ -77,7 +77,7 @@
       "Chevrolet_E84_Pin_Vin": {}
     },
     "SsangYong": {
-      "kyron_95160_NI_CS": {}
+      "kyron_95160_NI_CS": {"password_protected": true}
     },
     "PSA": {
       "me745_NI": {}

@@ -37,19 +37,30 @@ class kyron_95160_NI_CS(eeprom):
             
         print("Иммобилайзер отключен: установлены байты 0x5A в 0x480-0x487")
         
-        # ШАГ 2: Рассчитываем и записываем контрольную сумму
+        # ШАГ 2: Устанавливаем вторую последовательность в позиции 0x488-0x497
+        target_sequence = [0x39, 0x48, 0x00, 0x00, 0xE9, 0xD0, 0x00, 0x00, 
+                          0x00, 0x09, 0x03, 0x30, 0x00, 0x00, 0x09, 0x84]
+        
+        for i in range(16):
+            buffer[0x488 + i] = target_sequence[i]
+            
+        print("Установлена вторая последовательность в 0x488-0x497")
+        print(f"Байты 0x480-0x487: {buffer[0x480:0x488].hex().upper()}")
+        print(f"Байты 0x488-0x497: {buffer[0x488:0x498].hex().upper()}")
+        
+        # ШАГ 3: Рассчитываем и записываем контрольную сумму
         checksum_result = self.update_checksum(buffer)
         
         print("Обновлены адреса:")
-        print(f"  0x480-0x487: 5A 5A 5A 5A 5A 5A 5A 5A (иммобилайзер отключен)")
-        print(f"  0x488-0x497: {buffer[0x488:0x498].hex().upper()} (без изменений)")
+        print(f"  0x480-0x487: {buffer[0x480:0x488].hex().upper()} (иммобилайзер отключен)")
+        print(f"  0x488-0x497: {buffer[0x488:0x498].hex().upper()} (вторая последовательность)")
         print(f"  0x498-0x499: {buffer[0x498:0x49A].hex().upper()} (контрольная сумма)")
         
         return {
             "IMMO_STATUS": "ОТКЛЮЧЕН",
             "CHECKSUM_UPDATED": True,
             "CHECKSUM_VALUE": checksum_result,
-            "ADDRESSES_UPDATED": ["0x480-0x487", "0x498-0x499"]
+            "ADDRESSES_UPDATED": ["0x480-0x487", "0x488-0x497", "0x498-0x499"]
         }
     
     def calculate_checksum_16(self, buffer: bytearray, start_addr: int, end_addr: int) -> int:
@@ -69,7 +80,7 @@ class kyron_95160_NI_CS(eeprom):
         Обновление контрольной суммы согласно алгоритму:
         1. Рассчитываем checksum-16 для диапазона 0x480-0x497
         2. Прибавляем 1 к результату  
-        3. Записываем результат в 0x498-0x499 (16-битное значение, little-endian)
+        3. Записываем результат в 0x498-0x499 (16-битное значение, big-endian)
         """
         # Сохраняем оригинальные значения контрольной суммы
         original_0x498 = buffer[0x498]
@@ -131,12 +142,17 @@ class kyron_95160_NI_CS(eeprom):
         """Получение статуса иммобилайзера"""
         immo_position = 0x480
         immo_bytes = buffer[immo_position:immo_position+8]
+        second_sequence = buffer[0x488:0x498]
+        target_second_sequence = bytes([0x39, 0x48, 0x00, 0x00, 0xE9, 0xD0, 0x00, 0x00, 
+                                       0x00, 0x09, 0x03, 0x30, 0x00, 0x00, 0x09, 0x84])
         
-        if all(b == 0xA6 for b in immo_bytes):
-            return "АКТИВЕН (A6)"
+        if all(b == 0x5A for b in immo_bytes) and second_sequence == target_second_sequence:
+            return "ОТКЛЮЧЕН (5A + целевая последовательность)"
         elif all(b == 0x5A for b in immo_bytes):
             return "ОТКЛЮЧЕН (5A)"
         elif all(b == 0xA5 for b in immo_bytes):
             return "ОТКЛЮЧЕН (A5)"
+        elif all(b == 0xA6 for b in immo_bytes):
+            return "АКТИВЕН (A6)"
         else:
             return f"НЕИЗВЕСТЕН ({immo_bytes.hex().upper()})"
