@@ -78,6 +78,7 @@ try:
     from Plugin.EEPROM.Chevrolet_E84_Editor import Chevrolet_E84_Editor
     from Plugin.EEPROM.me7_5_No_Immo_Pin_Cs import me7_5_No_Immo_Pin_Cs
     from Plugin.EEPROM.kyron_95160_NI_CS import kyron_95160_NI_CS
+    from Plugin.EEPROM.me7_1_NI_CS import me7_1_NI_CS
     
     from Plugin.SRS.mazda_95320_GR6B_57K30B import mazda_95320_GR6B_57K30B
     from Plugin.SRS.Continental_Reault_8201_385_569 import Continental_Reault_8201_385_569
@@ -169,6 +170,7 @@ encoder_registry = {
     "_619771500_9674290880_2012MCU95320": _619771500_9674290880_2012MCU95320,
     "TRW_51822436_D219391215": TRW_51822436_D219391215,
     "cg100x_ahl":cg100x_ahl,
+    "me7_1_NI_CS": me7_1_NI_CS,
 }
 
 def check_password_protection(name: str):
