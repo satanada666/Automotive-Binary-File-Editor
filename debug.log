@@ -6802,3 +6802,696 @@
 2025-08-01 07:47:24,857 - DEBUG - add action menuUpdate to menuBar
 2025-08-01 07:47:24,883 - DEBUG - Starting new HTTPS connection (1): raw.githubusercontent.com:443
 2025-08-01 07:47:25,354 - DEBUG - https://raw.githubusercontent.com:443 "GET /satanada666/Automotive-Binary-File-Editor/main/version.txt HTTP/1.1" 200 27
+2025-08-03 13:33:02,505 - DEBUG - uiname is BLACK_BOX
+2025-08-03 13:33:02,506 - DEBUG - toplevel widget is MainWindow
+2025-08-03 13:33:02,506 - DEBUG - setting property geometry
+2025-08-03 13:33:02,506 - DEBUG - setting property font
+2025-08-03 13:33:02,508 - DEBUG - setting property windowTitle
+2025-08-03 13:33:02,509 - DEBUG - push MainWindow BLACK_BOX
+2025-08-03 13:33:02,509 - DEBUG - push QWidget centralwidget
+2025-08-03 13:33:02,522 - DEBUG - setting property geometry
+2025-08-03 13:33:02,523 - DEBUG - setting property styleSheet
+2025-08-03 13:33:02,584 - DEBUG - push QTreeWidget treeWidget
+2025-08-03 13:33:02,584 - DEBUG - pop widget QTreeWidget treeWidget
+2025-08-03 13:33:02,585 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x10eb1dd30>
+2025-08-03 13:33:02,585 - DEBUG - setting property geometry
+2025-08-03 13:33:02,585 - DEBUG - push QWidget verticalLayoutWidget
+2025-08-03 13:33:02,586 - DEBUG - setting property spacing
+2025-08-03 13:33:02,586 - DEBUG - setting property sizeConstraint
+2025-08-03 13:33:02,587 - DEBUG - setting property pyuicMargins
+2025-08-03 13:33:02,587 - DEBUG - setting property pyuicSpacing
+2025-08-03 13:33:02,587 - DEBUG - push QVBoxLayout verticalLayout
+2025-08-03 13:33:02,593 - DEBUG - setting property enabled
+2025-08-03 13:33:02,593 - DEBUG - setting property styleSheet
+2025-08-03 13:33:02,593 - DEBUG - push QTextEdit originalHexEdit
+2025-08-03 13:33:02,593 - DEBUG - pop widget QTextEdit originalHexEdit
+2025-08-03 13:33:02,593 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x10eb1de50>
+2025-08-03 13:33:02,594 - DEBUG - setting property value
+2025-08-03 13:33:02,594 - DEBUG - push QProgressBar progressBar
+2025-08-03 13:33:02,595 - DEBUG - pop widget QProgressBar progressBar
+2025-08-03 13:33:02,595 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x10eb1de50>
+2025-08-03 13:33:02,596 - DEBUG - setting property sizePolicy
+2025-08-03 13:33:02,596 - DEBUG - setting property font
+2025-08-03 13:33:02,599 - DEBUG - setting property accessibleDescription
+2025-08-03 13:33:02,599 - DEBUG - setting property title
+2025-08-03 13:33:02,600 - DEBUG - push QGroupBox vinPinContainer
+2025-08-03 13:33:02,600 - DEBUG - pop widget QGroupBox vinPinContainer
+2025-08-03 13:33:02,600 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x10eb1de50>
+2025-08-03 13:33:02,600 - DEBUG - setting property styleSheet
+2025-08-03 13:33:02,601 - DEBUG - push QTextEdit modifiedHexEdit
+2025-08-03 13:33:02,601 - DEBUG - pop widget QTextEdit modifiedHexEdit
+2025-08-03 13:33:02,601 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x10eb1de50>
+2025-08-03 13:33:02,601 - DEBUG - pop layout QVBoxLayout verticalLayout
+2025-08-03 13:33:02,601 - DEBUG - pop widget QWidget verticalLayoutWidget
+2025-08-03 13:33:02,601 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x10eb1dd30>
+2025-08-03 13:33:02,602 - DEBUG - setting property geometry
+2025-08-03 13:33:02,602 - DEBUG - setting property font
+2025-08-03 13:33:02,602 - DEBUG - setting property text
+2025-08-03 13:33:02,602 - DEBUG - push QLabel label
+2025-08-03 13:33:02,603 - DEBUG - pop widget QLabel label
+2025-08-03 13:33:02,603 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x10eb1dd30>
+2025-08-03 13:33:02,603 - DEBUG - setting property geometry
+2025-08-03 13:33:02,603 - DEBUG - setting property font
+2025-08-03 13:33:02,603 - DEBUG - setting property text
+2025-08-03 13:33:02,603 - DEBUG - push QLabel label_2
+2025-08-03 13:33:02,603 - DEBUG - pop widget QLabel label_2
+2025-08-03 13:33:02,603 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x10eb1dd30>
+2025-08-03 13:33:02,603 - DEBUG - pop widget QWidget centralwidget
+2025-08-03 13:33:02,603 - DEBUG - new topwidget <__main__.MainWindow object at 0x10eb0e5e0>
+2025-08-03 13:33:02,605 - DEBUG - push QStatusBar statusbar
+2025-08-03 13:33:02,605 - DEBUG - pop widget QStatusBar statusbar
+2025-08-03 13:33:02,605 - DEBUG - new topwidget <__main__.MainWindow object at 0x10eb0e5e0>
+2025-08-03 13:33:02,683 - DEBUG - setting property geometry
+2025-08-03 13:33:02,684 - DEBUG - push QMenuBar menuBar
+2025-08-03 13:33:02,685 - DEBUG - setting property title
+2025-08-03 13:33:02,686 - DEBUG - push QMenu menuFile
+2025-08-03 13:33:02,686 - DEBUG - pop widget QMenu menuFile
+2025-08-03 13:33:02,686 - DEBUG - new topwidget <PyQt5.QtWidgets.QMenuBar object at 0x11050d3a0>
+2025-08-03 13:33:02,686 - DEBUG - setting property title
+2025-08-03 13:33:02,686 - DEBUG - push QMenu menuColor
+2025-08-03 13:33:02,686 - DEBUG - pop widget QMenu menuColor
+2025-08-03 13:33:02,686 - DEBUG - new topwidget <PyQt5.QtWidgets.QMenuBar object at 0x11050d3a0>
+2025-08-03 13:33:02,686 - DEBUG - setting property title
+2025-08-03 13:33:02,686 - DEBUG - push QMenu menuUpdate
+2025-08-03 13:33:02,686 - DEBUG - pop widget QMenu menuUpdate
+2025-08-03 13:33:02,686 - DEBUG - new topwidget <PyQt5.QtWidgets.QMenuBar object at 0x11050d3a0>
+2025-08-03 13:33:02,686 - DEBUG - pop widget QMenuBar menuBar
+2025-08-03 13:33:02,686 - DEBUG - new topwidget <__main__.MainWindow object at 0x10eb0e5e0>
+2025-08-03 13:33:02,686 - DEBUG - setting property text
+2025-08-03 13:33:02,687 - DEBUG - setting property text
+2025-08-03 13:33:02,687 - DEBUG - setting property text
+2025-08-03 13:33:02,687 - DEBUG - setting property text
+2025-08-03 13:33:02,687 - DEBUG - setting property text
+2025-08-03 13:33:02,687 - DEBUG - setting property text
+2025-08-03 13:33:02,687 - DEBUG - setting property text
+2025-08-03 13:33:02,687 - DEBUG - setting property text
+2025-08-03 13:33:02,687 - DEBUG - setting property text
+2025-08-03 13:33:02,687 - DEBUG - setting property text
+2025-08-03 13:33:02,687 - DEBUG - pop widget MainWindow BLACK_BOX
+2025-08-03 13:33:02,687 - DEBUG - new topwidget None
+2025-08-03 13:33:02,687 - DEBUG - add action actionOpen to menuFile
+2025-08-03 13:33:02,687 - DEBUG - add action actionSave to menuFile
+2025-08-03 13:33:02,688 - DEBUG - add action actionCompare to menuFile
+2025-08-03 13:33:02,688 - DEBUG - add action actionColor to menuColor
+2025-08-03 13:33:02,688 - DEBUG - add action actionEditMileage to menuColor
+2025-08-03 13:33:02,688 - DEBUG - add action actionCheckUpdate to menuUpdate
+2025-08-03 13:33:02,688 - DEBUG - add action actionThankYou to menuUpdate
+2025-08-03 13:33:02,688 - DEBUG - add action menuFile to menuBar
+2025-08-03 13:33:02,689 - DEBUG - add action menuColor to menuBar
+2025-08-03 13:33:02,689 - DEBUG - add action menuUpdate to menuBar
+2025-08-03 13:33:02,966 - DEBUG - Starting new HTTPS connection (1): raw.githubusercontent.com:443
+2025-08-03 13:33:03,364 - DEBUG - https://raw.githubusercontent.com:443 "GET /satanada666/Automotive-Binary-File-Editor/main/version.txt HTTP/1.1" 200 27
+2025-08-03 13:48:20,756 - DEBUG - uiname is BLACK_BOX
+2025-08-03 13:48:20,757 - DEBUG - toplevel widget is MainWindow
+2025-08-03 13:48:20,757 - DEBUG - setting property geometry
+2025-08-03 13:48:20,757 - DEBUG - setting property font
+2025-08-03 13:48:20,758 - DEBUG - setting property windowTitle
+2025-08-03 13:48:20,759 - DEBUG - push MainWindow BLACK_BOX
+2025-08-03 13:48:20,759 - DEBUG - push QWidget centralwidget
+2025-08-03 13:48:20,770 - DEBUG - setting property geometry
+2025-08-03 13:48:20,770 - DEBUG - setting property styleSheet
+2025-08-03 13:48:20,832 - DEBUG - push QTreeWidget treeWidget
+2025-08-03 13:48:20,833 - DEBUG - pop widget QTreeWidget treeWidget
+2025-08-03 13:48:20,833 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x103d5c310>
+2025-08-03 13:48:20,834 - DEBUG - setting property geometry
+2025-08-03 13:48:20,834 - DEBUG - push QWidget verticalLayoutWidget
+2025-08-03 13:48:20,835 - DEBUG - setting property spacing
+2025-08-03 13:48:20,835 - DEBUG - setting property sizeConstraint
+2025-08-03 13:48:20,835 - DEBUG - setting property pyuicMargins
+2025-08-03 13:48:20,835 - DEBUG - setting property pyuicSpacing
+2025-08-03 13:48:20,835 - DEBUG - push QVBoxLayout verticalLayout
+2025-08-03 13:48:20,841 - DEBUG - setting property enabled
+2025-08-03 13:48:20,841 - DEBUG - setting property styleSheet
+2025-08-03 13:48:20,841 - DEBUG - push QTextEdit originalHexEdit
+2025-08-03 13:48:20,841 - DEBUG - pop widget QTextEdit originalHexEdit
+2025-08-03 13:48:20,842 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x103d5c430>
+2025-08-03 13:48:20,842 - DEBUG - setting property value
+2025-08-03 13:48:20,843 - DEBUG - push QProgressBar progressBar
+2025-08-03 13:48:20,843 - DEBUG - pop widget QProgressBar progressBar
+2025-08-03 13:48:20,843 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x103d5c430>
+2025-08-03 13:48:20,844 - DEBUG - setting property sizePolicy
+2025-08-03 13:48:20,844 - DEBUG - setting property font
+2025-08-03 13:48:20,847 - DEBUG - setting property accessibleDescription
+2025-08-03 13:48:20,848 - DEBUG - setting property title
+2025-08-03 13:48:20,848 - DEBUG - push QGroupBox vinPinContainer
+2025-08-03 13:48:20,848 - DEBUG - pop widget QGroupBox vinPinContainer
+2025-08-03 13:48:20,848 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x103d5c430>
+2025-08-03 13:48:20,849 - DEBUG - setting property styleSheet
+2025-08-03 13:48:20,849 - DEBUG - push QTextEdit modifiedHexEdit
+2025-08-03 13:48:20,849 - DEBUG - pop widget QTextEdit modifiedHexEdit
+2025-08-03 13:48:20,849 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x103d5c430>
+2025-08-03 13:48:20,849 - DEBUG - pop layout QVBoxLayout verticalLayout
+2025-08-03 13:48:20,849 - DEBUG - pop widget QWidget verticalLayoutWidget
+2025-08-03 13:48:20,849 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x103d5c310>
+2025-08-03 13:48:20,850 - DEBUG - setting property geometry
+2025-08-03 13:48:20,850 - DEBUG - setting property font
+2025-08-03 13:48:20,850 - DEBUG - setting property text
+2025-08-03 13:48:20,850 - DEBUG - push QLabel label
+2025-08-03 13:48:20,851 - DEBUG - pop widget QLabel label
+2025-08-03 13:48:20,851 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x103d5c310>
+2025-08-03 13:48:20,851 - DEBUG - setting property geometry
+2025-08-03 13:48:20,851 - DEBUG - setting property font
+2025-08-03 13:48:20,851 - DEBUG - setting property text
+2025-08-03 13:48:20,851 - DEBUG - push QLabel label_2
+2025-08-03 13:48:20,851 - DEBUG - pop widget QLabel label_2
+2025-08-03 13:48:20,851 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x103d5c310>
+2025-08-03 13:48:20,851 - DEBUG - pop widget QWidget centralwidget
+2025-08-03 13:48:20,851 - DEBUG - new topwidget <__main__.MainWindow object at 0x102378b80>
+2025-08-03 13:48:20,853 - DEBUG - push QStatusBar statusbar
+2025-08-03 13:48:20,853 - DEBUG - pop widget QStatusBar statusbar
+2025-08-03 13:48:20,853 - DEBUG - new topwidget <__main__.MainWindow object at 0x102378b80>
+2025-08-03 13:48:20,928 - DEBUG - setting property geometry
+2025-08-03 13:48:20,928 - DEBUG - push QMenuBar menuBar
+2025-08-03 13:48:20,930 - DEBUG - setting property title
+2025-08-03 13:48:20,930 - DEBUG - push QMenu menuFile
+2025-08-03 13:48:20,930 - DEBUG - pop widget QMenu menuFile
+2025-08-03 13:48:20,930 - DEBUG - new topwidget <PyQt5.QtWidgets.QMenuBar object at 0x103d5c940>
+2025-08-03 13:48:20,930 - DEBUG - setting property title
+2025-08-03 13:48:20,930 - DEBUG - push QMenu menuColor
+2025-08-03 13:48:20,931 - DEBUG - pop widget QMenu menuColor
+2025-08-03 13:48:20,931 - DEBUG - new topwidget <PyQt5.QtWidgets.QMenuBar object at 0x103d5c940>
+2025-08-03 13:48:20,931 - DEBUG - setting property title
+2025-08-03 13:48:20,931 - DEBUG - push QMenu menuUpdate
+2025-08-03 13:48:20,931 - DEBUG - pop widget QMenu menuUpdate
+2025-08-03 13:48:20,931 - DEBUG - new topwidget <PyQt5.QtWidgets.QMenuBar object at 0x103d5c940>
+2025-08-03 13:48:20,931 - DEBUG - pop widget QMenuBar menuBar
+2025-08-03 13:48:20,931 - DEBUG - new topwidget <__main__.MainWindow object at 0x102378b80>
+2025-08-03 13:48:20,931 - DEBUG - setting property text
+2025-08-03 13:48:20,931 - DEBUG - setting property text
+2025-08-03 13:48:20,931 - DEBUG - setting property text
+2025-08-03 13:48:20,932 - DEBUG - setting property text
+2025-08-03 13:48:20,932 - DEBUG - setting property text
+2025-08-03 13:48:20,932 - DEBUG - setting property text
+2025-08-03 13:48:20,932 - DEBUG - setting property text
+2025-08-03 13:48:20,932 - DEBUG - setting property text
+2025-08-03 13:48:20,932 - DEBUG - setting property text
+2025-08-03 13:48:20,932 - DEBUG - setting property text
+2025-08-03 13:48:20,932 - DEBUG - pop widget MainWindow BLACK_BOX
+2025-08-03 13:48:20,932 - DEBUG - new topwidget None
+2025-08-03 13:48:20,932 - DEBUG - add action actionOpen to menuFile
+2025-08-03 13:48:20,932 - DEBUG - add action actionSave to menuFile
+2025-08-03 13:48:20,932 - DEBUG - add action actionCompare to menuFile
+2025-08-03 13:48:20,932 - DEBUG - add action actionColor to menuColor
+2025-08-03 13:48:20,933 - DEBUG - add action actionEditMileage to menuColor
+2025-08-03 13:48:20,933 - DEBUG - add action actionCheckUpdate to menuUpdate
+2025-08-03 13:48:20,933 - DEBUG - add action actionThankYou to menuUpdate
+2025-08-03 13:48:20,933 - DEBUG - add action menuFile to menuBar
+2025-08-03 13:48:20,933 - DEBUG - add action menuColor to menuBar
+2025-08-03 13:48:20,934 - DEBUG - add action menuUpdate to menuBar
+2025-08-03 13:48:21,207 - DEBUG - Starting new HTTPS connection (1): raw.githubusercontent.com:443
+2025-08-03 13:48:21,587 - DEBUG - https://raw.githubusercontent.com:443 "GET /satanada666/Automotive-Binary-File-Editor/main/version.txt HTTP/1.1" 200 27
+2025-08-03 13:48:59,993 - DEBUG - uiname is BLACK_BOX
+2025-08-03 13:48:59,993 - DEBUG - toplevel widget is MainWindow
+2025-08-03 13:48:59,993 - DEBUG - setting property geometry
+2025-08-03 13:48:59,993 - DEBUG - setting property font
+2025-08-03 13:48:59,994 - DEBUG - setting property windowTitle
+2025-08-03 13:48:59,994 - DEBUG - push MainWindow BLACK_BOX
+2025-08-03 13:48:59,994 - DEBUG - push QWidget centralwidget
+2025-08-03 13:48:59,995 - DEBUG - setting property geometry
+2025-08-03 13:48:59,995 - DEBUG - setting property styleSheet
+2025-08-03 13:49:00,034 - DEBUG - push QTreeWidget treeWidget
+2025-08-03 13:49:00,034 - DEBUG - pop widget QTreeWidget treeWidget
+2025-08-03 13:49:00,034 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x10e1123a0>
+2025-08-03 13:49:00,034 - DEBUG - setting property geometry
+2025-08-03 13:49:00,034 - DEBUG - push QWidget verticalLayoutWidget
+2025-08-03 13:49:00,034 - DEBUG - setting property spacing
+2025-08-03 13:49:00,034 - DEBUG - setting property sizeConstraint
+2025-08-03 13:49:00,034 - DEBUG - setting property pyuicMargins
+2025-08-03 13:49:00,035 - DEBUG - setting property pyuicSpacing
+2025-08-03 13:49:00,035 - DEBUG - push QVBoxLayout verticalLayout
+2025-08-03 13:49:00,035 - DEBUG - setting property enabled
+2025-08-03 13:49:00,035 - DEBUG - setting property styleSheet
+2025-08-03 13:49:00,035 - DEBUG - push QTextEdit originalHexEdit
+2025-08-03 13:49:00,035 - DEBUG - pop widget QTextEdit originalHexEdit
+2025-08-03 13:49:00,035 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x10e1124c0>
+2025-08-03 13:49:00,036 - DEBUG - setting property value
+2025-08-03 13:49:00,036 - DEBUG - push QProgressBar progressBar
+2025-08-03 13:49:00,036 - DEBUG - pop widget QProgressBar progressBar
+2025-08-03 13:49:00,036 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x10e1124c0>
+2025-08-03 13:49:00,036 - DEBUG - setting property sizePolicy
+2025-08-03 13:49:00,036 - DEBUG - setting property font
+2025-08-03 13:49:00,038 - DEBUG - setting property accessibleDescription
+2025-08-03 13:49:00,038 - DEBUG - setting property title
+2025-08-03 13:49:00,039 - DEBUG - push QGroupBox vinPinContainer
+2025-08-03 13:49:00,039 - DEBUG - pop widget QGroupBox vinPinContainer
+2025-08-03 13:49:00,039 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x10e1124c0>
+2025-08-03 13:49:00,039 - DEBUG - setting property styleSheet
+2025-08-03 13:49:00,039 - DEBUG - push QTextEdit modifiedHexEdit
+2025-08-03 13:49:00,039 - DEBUG - pop widget QTextEdit modifiedHexEdit
+2025-08-03 13:49:00,039 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x10e1124c0>
+2025-08-03 13:49:00,040 - DEBUG - pop layout QVBoxLayout verticalLayout
+2025-08-03 13:49:00,040 - DEBUG - pop widget QWidget verticalLayoutWidget
+2025-08-03 13:49:00,040 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x10e1123a0>
+2025-08-03 13:49:00,040 - DEBUG - setting property geometry
+2025-08-03 13:49:00,040 - DEBUG - setting property font
+2025-08-03 13:49:00,040 - DEBUG - setting property text
+2025-08-03 13:49:00,040 - DEBUG - push QLabel label
+2025-08-03 13:49:00,040 - DEBUG - pop widget QLabel label
+2025-08-03 13:49:00,040 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x10e1123a0>
+2025-08-03 13:49:00,040 - DEBUG - setting property geometry
+2025-08-03 13:49:00,040 - DEBUG - setting property font
+2025-08-03 13:49:00,041 - DEBUG - setting property text
+2025-08-03 13:49:00,041 - DEBUG - push QLabel label_2
+2025-08-03 13:49:00,041 - DEBUG - pop widget QLabel label_2
+2025-08-03 13:49:00,041 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x10e1123a0>
+2025-08-03 13:49:00,041 - DEBUG - pop widget QWidget centralwidget
+2025-08-03 13:49:00,041 - DEBUG - new topwidget <__main__.MainWindow object at 0x10c72cc10>
+2025-08-03 13:49:00,041 - DEBUG - push QStatusBar statusbar
+2025-08-03 13:49:00,041 - DEBUG - pop widget QStatusBar statusbar
+2025-08-03 13:49:00,041 - DEBUG - new topwidget <__main__.MainWindow object at 0x10c72cc10>
+2025-08-03 13:49:00,094 - DEBUG - setting property geometry
+2025-08-03 13:49:00,094 - DEBUG - push QMenuBar menuBar
+2025-08-03 13:49:00,094 - DEBUG - setting property title
+2025-08-03 13:49:00,095 - DEBUG - push QMenu menuFile
+2025-08-03 13:49:00,095 - DEBUG - pop widget QMenu menuFile
+2025-08-03 13:49:00,095 - DEBUG - new topwidget <PyQt5.QtWidgets.QMenuBar object at 0x10e1129d0>
+2025-08-03 13:49:00,095 - DEBUG - setting property title
+2025-08-03 13:49:00,095 - DEBUG - push QMenu menuColor
+2025-08-03 13:49:00,095 - DEBUG - pop widget QMenu menuColor
+2025-08-03 13:49:00,095 - DEBUG - new topwidget <PyQt5.QtWidgets.QMenuBar object at 0x10e1129d0>
+2025-08-03 13:49:00,095 - DEBUG - setting property title
+2025-08-03 13:49:00,095 - DEBUG - push QMenu menuUpdate
+2025-08-03 13:49:00,095 - DEBUG - pop widget QMenu menuUpdate
+2025-08-03 13:49:00,095 - DEBUG - new topwidget <PyQt5.QtWidgets.QMenuBar object at 0x10e1129d0>
+2025-08-03 13:49:00,095 - DEBUG - pop widget QMenuBar menuBar
+2025-08-03 13:49:00,095 - DEBUG - new topwidget <__main__.MainWindow object at 0x10c72cc10>
+2025-08-03 13:49:00,095 - DEBUG - setting property text
+2025-08-03 13:49:00,096 - DEBUG - setting property text
+2025-08-03 13:49:00,096 - DEBUG - setting property text
+2025-08-03 13:49:00,096 - DEBUG - setting property text
+2025-08-03 13:49:00,096 - DEBUG - setting property text
+2025-08-03 13:49:00,096 - DEBUG - setting property text
+2025-08-03 13:49:00,096 - DEBUG - setting property text
+2025-08-03 13:49:00,096 - DEBUG - setting property text
+2025-08-03 13:49:00,096 - DEBUG - setting property text
+2025-08-03 13:49:00,096 - DEBUG - setting property text
+2025-08-03 13:49:00,096 - DEBUG - pop widget MainWindow BLACK_BOX
+2025-08-03 13:49:00,096 - DEBUG - new topwidget None
+2025-08-03 13:49:00,096 - DEBUG - add action actionOpen to menuFile
+2025-08-03 13:49:00,096 - DEBUG - add action actionSave to menuFile
+2025-08-03 13:49:00,097 - DEBUG - add action actionCompare to menuFile
+2025-08-03 13:49:00,097 - DEBUG - add action actionColor to menuColor
+2025-08-03 13:49:00,097 - DEBUG - add action actionEditMileage to menuColor
+2025-08-03 13:49:00,097 - DEBUG - add action actionCheckUpdate to menuUpdate
+2025-08-03 13:49:00,097 - DEBUG - add action actionThankYou to menuUpdate
+2025-08-03 13:49:00,097 - DEBUG - add action menuFile to menuBar
+2025-08-03 13:49:00,097 - DEBUG - add action menuColor to menuBar
+2025-08-03 13:49:00,097 - DEBUG - add action menuUpdate to menuBar
+2025-08-03 13:49:00,353 - DEBUG - Starting new HTTPS connection (1): raw.githubusercontent.com:443
+2025-08-03 13:49:00,602 - DEBUG - https://raw.githubusercontent.com:443 "GET /satanada666/Automotive-Binary-File-Editor/main/version.txt HTTP/1.1" 200 27
+2025-08-03 13:57:44,582 - DEBUG - uiname is BLACK_BOX
+2025-08-03 13:57:44,582 - DEBUG - toplevel widget is MainWindow
+2025-08-03 13:57:44,582 - DEBUG - setting property geometry
+2025-08-03 13:57:44,582 - DEBUG - setting property font
+2025-08-03 13:57:44,582 - DEBUG - setting property windowTitle
+2025-08-03 13:57:44,582 - DEBUG - push MainWindow BLACK_BOX
+2025-08-03 13:57:44,583 - DEBUG - push QWidget centralwidget
+2025-08-03 13:57:44,584 - DEBUG - setting property geometry
+2025-08-03 13:57:44,584 - DEBUG - setting property styleSheet
+2025-08-03 13:57:44,623 - DEBUG - push QTreeWidget treeWidget
+2025-08-03 13:57:44,623 - DEBUG - pop widget QTreeWidget treeWidget
+2025-08-03 13:57:44,623 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x10ea813a0>
+2025-08-03 13:57:44,623 - DEBUG - setting property geometry
+2025-08-03 13:57:44,623 - DEBUG - push QWidget verticalLayoutWidget
+2025-08-03 13:57:44,623 - DEBUG - setting property spacing
+2025-08-03 13:57:44,623 - DEBUG - setting property sizeConstraint
+2025-08-03 13:57:44,624 - DEBUG - setting property pyuicMargins
+2025-08-03 13:57:44,624 - DEBUG - setting property pyuicSpacing
+2025-08-03 13:57:44,624 - DEBUG - push QVBoxLayout verticalLayout
+2025-08-03 13:57:44,624 - DEBUG - setting property enabled
+2025-08-03 13:57:44,624 - DEBUG - setting property styleSheet
+2025-08-03 13:57:44,624 - DEBUG - push QTextEdit originalHexEdit
+2025-08-03 13:57:44,625 - DEBUG - pop widget QTextEdit originalHexEdit
+2025-08-03 13:57:44,625 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x10ea814c0>
+2025-08-03 13:57:44,625 - DEBUG - setting property value
+2025-08-03 13:57:44,625 - DEBUG - push QProgressBar progressBar
+2025-08-03 13:57:44,625 - DEBUG - pop widget QProgressBar progressBar
+2025-08-03 13:57:44,625 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x10ea814c0>
+2025-08-03 13:57:44,625 - DEBUG - setting property sizePolicy
+2025-08-03 13:57:44,625 - DEBUG - setting property font
+2025-08-03 13:57:44,628 - DEBUG - setting property accessibleDescription
+2025-08-03 13:57:44,628 - DEBUG - setting property title
+2025-08-03 13:57:44,628 - DEBUG - push QGroupBox vinPinContainer
+2025-08-03 13:57:44,628 - DEBUG - pop widget QGroupBox vinPinContainer
+2025-08-03 13:57:44,629 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x10ea814c0>
+2025-08-03 13:57:44,629 - DEBUG - setting property styleSheet
+2025-08-03 13:57:44,629 - DEBUG - push QTextEdit modifiedHexEdit
+2025-08-03 13:57:44,629 - DEBUG - pop widget QTextEdit modifiedHexEdit
+2025-08-03 13:57:44,629 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x10ea814c0>
+2025-08-03 13:57:44,629 - DEBUG - pop layout QVBoxLayout verticalLayout
+2025-08-03 13:57:44,629 - DEBUG - pop widget QWidget verticalLayoutWidget
+2025-08-03 13:57:44,629 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x10ea813a0>
+2025-08-03 13:57:44,629 - DEBUG - setting property geometry
+2025-08-03 13:57:44,630 - DEBUG - setting property font
+2025-08-03 13:57:44,630 - DEBUG - setting property text
+2025-08-03 13:57:44,630 - DEBUG - push QLabel label
+2025-08-03 13:57:44,630 - DEBUG - pop widget QLabel label
+2025-08-03 13:57:44,630 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x10ea813a0>
+2025-08-03 13:57:44,630 - DEBUG - setting property geometry
+2025-08-03 13:57:44,630 - DEBUG - setting property font
+2025-08-03 13:57:44,630 - DEBUG - setting property text
+2025-08-03 13:57:44,630 - DEBUG - push QLabel label_2
+2025-08-03 13:57:44,630 - DEBUG - pop widget QLabel label_2
+2025-08-03 13:57:44,630 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x10ea813a0>
+2025-08-03 13:57:44,630 - DEBUG - pop widget QWidget centralwidget
+2025-08-03 13:57:44,630 - DEBUG - new topwidget <__main__.MainWindow object at 0x10d09bc10>
+2025-08-03 13:57:44,631 - DEBUG - push QStatusBar statusbar
+2025-08-03 13:57:44,631 - DEBUG - pop widget QStatusBar statusbar
+2025-08-03 13:57:44,631 - DEBUG - new topwidget <__main__.MainWindow object at 0x10d09bc10>
+2025-08-03 13:57:44,690 - DEBUG - setting property geometry
+2025-08-03 13:57:44,690 - DEBUG - push QMenuBar menuBar
+2025-08-03 13:57:44,691 - DEBUG - setting property title
+2025-08-03 13:57:44,691 - DEBUG - push QMenu menuFile
+2025-08-03 13:57:44,691 - DEBUG - pop widget QMenu menuFile
+2025-08-03 13:57:44,691 - DEBUG - new topwidget <PyQt5.QtWidgets.QMenuBar object at 0x10ea819d0>
+2025-08-03 13:57:44,691 - DEBUG - setting property title
+2025-08-03 13:57:44,691 - DEBUG - push QMenu menuColor
+2025-08-03 13:57:44,691 - DEBUG - pop widget QMenu menuColor
+2025-08-03 13:57:44,691 - DEBUG - new topwidget <PyQt5.QtWidgets.QMenuBar object at 0x10ea819d0>
+2025-08-03 13:57:44,691 - DEBUG - setting property title
+2025-08-03 13:57:44,691 - DEBUG - push QMenu menuUpdate
+2025-08-03 13:57:44,691 - DEBUG - pop widget QMenu menuUpdate
+2025-08-03 13:57:44,691 - DEBUG - new topwidget <PyQt5.QtWidgets.QMenuBar object at 0x10ea819d0>
+2025-08-03 13:57:44,691 - DEBUG - pop widget QMenuBar menuBar
+2025-08-03 13:57:44,691 - DEBUG - new topwidget <__main__.MainWindow object at 0x10d09bc10>
+2025-08-03 13:57:44,692 - DEBUG - setting property text
+2025-08-03 13:57:44,692 - DEBUG - setting property text
+2025-08-03 13:57:44,692 - DEBUG - setting property text
+2025-08-03 13:57:44,692 - DEBUG - setting property text
+2025-08-03 13:57:44,692 - DEBUG - setting property text
+2025-08-03 13:57:44,692 - DEBUG - setting property text
+2025-08-03 13:57:44,692 - DEBUG - setting property text
+2025-08-03 13:57:44,692 - DEBUG - setting property text
+2025-08-03 13:57:44,692 - DEBUG - setting property text
+2025-08-03 13:57:44,692 - DEBUG - setting property text
+2025-08-03 13:57:44,692 - DEBUG - pop widget MainWindow BLACK_BOX
+2025-08-03 13:57:44,692 - DEBUG - new topwidget None
+2025-08-03 13:57:44,693 - DEBUG - add action actionOpen to menuFile
+2025-08-03 13:57:44,693 - DEBUG - add action actionSave to menuFile
+2025-08-03 13:57:44,693 - DEBUG - add action actionCompare to menuFile
+2025-08-03 13:57:44,693 - DEBUG - add action actionColor to menuColor
+2025-08-03 13:57:44,693 - DEBUG - add action actionEditMileage to menuColor
+2025-08-03 13:57:44,693 - DEBUG - add action actionCheckUpdate to menuUpdate
+2025-08-03 13:57:44,693 - DEBUG - add action actionThankYou to menuUpdate
+2025-08-03 13:57:44,693 - DEBUG - add action menuFile to menuBar
+2025-08-03 13:57:44,693 - DEBUG - add action menuColor to menuBar
+2025-08-03 13:57:44,694 - DEBUG - add action menuUpdate to menuBar
+2025-08-03 13:57:44,953 - DEBUG - Starting new HTTPS connection (1): raw.githubusercontent.com:443
+2025-08-03 13:57:45,326 - DEBUG - https://raw.githubusercontent.com:443 "GET /satanada666/Automotive-Binary-File-Editor/main/version.txt HTTP/1.1" 200 27
+2025-08-03 14:55:51,997 - DEBUG - uiname is BLACK_BOX
+2025-08-03 14:55:51,998 - DEBUG - toplevel widget is MainWindow
+2025-08-03 14:55:51,999 - DEBUG - setting property geometry
+2025-08-03 14:55:51,999 - DEBUG - setting property font
+2025-08-03 14:55:52,001 - DEBUG - setting property windowTitle
+2025-08-03 14:55:52,001 - DEBUG - push MainWindow BLACK_BOX
+2025-08-03 14:55:52,002 - DEBUG - push QWidget centralwidget
+2025-08-03 14:55:52,011 - DEBUG - setting property geometry
+2025-08-03 14:55:52,011 - DEBUG - setting property styleSheet
+2025-08-03 14:55:52,068 - DEBUG - push QTreeWidget treeWidget
+2025-08-03 14:55:52,069 - DEBUG - pop widget QTreeWidget treeWidget
+2025-08-03 14:55:52,069 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x103204280>
+2025-08-03 14:55:52,070 - DEBUG - setting property geometry
+2025-08-03 14:55:52,070 - DEBUG - push QWidget verticalLayoutWidget
+2025-08-03 14:55:52,070 - DEBUG - setting property spacing
+2025-08-03 14:55:52,071 - DEBUG - setting property sizeConstraint
+2025-08-03 14:55:52,071 - DEBUG - setting property pyuicMargins
+2025-08-03 14:55:52,071 - DEBUG - setting property pyuicSpacing
+2025-08-03 14:55:52,071 - DEBUG - push QVBoxLayout verticalLayout
+2025-08-03 14:55:52,076 - DEBUG - setting property enabled
+2025-08-03 14:55:52,076 - DEBUG - setting property styleSheet
+2025-08-03 14:55:52,076 - DEBUG - push QTextEdit originalHexEdit
+2025-08-03 14:55:52,076 - DEBUG - pop widget QTextEdit originalHexEdit
+2025-08-03 14:55:52,076 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x1032043a0>
+2025-08-03 14:55:52,077 - DEBUG - setting property value
+2025-08-03 14:55:52,078 - DEBUG - push QProgressBar progressBar
+2025-08-03 14:55:52,078 - DEBUG - pop widget QProgressBar progressBar
+2025-08-03 14:55:52,078 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x1032043a0>
+2025-08-03 14:55:52,079 - DEBUG - setting property sizePolicy
+2025-08-03 14:55:52,080 - DEBUG - setting property font
+2025-08-03 14:55:52,088 - DEBUG - setting property accessibleDescription
+2025-08-03 14:55:52,089 - DEBUG - setting property title
+2025-08-03 14:55:52,090 - DEBUG - push QGroupBox vinPinContainer
+2025-08-03 14:55:52,090 - DEBUG - pop widget QGroupBox vinPinContainer
+2025-08-03 14:55:52,090 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x1032043a0>
+2025-08-03 14:55:52,090 - DEBUG - setting property styleSheet
+2025-08-03 14:55:52,090 - DEBUG - push QTextEdit modifiedHexEdit
+2025-08-03 14:55:52,090 - DEBUG - pop widget QTextEdit modifiedHexEdit
+2025-08-03 14:55:52,090 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x1032043a0>
+2025-08-03 14:55:52,090 - DEBUG - pop layout QVBoxLayout verticalLayout
+2025-08-03 14:55:52,090 - DEBUG - pop widget QWidget verticalLayoutWidget
+2025-08-03 14:55:52,091 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x103204280>
+2025-08-03 14:55:52,091 - DEBUG - setting property geometry
+2025-08-03 14:55:52,091 - DEBUG - setting property font
+2025-08-03 14:55:52,091 - DEBUG - setting property text
+2025-08-03 14:55:52,091 - DEBUG - push QLabel label
+2025-08-03 14:55:52,091 - DEBUG - pop widget QLabel label
+2025-08-03 14:55:52,091 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x103204280>
+2025-08-03 14:55:52,091 - DEBUG - setting property geometry
+2025-08-03 14:55:52,092 - DEBUG - setting property font
+2025-08-03 14:55:52,092 - DEBUG - setting property text
+2025-08-03 14:55:52,092 - DEBUG - push QLabel label_2
+2025-08-03 14:55:52,092 - DEBUG - pop widget QLabel label_2
+2025-08-03 14:55:52,092 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x103204280>
+2025-08-03 14:55:52,092 - DEBUG - pop widget QWidget centralwidget
+2025-08-03 14:55:52,092 - DEBUG - new topwidget <__main__.MainWindow object at 0x103ecdaf0>
+2025-08-03 14:55:52,094 - DEBUG - push QStatusBar statusbar
+2025-08-03 14:55:52,094 - DEBUG - pop widget QStatusBar statusbar
+2025-08-03 14:55:52,094 - DEBUG - new topwidget <__main__.MainWindow object at 0x103ecdaf0>
+2025-08-03 14:55:52,169 - DEBUG - setting property geometry
+2025-08-03 14:55:52,169 - DEBUG - push QMenuBar menuBar
+2025-08-03 14:55:52,170 - DEBUG - setting property title
+2025-08-03 14:55:52,170 - DEBUG - push QMenu menuFile
+2025-08-03 14:55:52,171 - DEBUG - pop widget QMenu menuFile
+2025-08-03 14:55:52,171 - DEBUG - new topwidget <PyQt5.QtWidgets.QMenuBar object at 0x1032048b0>
+2025-08-03 14:55:52,171 - DEBUG - setting property title
+2025-08-03 14:55:52,171 - DEBUG - push QMenu menuColor
+2025-08-03 14:55:52,171 - DEBUG - pop widget QMenu menuColor
+2025-08-03 14:55:52,171 - DEBUG - new topwidget <PyQt5.QtWidgets.QMenuBar object at 0x1032048b0>
+2025-08-03 14:55:52,171 - DEBUG - setting property title
+2025-08-03 14:55:52,171 - DEBUG - push QMenu menuUpdate
+2025-08-03 14:55:52,171 - DEBUG - pop widget QMenu menuUpdate
+2025-08-03 14:55:52,171 - DEBUG - new topwidget <PyQt5.QtWidgets.QMenuBar object at 0x1032048b0>
+2025-08-03 14:55:52,171 - DEBUG - pop widget QMenuBar menuBar
+2025-08-03 14:55:52,171 - DEBUG - new topwidget <__main__.MainWindow object at 0x103ecdaf0>
+2025-08-03 14:55:52,171 - DEBUG - setting property text
+2025-08-03 14:55:52,171 - DEBUG - setting property text
+2025-08-03 14:55:52,172 - DEBUG - setting property text
+2025-08-03 14:55:52,172 - DEBUG - setting property text
+2025-08-03 14:55:52,172 - DEBUG - setting property text
+2025-08-03 14:55:52,172 - DEBUG - setting property text
+2025-08-03 14:55:52,172 - DEBUG - setting property text
+2025-08-03 14:55:52,172 - DEBUG - setting property text
+2025-08-03 14:55:52,172 - DEBUG - setting property text
+2025-08-03 14:55:52,172 - DEBUG - setting property text
+2025-08-03 14:55:52,172 - DEBUG - pop widget MainWindow BLACK_BOX
+2025-08-03 14:55:52,172 - DEBUG - new topwidget None
+2025-08-03 14:55:52,172 - DEBUG - add action actionOpen to menuFile
+2025-08-03 14:55:52,172 - DEBUG - add action actionSave to menuFile
+2025-08-03 14:55:52,172 - DEBUG - add action actionCompare to menuFile
+2025-08-03 14:55:52,173 - DEBUG - add action actionColor to menuColor
+2025-08-03 14:55:52,173 - DEBUG - add action actionEditMileage to menuColor
+2025-08-03 14:55:52,173 - DEBUG - add action actionCheckUpdate to menuUpdate
+2025-08-03 14:55:52,173 - DEBUG - add action actionThankYou to menuUpdate
+2025-08-03 14:55:52,173 - DEBUG - add action menuFile to menuBar
+2025-08-03 14:55:52,173 - DEBUG - add action menuColor to menuBar
+2025-08-03 14:55:52,174 - DEBUG - add action menuUpdate to menuBar
+2025-08-03 14:55:52,468 - DEBUG - Starting new HTTPS connection (1): raw.githubusercontent.com:443
+2025-08-03 14:55:52,909 - DEBUG - https://raw.githubusercontent.com:443 "GET /satanada666/Automotive-Binary-File-Editor/main/version.txt HTTP/1.1" 200 27
+2025-08-03 15:20:25,292 - DEBUG - uiname is BLACK_BOX
+2025-08-03 15:20:25,294 - DEBUG - toplevel widget is MainWindow
+2025-08-03 15:20:25,295 - DEBUG - setting property geometry
+2025-08-03 15:20:25,295 - DEBUG - setting property font
+2025-08-03 15:20:25,296 - DEBUG - setting property windowTitle
+2025-08-03 15:20:25,297 - DEBUG - push MainWindow BLACK_BOX
+2025-08-03 15:20:25,297 - DEBUG - push QWidget centralwidget
+2025-08-03 15:20:25,306 - DEBUG - setting property geometry
+2025-08-03 15:20:25,306 - DEBUG - setting property styleSheet
+2025-08-03 15:20:25,361 - DEBUG - push QTreeWidget treeWidget
+2025-08-03 15:20:25,362 - DEBUG - pop widget QTreeWidget treeWidget
+2025-08-03 15:20:25,362 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x106bc7280>
+2025-08-03 15:20:25,363 - DEBUG - setting property geometry
+2025-08-03 15:20:25,363 - DEBUG - push QWidget verticalLayoutWidget
+2025-08-03 15:20:25,363 - DEBUG - setting property spacing
+2025-08-03 15:20:25,363 - DEBUG - setting property sizeConstraint
+2025-08-03 15:20:25,364 - DEBUG - setting property pyuicMargins
+2025-08-03 15:20:25,364 - DEBUG - setting property pyuicSpacing
+2025-08-03 15:20:25,364 - DEBUG - push QVBoxLayout verticalLayout
+2025-08-03 15:20:25,368 - DEBUG - setting property enabled
+2025-08-03 15:20:25,368 - DEBUG - setting property styleSheet
+2025-08-03 15:20:25,368 - DEBUG - push QTextEdit originalHexEdit
+2025-08-03 15:20:25,368 - DEBUG - pop widget QTextEdit originalHexEdit
+2025-08-03 15:20:25,368 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x106bc73a0>
+2025-08-03 15:20:25,369 - DEBUG - setting property value
+2025-08-03 15:20:25,370 - DEBUG - push QProgressBar progressBar
+2025-08-03 15:20:25,370 - DEBUG - pop widget QProgressBar progressBar
+2025-08-03 15:20:25,370 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x106bc73a0>
+2025-08-03 15:20:25,370 - DEBUG - setting property sizePolicy
+2025-08-03 15:20:25,371 - DEBUG - setting property font
+2025-08-03 15:20:25,378 - DEBUG - setting property accessibleDescription
+2025-08-03 15:20:25,379 - DEBUG - setting property title
+2025-08-03 15:20:25,379 - DEBUG - push QGroupBox vinPinContainer
+2025-08-03 15:20:25,379 - DEBUG - pop widget QGroupBox vinPinContainer
+2025-08-03 15:20:25,379 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x106bc73a0>
+2025-08-03 15:20:25,380 - DEBUG - setting property styleSheet
+2025-08-03 15:20:25,380 - DEBUG - push QTextEdit modifiedHexEdit
+2025-08-03 15:20:25,380 - DEBUG - pop widget QTextEdit modifiedHexEdit
+2025-08-03 15:20:25,380 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x106bc73a0>
+2025-08-03 15:20:25,380 - DEBUG - pop layout QVBoxLayout verticalLayout
+2025-08-03 15:20:25,380 - DEBUG - pop widget QWidget verticalLayoutWidget
+2025-08-03 15:20:25,380 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x106bc7280>
+2025-08-03 15:20:25,381 - DEBUG - setting property geometry
+2025-08-03 15:20:25,381 - DEBUG - setting property font
+2025-08-03 15:20:25,381 - DEBUG - setting property text
+2025-08-03 15:20:25,381 - DEBUG - push QLabel label
+2025-08-03 15:20:25,381 - DEBUG - pop widget QLabel label
+2025-08-03 15:20:25,381 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x106bc7280>
+2025-08-03 15:20:25,381 - DEBUG - setting property geometry
+2025-08-03 15:20:25,381 - DEBUG - setting property font
+2025-08-03 15:20:25,382 - DEBUG - setting property text
+2025-08-03 15:20:25,382 - DEBUG - push QLabel label_2
+2025-08-03 15:20:25,382 - DEBUG - pop widget QLabel label_2
+2025-08-03 15:20:25,382 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x106bc7280>
+2025-08-03 15:20:25,382 - DEBUG - pop widget QWidget centralwidget
+2025-08-03 15:20:25,382 - DEBUG - new topwidget <__main__.MainWindow object at 0x1078e8af0>
+2025-08-03 15:20:25,384 - DEBUG - push QStatusBar statusbar
+2025-08-03 15:20:25,384 - DEBUG - pop widget QStatusBar statusbar
+2025-08-03 15:20:25,384 - DEBUG - new topwidget <__main__.MainWindow object at 0x1078e8af0>
+2025-08-03 15:20:25,456 - DEBUG - setting property geometry
+2025-08-03 15:20:25,456 - DEBUG - push QMenuBar menuBar
+2025-08-03 15:20:25,456 - DEBUG - setting property title
+2025-08-03 15:20:25,457 - DEBUG - push QMenu menuFile
+2025-08-03 15:20:25,457 - DEBUG - pop widget QMenu menuFile
+2025-08-03 15:20:25,457 - DEBUG - new topwidget <PyQt5.QtWidgets.QMenuBar object at 0x106bc78b0>
+2025-08-03 15:20:25,457 - DEBUG - setting property title
+2025-08-03 15:20:25,457 - DEBUG - push QMenu menuColor
+2025-08-03 15:20:25,457 - DEBUG - pop widget QMenu menuColor
+2025-08-03 15:20:25,457 - DEBUG - new topwidget <PyQt5.QtWidgets.QMenuBar object at 0x106bc78b0>
+2025-08-03 15:20:25,457 - DEBUG - setting property title
+2025-08-03 15:20:25,457 - DEBUG - push QMenu menuUpdate
+2025-08-03 15:20:25,457 - DEBUG - pop widget QMenu menuUpdate
+2025-08-03 15:20:25,457 - DEBUG - new topwidget <PyQt5.QtWidgets.QMenuBar object at 0x106bc78b0>
+2025-08-03 15:20:25,457 - DEBUG - pop widget QMenuBar menuBar
+2025-08-03 15:20:25,457 - DEBUG - new topwidget <__main__.MainWindow object at 0x1078e8af0>
+2025-08-03 15:20:25,457 - DEBUG - setting property text
+2025-08-03 15:20:25,458 - DEBUG - setting property text
+2025-08-03 15:20:25,458 - DEBUG - setting property text
+2025-08-03 15:20:25,458 - DEBUG - setting property text
+2025-08-03 15:20:25,458 - DEBUG - setting property text
+2025-08-03 15:20:25,458 - DEBUG - setting property text
+2025-08-03 15:20:25,458 - DEBUG - setting property text
+2025-08-03 15:20:25,458 - DEBUG - setting property text
+2025-08-03 15:20:25,458 - DEBUG - setting property text
+2025-08-03 15:20:25,458 - DEBUG - setting property text
+2025-08-03 15:20:25,458 - DEBUG - pop widget MainWindow BLACK_BOX
+2025-08-03 15:20:25,458 - DEBUG - new topwidget None
+2025-08-03 15:20:25,458 - DEBUG - add action actionOpen to menuFile
+2025-08-03 15:20:25,458 - DEBUG - add action actionSave to menuFile
+2025-08-03 15:20:25,459 - DEBUG - add action actionCompare to menuFile
+2025-08-03 15:20:25,459 - DEBUG - add action actionColor to menuColor
+2025-08-03 15:20:25,459 - DEBUG - add action actionEditMileage to menuColor
+2025-08-03 15:20:25,459 - DEBUG - add action actionCheckUpdate to menuUpdate
+2025-08-03 15:20:25,459 - DEBUG - add action actionThankYou to menuUpdate
+2025-08-03 15:20:25,459 - DEBUG - add action menuFile to menuBar
+2025-08-03 15:20:25,460 - DEBUG - add action menuColor to menuBar
+2025-08-03 15:20:25,460 - DEBUG - add action menuUpdate to menuBar
+2025-08-03 15:20:25,740 - DEBUG - Starting new HTTPS connection (1): raw.githubusercontent.com:443
+2025-08-03 15:20:26,187 - DEBUG - https://raw.githubusercontent.com:443 "GET /satanada666/Automotive-Binary-File-Editor/main/version.txt HTTP/1.1" 200 27
+2025-08-03 15:23:08,035 - DEBUG - uiname is BLACK_BOX
+2025-08-03 15:23:08,035 - DEBUG - toplevel widget is MainWindow
+2025-08-03 15:23:08,035 - DEBUG - setting property geometry
+2025-08-03 15:23:08,035 - DEBUG - setting property font
+2025-08-03 15:23:08,035 - DEBUG - setting property windowTitle
+2025-08-03 15:23:08,036 - DEBUG - push MainWindow BLACK_BOX
+2025-08-03 15:23:08,036 - DEBUG - push QWidget centralwidget
+2025-08-03 15:23:08,037 - DEBUG - setting property geometry
+2025-08-03 15:23:08,037 - DEBUG - setting property styleSheet
+2025-08-03 15:23:08,076 - DEBUG - push QTreeWidget treeWidget
+2025-08-03 15:23:08,076 - DEBUG - pop widget QTreeWidget treeWidget
+2025-08-03 15:23:08,076 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x1067fb8b0>
+2025-08-03 15:23:08,077 - DEBUG - setting property geometry
+2025-08-03 15:23:08,077 - DEBUG - push QWidget verticalLayoutWidget
+2025-08-03 15:23:08,077 - DEBUG - setting property spacing
+2025-08-03 15:23:08,077 - DEBUG - setting property sizeConstraint
+2025-08-03 15:23:08,077 - DEBUG - setting property pyuicMargins
+2025-08-03 15:23:08,077 - DEBUG - setting property pyuicSpacing
+2025-08-03 15:23:08,077 - DEBUG - push QVBoxLayout verticalLayout
+2025-08-03 15:23:08,078 - DEBUG - setting property enabled
+2025-08-03 15:23:08,078 - DEBUG - setting property styleSheet
+2025-08-03 15:23:08,078 - DEBUG - push QTextEdit originalHexEdit
+2025-08-03 15:23:08,078 - DEBUG - pop widget QTextEdit originalHexEdit
+2025-08-03 15:23:08,078 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x1067fb9d0>
+2025-08-03 15:23:08,078 - DEBUG - setting property value
+2025-08-03 15:23:08,078 - DEBUG - push QProgressBar progressBar
+2025-08-03 15:23:08,078 - DEBUG - pop widget QProgressBar progressBar
+2025-08-03 15:23:08,078 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x1067fb9d0>
+2025-08-03 15:23:08,079 - DEBUG - setting property sizePolicy
+2025-08-03 15:23:08,079 - DEBUG - setting property font
+2025-08-03 15:23:08,081 - DEBUG - setting property accessibleDescription
+2025-08-03 15:23:08,081 - DEBUG - setting property title
+2025-08-03 15:23:08,081 - DEBUG - push QGroupBox vinPinContainer
+2025-08-03 15:23:08,082 - DEBUG - pop widget QGroupBox vinPinContainer
+2025-08-03 15:23:08,082 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x1067fb9d0>
+2025-08-03 15:23:08,082 - DEBUG - setting property styleSheet
+2025-08-03 15:23:08,082 - DEBUG - push QTextEdit modifiedHexEdit
+2025-08-03 15:23:08,082 - DEBUG - pop widget QTextEdit modifiedHexEdit
+2025-08-03 15:23:08,082 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x1067fb9d0>
+2025-08-03 15:23:08,082 - DEBUG - pop layout QVBoxLayout verticalLayout
+2025-08-03 15:23:08,082 - DEBUG - pop widget QWidget verticalLayoutWidget
+2025-08-03 15:23:08,083 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x1067fb8b0>
+2025-08-03 15:23:08,083 - DEBUG - setting property geometry
+2025-08-03 15:23:08,083 - DEBUG - setting property font
+2025-08-03 15:23:08,083 - DEBUG - setting property text
+2025-08-03 15:23:08,083 - DEBUG - push QLabel label
+2025-08-03 15:23:08,083 - DEBUG - pop widget QLabel label
+2025-08-03 15:23:08,083 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x1067fb8b0>
+2025-08-03 15:23:08,083 - DEBUG - setting property geometry
+2025-08-03 15:23:08,083 - DEBUG - setting property font
+2025-08-03 15:23:08,083 - DEBUG - setting property text
+2025-08-03 15:23:08,084 - DEBUG - push QLabel label_2
+2025-08-03 15:23:08,084 - DEBUG - pop widget QLabel label_2
+2025-08-03 15:23:08,084 - DEBUG - new topwidget <PyQt5.QtWidgets.QWidget object at 0x1067fb8b0>
+2025-08-03 15:23:08,084 - DEBUG - pop widget QWidget centralwidget
+2025-08-03 15:23:08,084 - DEBUG - new topwidget <__main__.MainWindow object at 0x108f5a160>
+2025-08-03 15:23:08,084 - DEBUG - push QStatusBar statusbar
+2025-08-03 15:23:08,084 - DEBUG - pop widget QStatusBar statusbar
+2025-08-03 15:23:08,084 - DEBUG - new topwidget <__main__.MainWindow object at 0x108f5a160>
+2025-08-03 15:23:08,143 - DEBUG - setting property geometry
+2025-08-03 15:23:08,143 - DEBUG - push QMenuBar menuBar
+2025-08-03 15:23:08,143 - DEBUG - setting property title
+2025-08-03 15:23:08,143 - DEBUG - push QMenu menuFile
+2025-08-03 15:23:08,143 - DEBUG - pop widget QMenu menuFile
+2025-08-03 15:23:08,143 - DEBUG - new topwidget <PyQt5.QtWidgets.QMenuBar object at 0x1067fbee0>
+2025-08-03 15:23:08,143 - DEBUG - setting property title
+2025-08-03 15:23:08,144 - DEBUG - push QMenu menuColor
+2025-08-03 15:23:08,144 - DEBUG - pop widget QMenu menuColor
+2025-08-03 15:23:08,144 - DEBUG - new topwidget <PyQt5.QtWidgets.QMenuBar object at 0x1067fbee0>
+2025-08-03 15:23:08,144 - DEBUG - setting property title
+2025-08-03 15:23:08,144 - DEBUG - push QMenu menuUpdate
+2025-08-03 15:23:08,144 - DEBUG - pop widget QMenu menuUpdate
+2025-08-03 15:23:08,144 - DEBUG - new topwidget <PyQt5.QtWidgets.QMenuBar object at 0x1067fbee0>
+2025-08-03 15:23:08,144 - DEBUG - pop widget QMenuBar menuBar
+2025-08-03 15:23:08,144 - DEBUG - new topwidget <__main__.MainWindow object at 0x108f5a160>
+2025-08-03 15:23:08,144 - DEBUG - setting property text
+2025-08-03 15:23:08,144 - DEBUG - setting property text
+2025-08-03 15:23:08,144 - DEBUG - setting property text
+2025-08-03 15:23:08,144 - DEBUG - setting property text
+2025-08-03 15:23:08,144 - DEBUG - setting property text
+2025-08-03 15:23:08,145 - DEBUG - setting property text
+2025-08-03 15:23:08,145 - DEBUG - setting property text
+2025-08-03 15:23:08,145 - DEBUG - setting property text
+2025-08-03 15:23:08,145 - DEBUG - setting property text
+2025-08-03 15:23:08,145 - DEBUG - setting property text
+2025-08-03 15:23:08,145 - DEBUG - pop widget MainWindow BLACK_BOX
+2025-08-03 15:23:08,145 - DEBUG - new topwidget None
+2025-08-03 15:23:08,145 - DEBUG - add action actionOpen to menuFile
+2025-08-03 15:23:08,145 - DEBUG - add action actionSave to menuFile
+2025-08-03 15:23:08,145 - DEBUG - add action actionCompare to menuFile
+2025-08-03 15:23:08,145 - DEBUG - add action actionColor to menuColor
+2025-08-03 15:23:08,145 - DEBUG - add action actionEditMileage to menuColor
+2025-08-03 15:23:08,145 - DEBUG - add action actionCheckUpdate to menuUpdate
+2025-08-03 15:23:08,145 - DEBUG - add action actionThankYou to menuUpdate
+2025-08-03 15:23:08,146 - DEBUG - add action menuFile to menuBar
+2025-08-03 15:23:08,146 - DEBUG - add action menuColor to menuBar
+2025-08-03 15:23:08,146 - DEBUG - add action menuUpdate to menuBar
+2025-08-03 15:23:08,407 - DEBUG - Starting new HTTPS connection (1): raw.githubusercontent.com:443
+2025-08-03 15:23:08,768 - DEBUG - https://raw.githubusercontent.com:443 "GET /satanada666/Automotive-Binary-File-Editor/main/version.txt HTTP/1.1" 200 27
