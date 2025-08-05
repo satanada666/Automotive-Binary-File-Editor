@@ -28,7 +28,7 @@
         "sirius_d3_d4_NI":{}
     },
     "Nissan": {
-      "nissan_classic_SH705524N_NI": {},
+      "nissan_classic_SH705524N_NI": {"password_protected": true},
       "nissan_classic_SH705529N_NI": {},
       "nissan_hitachi_sh705507n_NI":{}
     },
