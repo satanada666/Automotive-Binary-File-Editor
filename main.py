@@ -707,6 +707,7 @@ def main():
     change_color_func = setup_color(win, settings)
     current_encoder = [None]
 
+
     def on_tree_item_clicked():
         try:
             selected_items = tree.selectedItems()
