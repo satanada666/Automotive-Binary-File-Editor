@@ -5,7 +5,7 @@ a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[],
-    datas=[('untitled_with_edit_mileage.ui', '.'), ('ecu_data.json', '.')],
+    datas=[('untitled_with_edit_mileage.ui', '.'), ('ecu_data.json', '.'), ('images', 'images')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
