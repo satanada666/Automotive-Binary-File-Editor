@@ -37,8 +37,8 @@ def compare_binary_files(file1_path, file2_path, output_diff_file, output_table_
 
 # Пример использования
 compare_binary_files(
-    "CG100X_1_8_8_2_20250706_001801_BMW_SME_Battery_Management_Module(crash).bin",
-    "CG100X_1_8_9_0_20250723_135144_BMW_SME_Battery_Management_Module(clear).bin",
+    "343830-20250805-141914.bin",
+    "343830-20250805-immo off.bin",
     "differences.txt",
     "differences_table.txt"
 )
