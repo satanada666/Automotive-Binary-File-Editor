@@ -180,7 +180,7 @@ def load_passwords_from_cloud(url: str) -> dict:
             if '=' in line:
                 mod, pwd = line.strip().split('=', 1)
                 result[mod.strip()] = pwd.strip()
-        print(f"Loaded passwords: {result}")
+        #print(f"Loaded passwords: {result}") 
         return result
     except Exception as e:
         print(f"Ошибка загрузки паролей из облака: {e}")
