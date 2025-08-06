@@ -1,3 +1,294 @@
+import os
+import sys
+import json
+import requests
+from PyQt5.QtWidgets import QInputDialog, QMessageBox, QLineEdit
+
+# Функция для получения пути к ресурсам (нужно, если используешь PyInstaller)
+def resource_path(relative_path):
+    try:
+        base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+        full_path = os.path.join(base_path, relative_path)
+        print(f"Resource path for {relative_path}: {full_path}")
+        return full_path
+    except Exception as e:
+        print(f"Error in resource_path: {e}")
+        return os.path.join(os.path.dirname(os.path.abspath(__file__)), relative_path)
+
+# Добавляем корневую директорию проекта в sys.path для корректных импортов
+project_root = resource_path(".")
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
+
+# Импорт модулей энкодеров
+try:
+    from Plugin.ECU.Ems3120_No_Immo import Ems3120_No_Immo
+    from Plugin.ECU.ME17_No_Immo import ME17_No_Immo
+    from Plugin.ECU.Ems3130_NI import Ems3130_NI
+    from Plugin.ECU.Ems3132_No_Immo import Ems3132_No_Immo
+    from Plugin.ECU.Ems3134_No_Immo import Ems3134_No_Immo
+    from Plugin.ECU.sirius_32_No_Immo_v1 import sirius_32_No_Immo_v1
+    from Plugin.ECU.sirius_32_No_Immo_v2 import sirius_32_No_Immo_v2
+    from Plugin.ECU.MT86_No_Immo import MT86_No_Immo
+    from Plugin.ECU.BMW_MS41_No_Immo_CS import BMW_MS41_No_Immo_CS
+    from Plugin.ECU.China_797_No_Immo import China_797_No_Immo
+    from Plugin.ECU.nissan_classic_SH705524N_NI import nissan_classic_SH705524N_NI
+    from Plugin.ECU.nissan_classic_SH705529N_NI import nissan_classic_SH705529N_NI
+    from Plugin.ECU.Mitsubishi_MH8302F_NI import Mitsubishi_MH8302F_NI
+    from Plugin.ECU.Melco_MH7203_NI import Melco_MH7203_NI
+    from Plugin.ECU.sim2k_140_141_341_NI import sim2k_140_141_341_NI
+    from Plugin.ECU.sim2k_240_241_242_245 import sim2k_240_241_242_245
+    from Plugin.ECU.sim2k_250_251 import sim2k_250_251
+    from Plugin.ECU.ME17_9_11_12_activate_cruise_control_NO_CS_CS_Winols import ME17_9_11_12_activate_cruise_control_NO_CS_CS_Winols
+    from Plugin.ECU.delphi_MT_38_NI import delphi_MT_38_NI
+    from Plugin.ECU.Me_17_kia_Hyundai import Me_17_kia_Hyundai
+    from Plugin.ECU.simk43_NI import simk43_NI
+    from Plugin.ECU.simk41_NI import simk41_NI
+    from Plugin.ECU.sirius_d3_d4_NI import sirius_d3_d4_NI
+    from Plugin.ECU.M78_NI import M78_NI
+    from Plugin.ECU.Me17_China_NI import Me17_China_NI
+    from Plugin.ECU.Ducato_edc16c39_NI import Ducato_edc16c39_NI
+    from Plugin.ECU.Sid802_804_NI import Sid802_804_NI
+    from Plugin.ECU.ms42_NI import ms42_NI
+    from Plugin.ECU.M798_MG798_NI import M798_MG798_NI
+    from Plugin.ECU.M_E_797_NI import M_E_797_NI
+    from Plugin.ECU.kefico_MH72_MH832_MH83 import kefico_MH72_MH832_MH83
+    from Plugin.ECU.nissan_hitachi_sh705507n_NI import nissan_hitachi_sh705507n_NI
+    from Plugin.ECU.me_72_BMW_NI import me_72_BMW_NI
+    from Plugin.EEPROM.j34p import j34p
+    from Plugin.EEPROM.Geely_Emgrand_93c56_PIN import Geely_Emgrand_93c56_PIN
+    from Plugin.EEPROM.me745_NI import me745_NI
+    from Plugin.EEPROM.edc16u1 import edc16u1
+    from Plugin.EEPROM.med_9_1_NI_95160 import med_9_1_NI_95160
+    from Plugin.EEPROM.opel_25040_pin_vin import Opel_25040_Pin_Vin
+    from Plugin.EEPROM.VW_Simos_4S_93C56_NI import VW_Simos_4S_93C56_NI
+    from Plugin.EEPROM.Vag_simos_2_1_No_Immo import Vag_simos_2_1_No_Immo
+    from Plugin.EEPROM.Vag_simos_3_3_No_Immo import Vag_simos_3_3_No_Immo
+    from Plugin.EEPROM.VAG_EDC15_NI_24c02 import VAG_EDC15_NI_24c02
+    from Plugin.EEPROM.VAG_M3_8_3_24C02_NI import VAG_M3_8_3_24C02_NI
+    from Plugin.EEPROM.Chevrolet_E84_Pin_Vin import Chevrolet_E84_Pin_Vin
+    from Plugin.EEPROM.Chevrolet_E84_Editor import Chevrolet_E84_Editor
+    from Plugin.EEPROM.me7_5_No_Immo_Pin_Cs import me7_5_No_Immo_Pin_Cs
+    from Plugin.EEPROM.kyron_95160_NI_CS import kyron_95160_NI_CS
+    from Plugin.EEPROM.me7_1_NI_CS import me7_1_NI_CS
+    from Plugin.SRS.mazda_95320_GR6B_57K30B import mazda_95320_GR6B_57K30B
+    from Plugin.SRS.Continental_Reault_8201_385_569 import Continental_Reault_8201_385_569
+    from Plugin.SRS.Hyundi_santa_fe_95910_2b180_epp95640 import Hyundi_santa_fe_95910_2b180_epp95640
+    from Plugin.SRS.srs_kia_95910_3u100_95320 import srs_kia_95910_3u100_95320
+    from Plugin.SRS._619771500_9674290880_2012MCU95320 import _619771500_9674290880_2012MCU95320
+    from Plugin.SRS._0285001639_Bosch_98820_BU900_HC12B32 import _0285001639_Bosch_98820_BU900_HC12B32
+    from Plugin.SRS.TRW_51822436_D219391215 import TRW_51822436_D219391215
+    from Plugin.DASH.Chevrolet_lacetti_dash_denso_96804358_EJ_6H21_11000_932900D_93c46 import Chevrolet_lacetti_dash_denso_96804358_EJ_6H21_11000_932900D_93c46
+    from Plugin.DASH.Daewoo_Gentra_dash_denso_93c56 import Daewoo_Gentra_dash_denso_93c56
+    from Plugin.DASH.Chevrolet_lacetti_2007_2013_dash_denso_93c46 import Chevrolet_lacetti_2007_2013_dash_denso_93c46
+    from Plugin.DASH.aveo_93c56 import aveo_93c56
+    from Plugin.DASH._94003_G9000_J5060_94013_G9920_Genesis_g80_94013_J5740_94019_2P191_94043_B1010_94043_B1870_ahls_off import _94003_G9000_J5060_94013_G9920_Genesis_g80_94013_J5740_94019_2P191_94043_B1010_94043_B1870_ahls_off
+    from Plugin.DASH.gelly_atlas_2020_24c02 import gelly_atlas_2020_24c02
+    from Plugin.DASH.haval_m6_2023_dash_93c56 import haval_m6_2023_dash_93c56
+    from Plugin.DASH.Prado_93c86_until_2015 import Prado_93c86_until_2015
+    from Plugin.DASH.sa3hk_3658100a_ahls import sa3hk_3658100a_ahls
+    from Plugin.BCM.Cruze_BCM_24c16_after_2009 import Cruze_BCM_24c16_after_2009
+except ImportError as e:
+    print(f"WARNING: Import error in encoders.py: {e}")
+
+# Реестр доступных энкодеров (ключ — имя модуля, значение — класс)
+encoder_registry = {
+    "Ems3120_No_Immo": Ems3120_No_Immo,
+    "ME17_No_Immo": ME17_No_Immo,
+    "Ems3130_NI": Ems3130_NI,
+    "Ems3132_No_Immo": Ems3132_No_Immo,
+    "Ems3134_No_Immo": Ems3134_No_Immo,
+    "sirius_32_No_Immo_v1": sirius_32_No_Immo_v1,
+    "sirius_32_No_Immo_v2": sirius_32_No_Immo_v2,
+    "MT86_No_Immo": MT86_No_Immo,
+    "BMW_MS41_No_Immo_CS": BMW_MS41_No_Immo_CS,
+    "China_797_No_Immo": China_797_No_Immo,
+    "nissan_classic_SH705524N_NI": nissan_classic_SH705524N_NI,
+    "nissan_classic_SH705529N_NI": nissan_classic_SH705529N_NI,
+    "Mitsubishi_MH8302F_NI": Mitsubishi_MH8302F_NI,
+    "Melco_MH7203_NI": Melco_MH7203_NI,
+    "sim2k_140_141_341_NI": sim2k_140_141_341_NI,
+    "sim2k_240_241_242_245": sim2k_240_241_242_245,
+    "sim2k_250_251": sim2k_250_251,
+    "ME17_9_11_12_activate_cruise_control_NO_CS_CS_Winols": ME17_9_11_12_activate_cruise_control_NO_CS_CS_Winols,
+    "delphi_MT_38_NI": delphi_MT_38_NI,
+    "Me_17_kia_Hyundai": Me_17_kia_Hyundai,
+    "simk43_NI": simk43_NI,
+    "simk41_NI": simk41_NI,
+    "sirius_d3_d4_NI": sirius_d3_d4_NI,
+    "M78_NI": M78_NI,
+    "Me17_China_NI": Me17_China_NI,
+    "Ducato_edc16c39_NI": Ducato_edc16c39_NI,
+    "Sid802_804_NI": Sid802_804_NI,
+    "ms42_NI": ms42_NI,
+    "M798_MG798_NI": M798_MG798_NI,
+    "M_E_797_NI": M_E_797_NI,
+    "kefico_MH72_MH832_MH83": kefico_MH72_MH832_MH83,
+    "nissan_hitachi_sh705507n_NI": nissan_hitachi_sh705507n_NI,
+    "me_72_BMW_NI": me_72_BMW_NI,
+    "j34p_No_Immo": j34p,
+    "Geely_Emgrand_93c56_PIN": Geely_Emgrand_93c56_PIN,
+    "me745_NI": me745_NI,
+    "EDC16U1(U34)_No_Immo": edc16u1,
+    "med_9_1_NI_95160": med_9_1_NI_95160,
+    "Opel_25040_Pin_Vin": Opel_25040_Pin_Vin,
+    "VW_Simos_4S_93C56_NI": VW_Simos_4S_93C56_NI,
+    "Vag_simos_2_1_No_Immo": Vag_simos_2_1_No_Immo,
+    "Vag_simos_3_3_No_Immo": Vag_simos_3_3_No_Immo,
+    "VAG_EDC15_NI_24c02": VAG_EDC15_NI_24c02,
+    "VAG_M3_8_3_24C02_NI": VAG_M3_8_3_24C02_NI,
+    "Chevrolet_E84_Pin_Vin": Chevrolet_E84_Pin_Vin,
+    "Chevrolet_E84_Editor": Chevrolet_E84_Editor,
+    "me7_5_No_Immo_Pin_Cs": me7_5_No_Immo_Pin_Cs,
+    "kyron_95160_NI_CS": kyron_95160_NI_CS,
+    "me7_1_NI_CS": me7_1_NI_CS,
+    "mazda_95320_GR6B_57K30B": mazda_95320_GR6B_57K30B,
+    "Continental_Reault_8201_385_569": Continental_Reault_8201_385_569,
+    "Hyundi_santa_fe_95910_2b180_epp95640": Hyundi_santa_fe_95910_2b180_epp95640,
+    "srs_kia_95910_3u100_95320": srs_kia_95910_3u100_95320,
+    "_619771500_9674290880_2012MCU95320": _619771500_9674290880_2012MCU95320,
+    "_0285001639_Bosch_98820_BU900_HC12B32": _0285001639_Bosch_98820_BU900_HC12B32,
+    "TRW_51822436_D219391215": TRW_51822436_D219391215,
+    "Chevrolet_lacetti_dash_denso_96804358_EJ_6H21_11000_932900D_93c46": Chevrolet_lacetti_dash_denso_96804358_EJ_6H21_11000_932900D_93c46,
+    "Daewoo_Gentra_dash_denso_93c56": Daewoo_Gentra_dash_denso_93c56,
+    "Chevrolet_lacetti_2007_2013_dash_denso_93c46": Chevrolet_lacetti_2007_2013_dash_denso_93c46,
+    "aveo_93c56": aveo_93c56,
+    "_94003_G9000_J5060_94013_G9920_Genesis_g80_94013_J5740_94019_2P191_94043_B1010_94043_B1870_ahls_off": _94003_G9000_J5060_94013_G9920_Genesis_g80_94013_J5740_94019_2P191_94043_B1010_94043_B1870_ahls_off,
+    "gelly_atlas_2020_24c02": gelly_atlas_2020_24c02,
+    "haval_m6_2023_dash_93c56": haval_m6_2023_dash_93c56,
+    "Prado_93c86_until_2015": Prado_93c86_until_2015,
+    "sa3hk_3658100a_ahls": sa3hk_3658100a_ahls,
+    "Cruze_BCM_24c16_after_2009": Cruze_BCM_24c16_after_2009
+}
+
+# Ссылка на облачный файл с паролями (замени на свою прямую ссылку!)
+PASSWORDS_URL = "https://drive.google.com/uc?export=download&id=18FR3PMLIgwexnmjfzzZSBuxjySS2U5jo"
+
+def load_passwords_from_cloud(url: str) -> dict:
+    """
+    Загружает пароли из облачного текстового файла в формате:
+    ModuleName=password
+    """
+    try:
+        r = requests.get(url, timeout=10)
+        if r.status_code != 200:
+            print(f"Ошибка загрузки паролей: HTTP {r.status_code}")
+            return {}
+        lines = r.text.strip().splitlines()
+        result = {}
+        for line in lines:
+            if '=' in line:
+                mod, pwd = line.strip().split('=', 1)
+                result[mod.strip()] = pwd.strip()
+        print(f"Loaded passwords: {result}")
+        return result
+    except Exception as e:
+        print(f"Ошибка загрузки паролей из облака: {e}")
+        return {}
+
+def check_password_protection(name: str) -> bool:
+    """
+    Проверяет, защищён ли модуль паролем, читая из ecu_data.json.
+    Если ecu_data.json недоступен, считает модуль защищённым.
+    """
+    try:
+        ecu_data_path = resource_path("ecu_data.json")
+        print(f"Checking password protection for {name}, JSON path: {ecu_data_path}")
+        
+        if not os.path.exists(ecu_data_path):
+            print(f"WARNING: ecu_data.json not found at {ecu_data_path}, assuming module is password protected")
+            return True
+            
+        with open(ecu_data_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+            
+        # Рекурсивный поиск модуля в JSON структуре
+        def search_module(obj, target_name):
+            if isinstance(obj, dict):
+                for key, value in obj.items():
+                    if key == target_name and isinstance(value, dict):
+                        return value.get("password_protected", False)
+                    elif isinstance(value, dict):
+                        result = search_module(value, target_name)
+                        if result is not None:
+                            return result
+            return None
+            
+        is_protected = search_module(data, name)
+        if is_protected is None:
+            print(f"WARNING: Module {name} not found in ecu_data.json, assuming password protected")
+            return True
+        print(f"Password protection check for {name}: {is_protected}")
+        return is_protected
+        
+    except Exception as e:
+        print(f"Error checking password protection for {name}: {e}, assuming module is password protected")
+        return True
+
+def get_encoder(name: str, parent=None):
+    """
+    Возвращает экземпляр модуля с проверкой пароля по ecu_data.json и passwords.txt.
+    Если модуль не защищён паролем в ecu_data.json, доступ разрешён без пароля.
+    Если модуль защищён, требуется интернет для загрузки пароля из passwords.txt.
+    """
+    print(f"get_encoder called with name: {name}, parent: {parent is not None}")
+    
+    encoder_class = encoder_registry.get(name)
+    if not encoder_class:
+        print(f"Модуль '{name}' не найден в реестре")
+        if parent:
+            QMessageBox.critical(parent, "Ошибка", f"Модуль '{name}' не найден в реестре.")
+        return None
+
+    # Проверяем, защищён ли модуль паролем в ecu_data.json
+    protected = check_password_protection(name)
+    print(f"Module {name} password protection: {protected}")
+
+    if protected:
+        passwords = load_passwords_from_cloud(PASSWORDS_URL)
+        if not passwords:
+            if parent:
+                QMessageBox.critical(parent, "Ошибка", "Нет доступа к облачному файлу с паролями. Проверьте подключение к интернету.")
+            print(f"get_encoder: Name = {name}, Encoder = None (failed to load passwords)")
+            return None
+
+        if name not in passwords:
+            if parent:
+                QMessageBox.critical(parent, "Ошибка", f"Пароль для модуля '{name}' не найден в облачном файле.")
+            print(f"get_encoder: Name = {name}, Encoder = None (password not found in passwords.txt)")
+            return None
+
+        if parent is None:
+            print("Ошибка: для проверки пароля нужен parent для показа диалога.")
+            return None
+
+        password, ok = QInputDialog.getText(
+            parent,
+            "Ввод пароля",
+            f"Модуль '{name}' защищён паролем. Введите пароль:",
+            QLineEdit.Password
+        )
+        if not ok:
+            print(f"get_encoder: Name = {name}, Encoder = None (password dialog cancelled)")
+            return None
+        if password != passwords[name]:
+            QMessageBox.warning(parent, "Ошибка", "Неверный пароль. Доступ запрещён.")
+            print(f"get_encoder: Name = {name}, Encoder = None (wrong password)")
+            return None
+    else:
+        # Если модуль не защищён паролем, разрешаем доступ без проверки
+        print(f"Module {name} is not password protected, proceeding to create encoder")
+
+    try:
+        encoder = encoder_class()
+        print(f"get_encoder: Name = {name}, Encoder = {type(encoder).__name__} (SUCCESS)")
+        return encoder
+    except Exception as e:
+        print(f"Ошибка создания модуля '{name}': {e}")
+        if parent:
+            QMessageBox.critical(parent, "Ошибка", f"Ошибка создания модуля '{name}': {e}")
+        return None
+'''###_Work
 # Исправленный encoders.py с поддержкой паролей в exe
 
 import os
@@ -266,4 +557,4 @@ def get_encoder(name: str, parent=None) -> Encoder:
         print(f"Error creating encoder instance for {name}: {e}")
         if parent:
             QMessageBox.critical(parent, "Ошибка", f"Ошибка создания модуля {name}: {str(e)}")
-        return None
+        return None'''

@@ -31,7 +31,7 @@ logging.basicConfig(
     ]
 )
 
-LOCAL_VERSION = "1.1.56"
+LOCAL_VERSION = "1.1.57"
 GITHUB_VERSION_URL = "https://raw.githubusercontent.com/satanada666/Automotive-Binary-File-Editor/main/version.txt"
 DOWNLOAD_URL = "https://github.com/satanada666/Automotive-Binary-File-Editor/releases"
 SUPPORT_URL = "https://yoomoney.ru/to/410013340366044/1000"
