@@ -28,7 +28,7 @@
         "sirius_d3_d4_NI":{}
     },
     "Nissan": {
-      "nissan_classic_SH705524N_NI": {},
+      "nissan_classic_SH705524N_NI": {"password_protected": true},
       "nissan_classic_SH705529N_NI": {},
       "nissan_hitachi_sh705507n_NI":{}
     },
@@ -96,7 +96,7 @@
         "aveo_93c56": {},
       "AHLS":{
         "_94003_G9000_J5060_94013_G9920_Genesis_g80_94013_J5740_94019_2P191_94043_B1010_94043_B1870_ahls_off":{},
-        "cg100x_ahl":{"password_protected": true}
+        "sa3hk_3658100a_ahls":{"password_protected": true}
       }
       }
     },

@@ -96,7 +96,7 @@ try:
     from Plugin.DASH.gelly_atlas_2020_24c02 import gelly_atlas_2020_24c02
     from Plugin.DASH.haval_m6_2023_dash_93c56 import haval_m6_2023_dash_93c56
     from Plugin.DASH.Prado_93c86_until_2015 import Prado_93c86_until_2015
-    from Plugin.DASH.cg100x_ahl import cg100x_ahl
+    from Plugin.DASH.sa3hk_3658100a_ahls import sa3hk_3658100a_ahls
     
     from Plugin.BCM.Cruze_BCM_24c16_after_2009 import Cruze_BCM_24c16_after_2009
 
@@ -169,7 +169,7 @@ encoder_registry = {
     "Cruze_BCM_24c16_after_2009": Cruze_BCM_24c16_after_2009,
     "_619771500_9674290880_2012MCU95320": _619771500_9674290880_2012MCU95320,
     "TRW_51822436_D219391215": TRW_51822436_D219391215,
-    "cg100x_ahl":cg100x_ahl,
+    "sa3hk_3658100a_ahls":sa3hk_3658100a_ahls,
     "me7_1_NI_CS": me7_1_NI_CS,
 }
 
